@@ -8,5 +8,7 @@ app.get("/hello", async(req, res) => {
     return res.status(200).json({message: "Hello"});
 });
 
+console.log("HiepPotato");
+
 app.listen(8000);
 module.exports = app;
