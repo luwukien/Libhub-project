@@ -39,7 +39,7 @@ app.post("/signup", async (req, res) => {
     });
 
     await user.save();
-    const accsessToken = jwt.sign(
+    const accessToken = jwt.sign(
 
         { userId: user._id },
         process.env.ACCESS_TOKEN_SECRET,
@@ -51,7 +51,7 @@ app.post("/signup", async (req, res) => {
     return res.status(201).json({
         error: false,
         user: { fullName: user.fullName, email: user.email },
-        accsessToken,
+        accessToken,
         message: "Registration Successful",
     });
 
@@ -72,8 +72,9 @@ app.post("/login", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
         return res.status(400).json({ message: "Inalid Credentials" });
-    }
-    const accsessToken = jwt.sign(
+    } 
+
+    const accessToken = jwt.sign(
         { userId: user.id },
 
         process.env.ACCESS_TOKEN_SECRET,
@@ -85,7 +86,7 @@ app.post("/login", async (req, res) => {
         error: false,
         message: "Login Successful",
         user: { fullName: user.fullName, email: user.email },
-        accsessToken,
+        accessToken,
     });
 
 });
