@@ -18,5 +18,9 @@
 }
 /* ct: custom.  */
 .ct-top-menu-item {
-  @apply cursor-pointer py-1 transition-colors hover:text-pornhub-300 relative after:transition-all after:absolute after:bottom-0 after:left-0 after:bg-orange-300 after:h-0.5 after:w-0 hover:after:w-full   after:ease-in-out  after:duration-500;
+  @apply cursor-pointer py-1 transition-colors hover:text-pornhub-200 relative after:transition-all after:absolute after:bottom-0 after:left-0 after:bg-orange-300 after:h-0.5 after:w-0 hover:after:w-full after:ease-in-out  after:duration-500;
+}
+
+.ct-top-menu-expand {
+  @apply absolute top-10 z-50 w-full text-center bg-white animate-slideDown;
 }
