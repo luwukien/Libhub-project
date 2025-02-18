@@ -37,7 +37,14 @@ const Home = () =>{
             </header> 
 
             <main>
-                
+                <fieldset>  
+                    <legend className="flex justify-center relative">What book are you looking for?</legend>
+                    <div className="inner-form">
+                        <div className="input-field absolute">
+                            <input type="text" />
+                        </div>
+                    </div>
+                </fieldset>
             </main> {/*End Body*/}
 
             <footer >
