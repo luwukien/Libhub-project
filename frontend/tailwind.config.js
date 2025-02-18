@@ -5,14 +5,18 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    fontFamily: {
-      display: ["Poppins", "sans-serif"],
-    },
     extend: {
       colors:{
         primary: "#05B6D3",
         secondary: "#EF863E",
-      }
+        pornhub: { 
+          200: '#ff9900',
+          300: '#ffaa00',
+        }
+      },
+      fontFamily: {
+        KumbhSans: ['Kumbh Sans', 'san-serif'],
+      },
     },
   },
   plugins: [],
