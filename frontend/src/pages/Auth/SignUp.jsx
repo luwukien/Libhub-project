@@ -43,8 +43,8 @@ const SignUp = () => {
         password:password,
       });
       console.log(response.data);
-      if(response.data && response.data.accessToken) {
-        localStorage.setItem("token", response.data.accessToken);
+      if(response.data && response.data.accsessToken) {
+        localStorage.setItem("token", response.data.accsessToken);
         navigate("/home");
       }
     } catch(error){
