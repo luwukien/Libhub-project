@@ -1,106 +1,133 @@
-import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import PasswordInput from "../../components/Input/PasswordInput";
+import { validateEmail } from "../../utils/helper";
+import axiosInstance from "../../utils/axiosInstance";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../utils/axiosinstance";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+
+  const handleLogin = async(e) => {
     e.preventDefault();
-    setLoading(true);
     
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      setLoading(false);
+    if(!validateEmail(email)){
+      setError("Invalid Email");
       return;
     }
-    
+
+    if(!password){
+      setError("Please enter password");
+      return;
+    }
+
     setError("");
-    
+
     try {
       const response = await axiosInstance.post("/login", {
-        email: email,
-        password: password,
+        email:email,
+        password:password,
       });
-      
-      console.log(response);
-
-      if (response.data && response.data.accessToken) {
+      console.log(response.data);
+      if(response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);
-        navigate("/dashboard");
+        navigate("/home");
       }
-    } catch (error) {
-      console.log(error);
-      setError("Invalid email or password");
-    } finally {
-      setLoading(false);
+    } catch(error){
+      if(error.response && 
+        error.response.data &&
+        error.response.data.message
+      ){
+        setError(error.response.data.message);
+      }else{
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
+
   };
 
   return (
-    <div className="h-screen bg-black overflow-hidden relative flex items-center justify-center">
-      <div className="w-2/4 h-[75vh] bg-white rounded-lg relative p-16 shadow-cyan-200/20">
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center backdrop-blur-[2px]"
+      style={{ backgroundImage: "url('/library_view.png')" }} // ✅ Đường dẫn ảnh đúng
+    >
+      {/* Logo */}
+      <div className="absolute top-4 left-4">
+        <img src="/Lib-hub.svg" alt="Logo" className="w-32 h-16" /> {/* ✅ Đường dẫn đúng */}
+      </div>
+
+      <div className="bg-white bg-opacity-80 rounded-2xl p-8 shadow-lg w-96">
+        {/* Title */}
+        <h2 className="text-center text-xl font-bold mb-1">Login</h2>
+        <p className="text-center text-lg text-gray-900 font-bold mb-4">
+          Welcome back!
+        </p>
+
+        {/* Form */}
         <form onSubmit={handleLogin}>
-          <h4 className="text-2xl font-semibold mb-7 text-yellow-500 text-center">
-            Login
-          </h4>
-
-          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-
-          {/* Input Email */}
           <div className="mb-4">
+            <label className="block text-gray-800 font-medium mb-1">Email</label>
             <input
-              type="email"
-              placeholder="Email"
-              className="input-box w-full"
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              type="text"
+              placeholder="Enter your email"
+              className="w-full p-2 rounded-md hover:ring-2 hover:ring-black"
+              value={email}
+              onChange={({target})=>{
+                setEmail(target.value);
+              }}
             />
-          </div>
-
-          {/* Input Password */}
-          <div className="mb-4">
+            </div>
+          <div className="mb-4 relative group">
+            <label className="block text-gray-800 font-medium mb-1">Password</label>
             <input
-              type="password"
-              placeholder="Password"
-              className="input-box w-full"
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              type={showPassword ? "text" : "password"} // ✅ Toggle mật khẩu
+              placeholder="Enter your password"
+              className="w-full p-2 border rounded-md hover:ring-2 hover:ring-black"
+              value={password}
+              onChange={({target})=>{
+              setPassword(target.value);
+              }}
             />
-          </div>
-
-          {/* Button Login */}
-          <div className="mb-6">
-            <button
-              type="submit"
-              className="btn-primary w-full text-yellow-500"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "LOGIN"}
-            </button>
-          </div>
-
-          <p className="text-yellow-500 text-center mb-4">Or</p>
-
-          {/* Button Create Account */}
-          <div>
+            {/* Eye icon */}
             <button
               type="button"
-              className="w-full text-yellow-500"
-              onClick={() => navigate("/signup")}
+              onClick={() => setShowPassword(!showPassword)} // ✅ Đúng cách
+              className="absolute inset-y-9 right-2 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-50"
             >
-              CREATE ACCOUNT
+              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
             </button>
           </div>
+          {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
+          <div className="flex items-center mb-4">
+            <input type="checkbox" id="remember-me" className="mr-2" />
+            <label htmlFor="remember-me" className="text-gray-800 text-sm">
+              Remember me!
+            </label>
+          </div>
+          
+          <button type="submit" className="w-full bg-black text-yellow-400 font-bold py-2 rounded-md hover:bg-gray-900">
+            Login
+          </button>
         </form>
+
+        {/* Sign up link */}
+        <p className="text-center text-sm text-gray-800 mt-4">
+          Don’t have an account?{" "}
+          <a href="/signup" className="text-blue-500 font-medium underline underline-offset-2">
+            Sign up!
+          </a>
+        </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login; 
+export default Login;

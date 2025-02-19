@@ -6,7 +6,7 @@ export default {
   ],
   theme: {
     fontFamily: {
-      display: ["Poppins", "sans-serif"],
+      display: ['Kumbh Sans', "Poppins", "sans-serif"],
     },
     extend: {
       colors:{
@@ -14,6 +14,15 @@ export default {
         secondary: "#EF863E",
       }
     },
+    animation: {
+      slideDown: 'slideDown 0.5s ease-in-out',
+    },
+    keyframes: {
+      slideDown: {
+        '0%': { transform: 'translateY(-100%)' },
+        '100%': { transform: 'translateY(0)' },
+      },
+    }
   },
   plugins: [],
 }
