@@ -1,5 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import PasswordInput from "../../components/Input/PasswordInput";
+// import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
