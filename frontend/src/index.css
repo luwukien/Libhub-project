@@ -2,6 +2,9 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Kumbh+Sans:wght@100..900&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -22,5 +25,5 @@
 }
 
 .ct-top-menu-expand {
-  @apply absolute top-10 z-50 w-full text-center bg-white animate-slideDown;
+  @apply absolute top-10 z-50 w-full text-center bg-black animate-slideDown;
 }

@@ -15,7 +15,8 @@ export default {
         }
       },
       fontFamily: {
-        KumbhSans: ['Kumbh Sans', 'san-serif'],
+        KumbhSans: ['Kumbh Sans', 'san-serif'], 
+        NunitoSans: ['Nunito Sans','san-serif'],
       },
       animation: {
         slideDown: 'slideDown 0.5s ease-in-out',
