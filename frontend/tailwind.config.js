@@ -6,12 +6,17 @@ export default {
   ],
   theme: {
     fontFamily: {
-      display: ['Kumbh Sans', "Poppins", "sans-serif"],
+      display : ['Kumbh Sans', "Poppins", "sans-serif"],
+      NunitoSans: ['Nunito Sans','san-serif'],
     },
     extend: {
       colors:{
         primary: "#05B6D3",
         secondary: "#EF863E",
+        pornhub: { 
+          200: '#ff9900',
+          300: '#ffbb00',
+        }
       }
     },
     animation: {
