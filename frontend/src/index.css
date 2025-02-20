@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Kumbh+Sans:wght@100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -23,4 +26,17 @@
   .btn-primary{
     @apply w-full text-sm font-medium text-white bg-cyan-500 shadow-lg shadow-cyan-200/50 p-[10px] rounded-full my-1 hover:bg-cyan-100 hover:text-primary; 
   }
+}
+
+/* ct: custom.  */
+.ct-top-menu-item {
+  @apply cursor-pointer py-1 transition-colors hover:text-pornhub-200 relative after:transition-all after:absolute after:bottom-0 after:left-0 after:bg-orange-300 after:h-0.5 after:w-0 hover:after:w-full after:ease-in-out  after:duration-500;
+}
+
+.ct-top-menu-expand {
+  @apply absolute top-10 z-50 w-full text-center bg-black animate-slideDown;
+}
+
+.ct-link {
+  @apply hover:text-pornhub-200;
 }
