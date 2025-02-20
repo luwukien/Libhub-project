@@ -1,5 +1,4 @@
 // import React from "react";
-import TopMenu from "../../compenets/TopMenu"
 
 const Home = () =>{
     return(
@@ -34,12 +33,7 @@ const Home = () =>{
                             </a>
                         </li> 
                     </ul>
-                    
-                    <div className="basis-1/6 lg:hidden flex items-center cursor-pointer px-3 sm:px-8">
-                        <svg id="ct-toggle-top-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-7">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
-                        </svg>
-                    </div>
+
 
                 </nav>
             </header> 
@@ -62,8 +56,14 @@ const Home = () =>{
                 </div>                    
             </main> {/*End Body*/}
 
-            <footer >
-                Footer
+            <footer className="w-[95%] xl:w-[65%] mx-auto pb-24">
+                <div className="flex">
+                    <div className="">
+                        <div className="">
+                            <img src="public/Lib-hub.svg" alt="logo-lib-hub" />
+                        </div>
+                    </div>
+                </div>
             </footer> {/*End Footer*/}
         
         </>
