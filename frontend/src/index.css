@@ -19,6 +19,15 @@
     overflow-x: hidden;
   }
 }
+
+@layer components {
+  .input-box{
+    @apply w-full text-sm bg-cyan-600/5 rounded px-5 py-3 mb-4 outline-none;
+  }
+  .btn-primary{
+    @apply w-full text-sm font-medium text-white bg-cyan-500 shadow-lg shadow-cyan-200/50 p-[10px] rounded-full my-1 hover:bg-cyan-100 hover:text-primary; 
+  }
+}
 /* ct: custom.  */
 .ct-top-menu-item {
   @apply cursor-pointer py-1 transition-colors hover:text-pornhub-200 relative after:transition-all after:absolute after:bottom-0 after:left-0 after:bg-orange-300 after:h-0.5 after:w-0 hover:after:w-full after:ease-in-out  after:duration-500;
@@ -26,4 +35,8 @@
 
 .ct-top-menu-expand {
   @apply absolute top-10 z-50 w-full text-center bg-black animate-slideDown;
+}
+
+.ct-link {
+  @apply hover:text-pornhub-200
 }

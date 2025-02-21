@@ -10,6 +10,7 @@ const App = () => {
         <div>
           <Router>
             <Routes>
+              <Route path="/" exact element={<Root/>} />
               <Route path="/login" exact element={<Login/>} />
               <Route path="/signup" exact element={<SignUp/>} />
               <Route path="/home" exact element={<Home/>} />
@@ -17,6 +18,15 @@ const App = () => {
           </Router>
         </div>
     )
+}
+
+const Root = () => {
+  const isAuth = !!localStorage.getItem("token");
+  return isAuth? (
+    <Navigate to="/home"/>
+  ):(
+    <Navigate to="/login"/>
+  )
 }
 
 export default App
