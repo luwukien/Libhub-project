@@ -9,6 +9,9 @@ const User = require("./models/user.model");
 const Book = require("./models/book.model");
 const { authenticateToken } = require("./utilities");
 
+const upload = require("./multer");
+const fs = require("fs");
+const path = require("path");
 
 mongoose.connect(config.connectionString);
 
@@ -114,12 +117,12 @@ app.post("/add-book", authenticateToken, async (req, res) => {
     const { userId } = req.user;
     req.body.userId = userId;
 
-    if (!req.body.title || !req.body.category || !req.body.story || !req.body.date || !req.body.imageUrl) {
+    if (!req.body.title || !req.body.author || !req.body.category || !req.body.story || !req.body.date || !req.body.imageUrl) {
         return res.status(400).json({ error: true, message: "All fields are required" });
     }
 
-    const parsedVisitedDate = new Date(parseInt(req.body.visitedDate));
-    req.body.visitedDate = parsedVisitedDate;
+    const parsedDate = new Date(parseInt(req.body.date));
+    req.body.date = parsedDate;
     try {
         const book = new Book(req.body);
 
@@ -131,7 +134,95 @@ app.post("/add-book", authenticateToken, async (req, res) => {
 
 });
 
+//get book
 
+app.get("/get-all-book", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+
+    try {
+        const book = await Book.find({ }).sort({
+            isFavourite: -1
+        });
+        res.status(200).json({ stories: book });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+//upload book cover
+app.post("/image-upload", upload.single("image"), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.
+                status(400)
+                .json({ error: true, message: "No image uploaded" });
+        }
+
+        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+        res.status(201).json({ imageUrl });
+
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+//Delete image from uploads folder
+app.delete("/delete-image", async (req, res) => {
+    const { imageUrl } = req.query;
+    if (!imageUrl) {
+        return res
+            .status(400)
+            .json({ error: true, message: "imageUrl is required" });
+    }
+    try {
+        const filename = path.basename(imageUrl);
+        const filePath = path.join(__dirname, 'uploads', filename);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            return res.status(200).json({ message: "Image delete successfully" });
+        } else {
+            return res.status(200).json({ message: "Image not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+
+
+//Edit Book
+app.post("/edit-book/:id", authenticateToken, async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.user;
+
+    if (!req.body.title || !req.body.category || !req.body.story || !req.body.date || !req.body.imageUrl) {
+        return res.status(400).json({ error: true, message: "All fields are required" });
+    }
+
+    const parsedDate = new Date(parseInt(req.body.date));
+    try {
+        const book = await Book.findOne({ _id: id });
+
+        if (!book) {
+            return res.status(400).json({ error: true, message: "Book Story not found" });
+        }
+        const placeholderImgUrl = `http://localhost:8000/assets/placeholder.png`;
+
+        book.title = req.body.title;
+        book.story = req.body.story;
+        book.category = req.body.category;
+        book.imageUrl = req.body.imageUrl || placeholderImgUrl;
+        book.date = parsedDate;
+
+        await book.save();
+        res.status(200).json({ story: book, message: 'Update successful' });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+
+});
 
 app.listen(8000);
 module.exports = app;
