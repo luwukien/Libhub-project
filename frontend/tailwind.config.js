@@ -5,10 +5,6 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    fontFamily: {
-      display : ['Kumbh Sans', "Poppins", "sans-serif"],
-      NunitoSans: ['Nunito Sans','san-serif'],
-    },
     extend: {
       colors:{
         primary: "#05B6D3",
