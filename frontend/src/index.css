@@ -46,5 +46,6 @@
 }
 
 .ct-subheadline {
-  @apply flex justify-center items-center font-extrabold text-4xl py-4;
+  @apply flex justify-center items-center font-extrabold text-4xl pt-6 pb-9;
 }
+
