@@ -7,7 +7,6 @@ const Home = () =>{
 
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(null);
-    const [allBook, setAllBook] = useState(null);
 
     const getUserInfo = async () => {
         try{

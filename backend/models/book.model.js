@@ -8,10 +8,11 @@ const book = new Schema({
     category: { type: String, required: true},
     author: { type: String, required: true},
     story: { type:String, required: true},
-    isFavourite: { type: Boolean, default: false},
+    isFavourite:{type:Boolean, required:false},
     imageUrl: {type: String, required: true},
     date: Date,
     remainingBook: {type: Number, required: true},
+    favouriteCount: { type: Number, default: 0 },
 });
 
 

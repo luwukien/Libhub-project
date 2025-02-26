@@ -7,8 +7,8 @@ import BookCard from "../../components/Cards/BookCard";
 const Category = () => {
 
     const navigate = useNavigate();
-    const [userInfo, setUserInfo] = useState(null);
     const [allBooks, setAllBooks] = useState([]);
+    const [userInfo, setUserInfo] = useState(null);
 
     const getUserInfo = async () => {
         try{
@@ -27,7 +27,6 @@ const Category = () => {
     const getAllBooks = async () => {
         try{
             const response = await axiosInstance.get("/get-all-book");
-            console.log(response.data);
             if(response.data && response.data.stories){
                 setAllBooks(response.data.stories);
             }
@@ -36,13 +35,26 @@ const Category = () => {
         }
     }
 
+
     const handleEdit = (data) => {};
     const handleViewBook = (data) => {};
-    const updateIsFavourite = async (bookData) => {};
+    
+    const updateIsFavourite = async (bookData) => {
+        const bookId = bookData._id;
+        try {
+            const response = await axiosInstance.put(`/update-is-favourite/${bookId}`);
+            
+            if (response.data && response.data.story) {
+                getAllBooks();
+            }
+        } catch (error) {
+            console.log("An unexpected error occurred. Please try again.");
+        }
+    };
 
     useEffect(() => {
-        getAllBooks()
-        getUserInfo();  
+        getAllBooks();
+        getUserInfo(); 
         return () => {
             
         }
@@ -60,7 +72,7 @@ const Category = () => {
                 <div className="flex gap-7">
                     <div className="flex-1">
                         {allBooks.length > 0 ? (
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-8 gap-8">
                                 {allBooks.map((item) => {
                                     return (
                                         <BookCard 

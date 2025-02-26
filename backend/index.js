@@ -124,7 +124,10 @@ app.post("/add-book", authenticateToken, async (req, res) => {
     const parsedDate = new Date(parseInt(req.body.date));
     req.body.date = parsedDate;
     try {
-        const book = new Book(req.body);
+        const book = new Book({
+            ...req.body,
+            favouriteCount: 0,
+        });
 
         await book.save();
         res.status(201).json({ story: book, message: "Added Successfully" });
@@ -137,13 +140,16 @@ app.post("/add-book", authenticateToken, async (req, res) => {
 //get book
 
 app.get("/get-all-book", authenticateToken, async (req, res) => {
-    const { userId } = req.user;
-
+    const{ userId } = req.user;
     try {
-        const book = await Book.find({ }).sort({
-            isFavourite: -1
+        const books = await Book.find({}).sort({ favouriteCount: -1 });
+        const user = await User.findById(userId);
+
+        const booksWithFavourite = books.map(book => {
+            const isFavourite = user.favourites.includes(book._id);
+            return { ...book.toObject(), isFavourite };
         });
-        res.status(200).json({ stories: book });
+        res.status(200).json({ stories: booksWithFavourite });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
@@ -222,6 +228,47 @@ app.post("/edit-book/:id", authenticateToken, async (req, res) => {
         res.status(500).json({ error: true, message: error.message });
     }
 
+});
+
+//Update Is Favourite
+app.put("/update-is-favourite/:id", authenticateToken, async (req, res) => {
+    const { id } = req.params; 
+    const { userId } = req.user; 
+
+    try {
+        const book = await Book.findOne({ _id: id});
+        if (!book) {
+            return res.status(404).json({ error: true, message: "Book not found" });
+        }
+
+        
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: true, message: "User not found" });
+        }
+
+        const isAlreadyFavourite = user.favourites.includes(id);
+        let updatedFavourite;
+        if (isAlreadyFavourite) {
+            user.favourites = user.favourites.filter(bookId => bookId.toString() !== id);
+            updatedFavourite = false;
+            book.favouriteCount = Math.max(0, book.favouriteCount - 1);
+        } else {
+            user.favourites.push(id);
+            updatedFavourite = true;
+            book.favouriteCount += 1;
+        }
+
+        await user.save();
+        await book.save();
+
+        res.status(200).json({
+            story: true,
+            message: "Favourite status updated successfully",
+        });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
 });
 
 app.listen(8000);

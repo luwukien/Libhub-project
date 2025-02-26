@@ -40,3 +40,8 @@
 .ct-link {
   @apply hover:text-pornhub-200;
 }
+@layer components{
+  .icon-btn {
+    @apply text-[15px] text-white cursor-pointer hover:text-red-500;
+  }
+}
