@@ -3,6 +3,7 @@ import Footer from "../../components/layouts/Footer";
 import { Navigate, useNavigate } from "react-router-dom"
 import axiosInstance from "../../utils/axiosInstance";
 import Navbar from "../../components/layouts/Header";
+import TextToggle from "../../components/TextToggle";
 
 const Home = () =>{
 
@@ -37,22 +38,36 @@ const Home = () => {
 }
     return(
         <>
-          <div className="content-wrapper">
+          <div className="content-wrapper font-NunitoSans">
             <header>
                   <Navbar userInfo={userInfo}/>
               </header>
       
-              <main>
+              <main className="">
                 <div className="">
                   Game
                 </div> {/*End game*/}
 
-                <div className="">
-                  About-us
-                </div> {/*End about-us*/}
+                <div className="bg-gray-100 h-auto">
+                  <div className="p-5">
+                    <div className="ct-subheadline">
+                      About
+                    </div>
+                    <div className="flex w-11/12">
+                      <div className="flex-1 w-40  font-extrabold text-5xl flex justify-center items-center tracking-wide">
+                        What is <span className="text-pornhub-200 ml-2">Libhub?</span>
+                      </div>
+                      <div className="flex-1 w-64 font-medium">
+                        <TextToggle />
+                      </div>
+                      
+                    </div> {/* End about product*/}
 
-                <div className="">
-                  Category Previous
+                  </div> 
+                </div> {/*End about*/}
+
+                <div className="ct-subheadline">
+                  Categories
                 </div> {/*End category-previous*/}
 
                 <div className="">

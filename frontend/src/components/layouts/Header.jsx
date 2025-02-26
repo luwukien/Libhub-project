@@ -93,9 +93,8 @@ const Header = ({ userInfo }) => {
 
 
   return (
-    <header className="font-KumbhSans z-50">
+    <header className="font-KumbhSans z-50 ">
       <nav className="flex justify-between items-center relative py-1 font-bold drop-shadow-sm bg-slate-50 h-[90px]">
-
         {/* Logo */}
         <div className="lg:basis-1/6 lg:mx-auto">
           <a href="#" className="inline-flex items-center justify-center w-auto h-auto relative">
@@ -120,7 +119,7 @@ const Header = ({ userInfo }) => {
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-1/2 sm:ml-2 lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
           <li><a className="ct-top-menu-item" href="/home">Home</a></li>
-          <li><a className="ct-top-menu-item" href="#">About Us</a></li>
+          <li><a className="ct-top-menu-item" href="#">About</a></li>
           <li>
             <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
                 Category

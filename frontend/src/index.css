@@ -45,3 +45,6 @@
   @apply w-full text-black hover:bg-pornhub-200 hover:text-white hover:rounded-md p-3 duration-300 -z-40;;
 }
 
+.ct-subheadline {
+  @apply flex justify-center items-center font-extrabold text-4xl py-4;
+}
