@@ -8,8 +8,13 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+<<<<<<< HEAD
     "dev:frontend": "cd C:\\Users\\Admin\\Desktop\\LibHub\\frontend && vite",
     "dev:backend": "cd C:\\Users\\Admin\\Desktop\\LibHub\\backend && node index.js",
+=======
+    "dev:frontend": "cd D:\\Project\\ClubProject\\lib-hub-project\\frontend&& vite",  
+    "dev:backend": "cd D:\\Project\\ClubProject\\lib-hub-project\\backend && node index.js",  
+>>>>>>> c86d55d8d725ef21d473cb8e96d3725c63621e6c
     "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\""
   },
   "dependencies": {
