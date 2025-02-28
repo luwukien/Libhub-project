@@ -1,29 +1,13 @@
 import React, { useEffect, useState } from "react";
-// import Footer from "../../components/layouts/Footer";
+import Footer from "../../components/layouts/Footer";
 import { Navigate, useNavigate } from "react-router-dom"
 import axiosInstance from "../../utils/axiosInstance";
 import Navbar from "../../components/layouts/Header";
 import TextToggle from "../../components/TextToggle";
-import CardCategory from "../../components/CardCategory/CardCategory";
-import axios from 'axios';
+import CardSlider from "../../components/CardSlider";
 
 
 const Home = () =>{
-    // fetching data category
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState([true]);
-    const [error, setError] = useState(null);
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/categories");
-        setCategories(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
 
     // get Inforamation user
     const navigate = useNavigate();
@@ -44,17 +28,10 @@ const Home = () =>{
       };
 
     useEffect(() => {
-      fetchData();
       getUserInfo();  
       return () => {   
       };
-        }, []);
-
-    //when fetching progress loading
-    if (loading) return <div>Loading...</div>;
-
-    //when fetching progress errors
-    if (error) return <div>Error: {error}</div>;
+      }, []);
       
     return(
         <>
@@ -89,20 +66,9 @@ const Home = () =>{
                     <div className="ct-subheadline">
                       Categories
                     </div> 
-                    <div className="flex flex-wrap justify-center gap-6 min-h-screen">
-                      {/* Render CardCategories from data */}
-                      {categories.map((category, index) => {
-                        return (
-                          <CardCategory
-                          key={index} 
-                          title={category.title}
-                          description={category.description}  
-                          imageUrl={category.imageUrl}
-                          linkCategory={category.linkCategory}
-                          />
-                        );
-
-                      })}
+                    <div className="flex flex-wrap justify-center gap-6">
+                      {/* Render CardCategories and CardSlider from data */}
+                      <CardSlider />
                     </div>
                   </div>
                 </div>{/*End category-previous*/}
@@ -116,7 +82,7 @@ const Home = () =>{
 
           </div> {/* End content-wrapper */}
 
-          {/* <Footer /> */}
+          <Footer />
         </>
     )
 }

@@ -17,4 +17,4 @@ const CardCategory = ({id, title, description, imageUrl, linkCategory}) => {
   );
 };
 
-export default CardCategory;
+  export default CardCategory;
