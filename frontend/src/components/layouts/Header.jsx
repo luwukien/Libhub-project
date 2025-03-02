@@ -63,7 +63,7 @@ const Header = ({ userInfo }) => {
               exit={{ opacity: 0, y: 15 }}
               style={{ translateX: "-50%" }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute left-1/2 top-12"
+              className="absolute left-1/2 top-12 z-100"
             >
               <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
               
@@ -93,8 +93,8 @@ const Header = ({ userInfo }) => {
 
 
   return (
-    <header className="font-KumbhSans z-50 ">
-      <nav className="flex justify-between items-center relative py-1 font-bold drop-shadow-sm bg-slate-50 h-[90px]">
+    <header className="font-KumbhSans">
+      <nav className="flex justify-between items-center relative py-1 font-bold drop-shadow-sm bg-slate-50 h-[50px]">
         {/* Logo */}
         <div className="lg:basis-1/6 lg:mx-auto">
           <a href="#" className="inline-flex items-center justify-center w-auto h-auto relative">
@@ -103,18 +103,18 @@ const Header = ({ userInfo }) => {
         </div>
 
         {/* Search Bar */}
-        <div className="relative flex flex-col items-center text-black text-center basis-1/2">
-          <fieldset className="w-full max-w-3xl items-center mx-auto">  
-            <div className="relative w-full">
-                <button className="icon-search absolute top-1/2 -translate-y-1/2 flex justify-center items-center h-full w-16 hover:text-pornhub-200 hover:transition-colors ">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>        
-                </button>
-                <input type="text" placeholder="Tittle book, author, ISBN, ..." className="w-full h-3 p-8 pl-16 rounded-full text-black focus:outline-none bg-gray-200 font-NunitoSans font-normal " />
-            </div>
-          </fieldset>                    
-        </div>
+        <div className="input-field relative max-w-md w-full ml-4">
+        <button className="icon-search absolute top-1/2 -translate-y-1/2 flex justify-center items-center h-full w-12 hover:text-pornhub-200 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </button>
+        <input
+          type="text"
+          placeholder="Title book, author, ISBN, ..."
+          className="w-full h-[40px] p-4 pl-12 rounded-full text-black focus:outline-none bg-gray-200 text-sm"
+        />
+      </div>
 
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-1/2 sm:ml-2 lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">

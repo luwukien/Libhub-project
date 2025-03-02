@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 // import Footer from "../../components/layouts/Footer";
 import { Navigate, useNavigate } from "react-router-dom"
 import axiosInstance from "../../utils/axiosInstance";
-import Navbar from "../../components/layouts/Header";
+import Header from "../../components/layouts/Header";
 import TextToggle from "../../components/TextToggle";
-import CardCategory from "../../components/CardCategory/CardCategory";
+import CardCategory from "../../components/Cards/CardCategory";
 import axios from 'axios';
+import GameCard from "../../components/Cards/GameCard";
 
 
 const Home = () =>{
     // fetching data category
     const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState([true]);
     const [error, setError] = useState(null);
 
     const fetchData = async () => {
@@ -46,26 +46,26 @@ const Home = () =>{
     useEffect(() => {
       fetchData();
       getUserInfo();  
-      return () => {   
-      };
         }, []);
 
-    //when fetching progress loading
-    if (loading) return <div>Loading...</div>;
+        const [showGame, setShowGame] = useState(() => {
+          return localStorage.getItem("unityGameVisible") === "true";
+      });
+  
+      useEffect(() => {
+          localStorage.setItem("unityGameVisible", "true"); // Khi vào HomePage, game sẽ hiển thị
+      }, []);
 
-    //when fetching progress errors
-    if (error) return <div>Error: {error}</div>;
-      
     return(
         <>
           <div className="content-wrapper font-NunitoSans">
             <header>
-                  <Navbar userInfo={userInfo}/>
+                  <Header userInfo={userInfo}/>
               </header>
       
               <main className="">
-                <div className="">
-                  Game
+                <div className="rounded-lg">
+                {showGame && <GameCard />}
                 </div> {/*End game*/}
 
                 <div className="bg-gray-100 h-auto">

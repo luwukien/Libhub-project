@@ -8,24 +8,24 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-<<<<<<< HEAD
     "dev:frontend": "cd C:\\Users\\Admin\\Desktop\\LibHub\\frontend && vite",
     "dev:backend": "cd C:\\Users\\Admin\\Desktop\\LibHub\\backend && node index.js",
-=======
-    "dev:frontend": "cd D:\\Project\\ClubProject\\lib-hub-project\\frontend&& vite",  
-    "dev:backend": "cd D:\\Project\\ClubProject\\lib-hub-project\\backend && node index.js",  
->>>>>>> c86d55d8d725ef21d473cb8e96d3725c63621e6c
-    "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\""
+    "dev:mock-api": "cd C:\\Users\\Admin\\Desktop\\LibHub\\backend && npx json-server db.json",
+    "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:mock-api\""
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
     "axios": "^1.7.9",
     "concurrently": "^9.1.2",
+    "framer-motion": "^12.4.7",
     "moment": "^2.30.1",
     "react": "^19.0.0",
+    "react-day-picker": "^9.5.1",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
-    "react-router-dom": "^7.1.5"
+    "react-modal": "^3.16.3",
+    "react-router-dom": "^7.1.5",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

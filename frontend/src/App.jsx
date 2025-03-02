@@ -1,13 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import React from "react";
-
+import { GameProvider } from "./utils/GameProvider";
 import Login from "./pages/Auth/Login"
 import SignUp from "./pages/Auth/SignUp";
 import Home from "./pages/Home/Home";
 import Account from "./pages/Auth/Account";
 import Category from "./pages/Book/Category";
+import GameCard from "./components/Cards/GameCard";
 
 const App = () => {
+
     return(
         <div>
           <Router>

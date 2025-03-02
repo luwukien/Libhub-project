@@ -172,6 +172,26 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
     }
 });
 
+// Upload image URL
+app.post("/image-upload-url", async (req, res) => {
+    try {
+        const { imageUrl } = req.body;
+        
+        if (!imageUrl) {
+            return res.status(400).json({ error: true, message: "Image URL is required" });
+        }
+
+        if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(imageUrl)) {
+            return res.status(400).json({ error: true, message: "Invalid image URL format" });
+        }
+        res.status(201).json({ imageUrl });
+
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+
 //Delete image from uploads folder
 app.delete("/delete-image", async (req, res) => {
     const { imageUrl } = req.query;
@@ -199,11 +219,11 @@ app.use("/assets", express.static(path.join(__dirname, "assets")));
 
 
 //Edit Book
-app.post("/edit-book/:id", authenticateToken, async (req, res) => {
+app.put("/edit-book/:id", authenticateToken, async (req, res) => {
     const { id } = req.params;
     const { userId } = req.user;
 
-    if (!req.body.title || !req.body.category || !req.body.story || !req.body.date || !req.body.imageUrl) {
+    if (!req.body.title || !req.body.category || !req.body.story || !req.body.date) {
         return res.status(400).json({ error: true, message: "All fields are required" });
     }
 
@@ -212,7 +232,7 @@ app.post("/edit-book/:id", authenticateToken, async (req, res) => {
         const book = await Book.findOne({ _id: id });
 
         if (!book) {
-            return res.status(400).json({ error: true, message: "Book Story not found" });
+            return res.status(400).json({ error: true, message: "Book not found" });
         }
         const placeholderImgUrl = `http://localhost:8000/assets/placeholder.png`;
 
@@ -221,6 +241,7 @@ app.post("/edit-book/:id", authenticateToken, async (req, res) => {
         book.category = req.body.category;
         book.imageUrl = req.body.imageUrl || placeholderImgUrl;
         book.date = parsedDate;
+        book.remainingBook = req.body.remainingBook;
 
         await book.save();
         res.status(200).json({ story: book, message: 'Update successful' });
@@ -266,6 +287,36 @@ app.put("/update-is-favourite/:id", authenticateToken, async (req, res) => {
             story: true,
             message: "Favourite status updated successfully",
         });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+//Delete Book
+app.delete("/delete-book/:id", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    const { id } = req.params;
+
+    try {
+        const book = await Book.findOne({ _id: id });
+        //console.log(book);
+        if (!book) {
+            return res.status(404).json({ error: true, message: "Book not found" });
+        }
+        await book.deleteOne({ _id: id });
+
+        const imageUrl = book.imageUrl;
+        const filename = path.basename(imageUrl);
+
+        const filePath = path.join(__dirname, 'uploads', filename);
+
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error("Failed to delete image file:", err);
+            }
+        });
+        res.status(200).json({ error: "Book delete successfully" });
+
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
