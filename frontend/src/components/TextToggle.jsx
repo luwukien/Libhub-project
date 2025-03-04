@@ -9,11 +9,14 @@ function TextToggle() {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <p className={`${isExpanded ? '' : 'line-clamp-3'}`}>
-        Libhub is an innovative improvement to the schools library system, designed to enhance students learning experience. It simplifies the search for academic resources, making it easier to find relevant materials.
-        We are Team 4 from JS Club. Our project, Libhub, simplifies resource searching and provides a virtual library simulation, making it easier for students to access and explore academic materials. We aim to optimize the UI to enhance book searching.
+    <div id='about' className="max-w-5xl mx-auto">
+      <p className='mb-3'>
+        Libhub stands for Library Hub. This is an innovative improvement to the schools library system, designed to enhance students learning experience. It simplifies the search for academic resources, making it easier to find relevant materials.
       </p>
+      <p className={`${isExpanded ? '' : 'line-clamp-1'}`}>
+        And we are BoyFốur from team 4 JS Club. Our project, Libhub, simplifies resource searching and provides a virtual library simulation, making it easier for students to access and explore academic materials. We aim to optimize UI/UX to make the library more user-friendly and interesting.
+      </p>
+
       <button 
         onClick={toggleText} 
         className="text-blue-500 hover:underline hover:underline-offset-1 text-base"

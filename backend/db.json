@@ -20,6 +20,13 @@
       "description": "Tủ sách lịch sự là tủ sách chứa những quyển sách lịch sử...",
       "imageUrl": "/public/tech-category.jpg",
       "linkCategory": "http://localhost:5173/category"
+    },
+    {
+      "description": "Tủ sách lịch sự là tủ sách chứa những quyển sách lịch sử...",
+      "id": 4
+    },
+    {
+      "id": 5
     }
   ]
 }

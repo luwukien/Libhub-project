@@ -2,9 +2,9 @@
   import ProfileInfo from "../Cards/ProfileInfo";
   import { useNavigate } from "react-router-dom";
   import { AnimatePresence, motion } from "framer-motion";
+  
 
-
-  const Header = ({ userInfo }) => {
+  const Header = ({ userInfo, scrollToFooter, scrollToAbout}) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
@@ -74,7 +74,7 @@
         </div>
       );
     };
-    // box content flying out
+    // box content flyout
     const CategoryContent = () => {
       return (    
         <div className="h-auto w-[250px] bg-white shadow-xl font-NunitoSans rounded-md">
@@ -90,20 +90,18 @@
       );
     }
 
-
-
     return (
       <header className="font-KumbhSans z-50 mx-2 ">
         <nav className="flex justify-between items-center relative py-1 font-bold drop-shadow-sm bg-slate-50 h-[90px]">
           {/* Logo */}
-          <div className="lg:basis-1/6 lg:mx-auto">
+          <div className="basis-1/12 mx-auto">
             <a href="#" className="inline-flex items-center justify-center w-auto h-auto relative">
-              <img className="lg:w-36 md:w-32 w-28 lg:h-auto " src="public/Lib-hub.svg" alt="Logo-lib-hub"/>
+              <img className="lg:w-auto w-32 lg:h-auto " src="public/lib-hub-logo.png" alt="Logo-lib-hub"/>
             </a>
           </div>
 
           {/* Search Bar */}
-          <div className="relative flex flex-col items-center text-black text-center basis-1/2">
+          <div className="relative flex flex-col items-center text-black text-center basis-5/12">
             <fieldset className="w-full max-w-3xl items-center mx-auto">  
               <div className="relative w-full">
                   <button className="icon-search absolute top-1/2 -translate-y-1/2 flex justify-center items-center h-full w-16 hover:text-pornhub-200 hover:transition-colors ">
@@ -117,15 +115,15 @@
           </div>
 
           {/* Menu */}
-          <ul id="ct-top-menu" className="basis-1/2 sm:ml-2 lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
+          <ul id="ct-top-menu" className="basis-5/12 sm:ml-2 lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
             <li><a className="ct-top-menu-item" href="/home">Home</a></li>
-            <li><a className="ct-top-menu-item" href="#">About</a></li>
+            <li><a className="ct-top-menu-item" onClick={scrollToAbout}>About</a></li>
             <li>
               <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
                   Category
               </FlyoutLink>
             </li>
-            <li><a className="ct-top-menu-item" href="#">Contact Us</a></li>
+            <li><a className="ct-top-menu-item" onClick ={scrollToFooter}>Contact Us</a></li>
             
             {/* Avatar with Dropdown */}
             {isToken ? <ProfileInfo userInfo={userInfo}/> : (<button className="ct-top-menu-item" onClick={onLogin}>Login</button>)}
@@ -142,5 +140,6 @@
 
     );
   };
+
 
   export default Header;

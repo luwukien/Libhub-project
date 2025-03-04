@@ -26,10 +26,7 @@ export default {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateY(0)' },
         },
-      },
-      maxWidth: {
-        'cardCategory' : '21rem',
-      }
+      },  
     },
   },
   plugins: [],

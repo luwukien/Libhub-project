@@ -27,6 +27,17 @@ const Home = () =>{
         }
       };
 
+      //scroll 
+      const scrollToFooter = () => {
+        const footer = document.getElementById("footer");
+        footer.scrollIntoView({behavior: "smooth"});
+      }
+
+      const scrollToAbout = () => {
+        const about = document.getElementById("about");
+        about.scrollIntoView({behavior: "smooth"});
+      }
+      
     useEffect(() => {
       getUserInfo();  
       return () => {   
@@ -37,7 +48,7 @@ const Home = () =>{
         <>
           <div className="content-wrapper font-NunitoSans">
             <header>
-                  <Navbar userInfo={userInfo}/>
+                  <Navbar userInfo={userInfo} scrollToFooter={scrollToFooter}/>
               </header>
       
               <main className="">
@@ -47,16 +58,11 @@ const Home = () =>{
 
                 <div className="bg-gray-100 h-auto">
                   <div className="p-5">
-                    <div className="ct-subheadline">
-                      About
-                    </div>
-                    <div className="flex w-11/12">
-                      <div className="flex-1 w-40  font-extrabold text-5xl flex justify-center items-center tracking-wide">
-                        What is <span className="text-pornhub-200 ml-2">Libhub?</span>
+                      <div className="ct-subheadline ">
+                        What is the <span className="text-pornhub-200 ml-2 mr-2">Libhub</span> product?
                       </div>
-                      <div className="flex-1 w-64 font-medium">
-                        <TextToggle />
-                      </div>   
+                    <div className="flex items-center justify-center font-medium">
+                      <TextToggle scrollToAbout={scrollToAbout}/>
                     </div> 
                   </div> 
                 </div> {/*End about*/}
@@ -66,10 +72,9 @@ const Home = () =>{
                     <div className="ct-subheadline">
                       Categories
                     </div> 
-                    <div className="flex flex-wrap justify-center gap-6">
-                      {/* Render CardCategories and CardSlider from data */}
-                      <CardSlider />
-                    </div>
+                    {/* Render CardCategories and CardSlider from data */}
+                    <CardSlider />
+
                   </div>
                 </div>{/*End category-previous*/}
 

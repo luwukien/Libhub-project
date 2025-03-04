@@ -3,12 +3,12 @@ import React, { useState } from "react";
 const Footer = () => {
   return (
     <>
-      <div className="bg-gray-200 ">
-        <footer className="w-95 xl:w-[70%] mx-auto pb-24 text-gray-500 text-base p-7  ">
+      <div className="bg-gray-200">
+        <footer id="footer" className="w-95 xl:w-[70%] mx-auto pb-24 text-gray-500 text-base p-7" >
           <div className="flex flex-col md:flex-row text-center md:text-left gap-8">
             <div className="basis-1/3 ">
               <div className="flex flex-col items-center">
-                <img src="public/Lib-hub.svg" className="w-44 h-auto mb-1" />
+                <img src="public/lib-hub-logo.png" className="w-44 h-auto mb-1" />
               </div>
               <div className="">
                 <p className="mb-8 md:mb-0 text-center text-[15px]"><q>Today <span className="underline decoration-sky-500/30">a reader</span>, tomorrow <span className="underline decoration-pink-500/30">a leader.</span></q> -Margaret Fuller</p>
