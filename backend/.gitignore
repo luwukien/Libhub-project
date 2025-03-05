@@ -22,5 +22,4 @@ yarn-debug.log*
 yarn-error.log*
 
 config.json
-
-db.json
+backend/db.json

@@ -74,13 +74,17 @@ const Home = () =>{
                     </div> 
                     {/* Render CardCategories and CardSlider from data */}
                     <CardSlider />
-
                   </div>
                 </div>{/*End category-previous*/}
 
 
-                <div className="">
-                  Hot Book
+                <div className="bg-gray-100">
+                  <div className="p-9">
+                    <div className="ct-subheadline">
+                      Hot Books
+                    </div>
+                    
+                  </div>
                 </div> {/*End hot-book*/}           
 
               </main> {/*End Body*/}

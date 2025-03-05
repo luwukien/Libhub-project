@@ -4,44 +4,66 @@ import axios from 'axios';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { PrevArrow, NextArrow } from "./Arrow";
 
 const CardSlider = () => {
 
-  // const [categories, setCategories] = useState([]);
-  // const [loading, setLoading] = useState([true]);
-  // const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState([true]);
+  const [error, setError] = useState(null);
 
-  // fetching data category
-  // const fetchData = async () => { 
-  //   try {
-  //     const response = await axios.get("http://localhost:3000/categories");
-  //     setCategories(response.data);
-  //     setLoading(false);
-  //   } catch (err) {
-  //     setError(err.message);
-  //     setLoading(false);
-  //   }
-  // };
+  //fetching data category
+  const fetchData = async () => { 
+    try {
+      const response = await axios.get("http://localhost:3000/categories");
+      setCategories(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // fetchData(); 
+    fetchData(); 
   }, []);
 
   //when fetching progress 
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error}</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   //setting for carousel
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 900,
     slidesToShow: 3,
-    slidesToScroll: 3
+    slidesToScroll: 1,
+      nextArrow: <NextArrow />,
+      prevArrow: <PrevArrow />,
+    responsive: [
+    {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 0
+        }
+      },
+    ]
   };
 
   return (
-    <div className="">
+    <div className="relative w-full max-w-7xl mx-auto bg-transparent">
       <Slider {...settings}>
         {/* Render CardCategories from data */}
         {categories.map((category, index) => {
@@ -59,75 +81,6 @@ const CardSlider = () => {
     </div>
   );
 };
-
-const categories = [  
-  {
-    id: 1,
-    title: "Technology BookShelf",
-    description: "Tủ sách công nghệ là tủ sách chứa những quyển sách công nghệ...",
-    imageUrl: "/public/tech-category.jpg", 
-    linkCategory: "http://localhost:5173/category"
-
-  },
-  {
-    id: 2,
-    title: "Science BookShelf",
-    description: "Tủ sách khoa học là tủ sách chứa những quyển sách khoa học...",
-    imageUrl: "/public/tech-category.jpg",
-    linkCategory: "http://localhost:5173/category"
-
-  },
-  {
-    id: 3,
-    title: "History BookShelf",
-    description: "Tủ sách lịch sự là tủ sách chứa những quyển sách lịch sử...",
-    imageUrl: "/public/tech-category.jpg",
-    linkCategory: "http://localhost:5173/category"
-
-  },
-  {
-    id: 4,
-    title: "History BookShelf",
-    description: "Tủ sách lịch sự là tủ sách chứa những quyển sách lịch sử...",
-    imageUrl: "/public/tech-category.jpg",
-    linkCategory: "http://localhost:5173/category"
-  },
-  {
-    id: 5,
-    title: "History BookShelf",
-    description: "Tủ sách lịch sự là tủ sách chứa những quyển sách lịch sử...",
-    imageUrl: "/public/tech-category.jpg",
-    linkCategory: "http://localhost:5173/category"
-  },
-  {
-    id: 6,
-    title: "History BookShelf",
-    description: "Tủ sách lịch sự là tủ sách chứa những quyển sách lịch sử...",
-    imageUrl: "/public/tech-category.jpg",
-    linkCategory: "http://localhost:5173/category"
-  },
-  {
-    id: 7,
-    title: "History BookShelf",
-    description: "Tủ sách lịch sự là tủ sách chứa những quyển sách lịch sử...",
-    imageUrl: "/public/tech-category.jpg",
-    linkCategory: "http://localhost:5173/category"
-  },
-  {
-    id: 8,
-    title: "History BookShelf",
-    description: "Tủ sách lịch sự là tủ sách chứa những quyển sách lịch sử...",
-    imageUrl: "/public/tech-category.jpg",
-    linkCategory: "http://localhost:5173/category"
-  },
-  {
-    id: 9,
-    title: "History BookShelf",
-    description: "Tủ sách lịch sự là tủ sách chứa những quyển sách lịch sử...",
-    imageUrl: "/public/tech-category.jpg",
-    linkCategory: "http://localhost:5173/category"
-  }
-] 
 
 export default CardSlider;
 
