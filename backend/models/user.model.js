@@ -8,6 +8,7 @@ const UserSchema = new Schema({
     avatar:String,
     MSSV:String,
     Birth:Date,
+    favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
 });
 
 module.exports = mongoose.model("User", UserSchema);  

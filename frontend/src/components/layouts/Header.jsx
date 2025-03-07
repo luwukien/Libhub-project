@@ -32,63 +32,65 @@
 
     {/* Flyout Category */}
 
-    const FlyoutLink = ({ children, href, FlyoutContent }) => {
-      const [open, setOpen] = useState(false);
-    
-      const showFlyout = FlyoutContent && open;
-    
-      return (
-        <div
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
-          className="relative w-fit h-fit"
-        >
-          <a href="/category" className="ct-top-menu-item flex items-center group">
-            {children}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-3 ml-2 transform transition-transform duration-300 group-hover:rotate-180">
-            <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-            <span
-              style={{
-                transform: showFlyout ? "scaleX(1)" : "scaleX(0)",
-              }}
+  const FlyoutLink = ({ children, href, FlyoutContent }) => {
+    const [open, setOpen] = useState(false);
   
-            />
-          </a>
-          <AnimatePresence >
-            {showFlyout && (
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 15 }}
-                style={{ translateX: "-50%" }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="absolute left-1/2 top-12"
-              >
-                <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
-                
-                <FlyoutContent />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      );
-    };
-    // box content flyout
-    const CategoryContent = () => {
-      return (    
-        <div className="h-auto w-[250px] bg-white shadow-xl font-NunitoSans rounded-md">
-          <ul className="font-normal text-base">
-            <li className="ct-flyout-menu"><a href="#">Technology Books</a></li>
-            <li className="ct-flyout-menu"><a href="#">Economy Books</a></li>
-            <li className="ct-flyout-menu"><a href="#">History Books</a></li>
-            <li className="ct-flyout-menu"><a href="#">Language Books</a></li>
-            <li className="ct-flyout-menu"><a href="#">Psychology Books</a></li>
-            <li className="ct-flyout-menu"><a href="#">Philosophy Books</a></li>
-          </ul>
-        </div>
-      );
-    }
+    const showFlyout = FlyoutContent && open;
+  
+    return (
+      <div
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        className="relative w-fit h-fit"
+      >
+        <a href="/category" className="ct-top-menu-item flex items-center group">
+          {children}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-3 ml-2 transform transition-transform duration-300 group-hover:rotate-180">
+          <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+          </svg>
+          <span
+            style={{
+              transform: showFlyout ? "scaleX(1)" : "scaleX(0)",
+            }}
+ 
+          />
+        </a>
+        <AnimatePresence >
+          {showFlyout && (
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 15 }}
+              style={{ translateX: "-50%" }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="absolute left-1/2 top-12 z-100"
+            >
+              <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
+              
+              <FlyoutContent />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+  // box content flying out
+  const CategoryContent = () => {
+    return (    
+      <div className="h-auto w-[250px] bg-white shadow-xl font-NunitoSans rounded-md">
+        <ul className="font-normal text-base">
+          <li className="ct-flyout-menu"><a href="#">Technology Books</a></li>
+          <li className="ct-flyout-menu"><a href="#">Economy Books</a></li>
+          <li className="ct-flyout-menu"><a href="#">History Books</a></li>
+          <li className="ct-flyout-menu"><a href="#">Language Books</a></li>
+          <li className="ct-flyout-menu"><a href="#">Psychology Books</a></li>
+          <li className="ct-flyout-menu"><a href="#">Philosophy Books</a></li>
+        </ul>
+      </div>
+    );
+  }
+
+
 
     return (
       <header className="font-KumbhSans z-50 mx-2 ">

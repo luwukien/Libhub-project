@@ -2,12 +2,29 @@ import React, { useEffect, useState } from "react";
 import Footer from "../../components/layouts/Footer";
 import { Navigate, useNavigate } from "react-router-dom"
 import axiosInstance from "../../utils/axiosInstance";
-import Navbar from "../../components/layouts/Header";
+import Header from "../../components/layouts/Header";
 import TextToggle from "../../components/TextToggle";
+import CardCategory from "../../components/Cards/CardCategory";
+import axios from 'axios';
+import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/CardSlider";
 
 
 const Home = () =>{
+    // fetching data category
+    const [categories, setCategories] = useState([]);
+    const [error, setError] = useState(null);
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/categories");
+        setCategories(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
 
     // get Inforamation user
     const navigate = useNavigate();
@@ -40,20 +57,26 @@ const Home = () =>{
       
     useEffect(() => {
       getUserInfo();  
-      return () => {   
-      };
+        }, []);
+
+        const [showGame, setShowGame] = useState(() => {
+          return localStorage.getItem("unityGameVisible") === "true";
+      });
+  
+      useEffect(() => {
+          localStorage.setItem("unityGameVisible", "true"); // Khi vào HomePage, game sẽ hiển thị
       }, []);
-      
+
     return(
         <>
           <div className="content-wrapper font-NunitoSans">
             <header>
-                  <Navbar userInfo={userInfo} scrollToFooter={scrollToFooter}/>
+                  <Header userInfo={userInfo} scrollToFooter={scrollToFooter}/>
               </header>
       
               <main className="">
-                <div className="">
-                  Game
+                <div className="rounded-lg">
+                {showGame && <GameCard />}
                 </div> {/*End game*/}
 
                 <div className="bg-gray-100 h-auto">

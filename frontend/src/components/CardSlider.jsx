@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CardCategory from "./CardCategory/CardCategory";
+import CardCategory from "./Cards/CardCategory";  
 import axios from 'axios';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";

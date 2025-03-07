@@ -9,6 +9,9 @@ const User = require("./models/user.model");
 const Book = require("./models/book.model");
 const { authenticateToken } = require("./utilities");
 
+const upload = require("./multer");
+const fs = require("fs");
+const path = require("path");
 
 mongoose.connect(config.connectionString);
 
@@ -114,14 +117,17 @@ app.post("/add-book", authenticateToken, async (req, res) => {
     const { userId } = req.user;
     req.body.userId = userId;
 
-    if (!req.body.title || !req.body.category || !req.body.story || !req.body.date || !req.body.imageUrl) {
+    if (!req.body.title || !req.body.author || !req.body.category || !req.body.story || !req.body.date || !req.body.imageUrl) {
         return res.status(400).json({ error: true, message: "All fields are required" });
     }
 
-    const parsedVisitedDate = new Date(parseInt(req.body.visitedDate));
-    req.body.visitedDate = parsedVisitedDate;
+    const parsedDate = new Date(parseInt(req.body.date));
+    req.body.date = parsedDate;
     try {
-        const book = new Book(req.body);
+        const book = new Book({
+            ...req.body,
+            favouriteCount: 0,
+        });
 
         await book.save();
         res.status(201).json({ story: book, message: "Added Successfully" });
@@ -131,7 +137,190 @@ app.post("/add-book", authenticateToken, async (req, res) => {
 
 });
 
+//get book
 
+app.get("/get-all-book", authenticateToken, async (req, res) => {
+    const{ userId } = req.user;
+    try {
+        const books = await Book.find({}).sort({ favouriteCount: -1 });
+        const user = await User.findById(userId);
+
+        const booksWithFavourite = books.map(book => {
+            const isFavourite = user.favourites.includes(book._id);
+            return { ...book.toObject(), isFavourite };
+        });
+        res.status(200).json({ stories: booksWithFavourite });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+//upload book cover
+app.post("/image-upload", upload.single("image"), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.
+                status(400)
+                .json({ error: true, message: "No image uploaded" });
+        }
+
+        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+        res.status(201).json({ imageUrl });
+
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+// Upload image URL
+app.post("/image-upload-url", async (req, res) => {
+    try {
+        const { imageUrl } = req.body;
+        
+        if (!imageUrl) {
+            return res.status(400).json({ error: true, message: "Image URL is required" });
+        }
+
+        if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(imageUrl)) {
+            return res.status(400).json({ error: true, message: "Invalid image URL format" });
+        }
+        res.status(201).json({ imageUrl });
+
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+
+//Delete image from uploads folder
+app.delete("/delete-image", async (req, res) => {
+    const { imageUrl } = req.query;
+    if (!imageUrl) {
+        return res
+            .status(400)
+            .json({ error: true, message: "imageUrl is required" });
+    }
+    try {
+        const filename = path.basename(imageUrl);
+        const filePath = path.join(__dirname, 'uploads', filename);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            return res.status(200).json({ message: "Image delete successfully" });
+        } else {
+            return res.status(200).json({ message: "Image not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+
+
+//Edit Book
+app.put("/edit-book/:id", authenticateToken, async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.user;
+
+    if (!req.body.title || !req.body.category || !req.body.story || !req.body.date) {
+        return res.status(400).json({ error: true, message: "All fields are required" });
+    }
+
+    const parsedDate = new Date(parseInt(req.body.date));
+    try {
+        const book = await Book.findOne({ _id: id });
+
+        if (!book) {
+            return res.status(400).json({ error: true, message: "Book not found" });
+        }
+        const placeholderImgUrl = `http://localhost:8000/assets/placeholder.png`;
+
+        book.title = req.body.title;
+        book.story = req.body.story;
+        book.category = req.body.category;
+        book.imageUrl = req.body.imageUrl || placeholderImgUrl;
+        book.date = parsedDate;
+        book.remainingBook = req.body.remainingBook;
+
+        await book.save();
+        res.status(200).json({ story: book, message: 'Update successful' });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+
+});
+
+//Update Is Favourite
+app.put("/update-is-favourite/:id", authenticateToken, async (req, res) => {
+    const { id } = req.params; 
+    const { userId } = req.user; 
+
+    try {
+        const book = await Book.findOne({ _id: id});
+        if (!book) {
+            return res.status(404).json({ error: true, message: "Book not found" });
+        }
+
+        
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: true, message: "User not found" });
+        }
+
+        const isAlreadyFavourite = user.favourites.includes(id);
+        let updatedFavourite;
+        if (isAlreadyFavourite) {
+            user.favourites = user.favourites.filter(bookId => bookId.toString() !== id);
+            updatedFavourite = false;
+            book.favouriteCount = Math.max(0, book.favouriteCount - 1);
+        } else {
+            user.favourites.push(id);
+            updatedFavourite = true;
+            book.favouriteCount += 1;
+        }
+
+        await user.save();
+        await book.save();
+
+        res.status(200).json({
+            story: true,
+            message: "Favourite status updated successfully",
+        });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+//Delete Book
+app.delete("/delete-book/:id", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    const { id } = req.params;
+
+    try {
+        const book = await Book.findOne({ _id: id });
+        //console.log(book);
+        if (!book) {
+            return res.status(404).json({ error: true, message: "Book not found" });
+        }
+        await book.deleteOne({ _id: id });
+
+        const imageUrl = book.imageUrl;
+        const filename = path.basename(imageUrl);
+
+        const filePath = path.join(__dirname, 'uploads', filename);
+
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error("Failed to delete image file:", err);
+            }
+        });
+        res.status(200).json({ error: "Book delete successfully" });
+
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
 
 app.listen(8000);
 module.exports = app;
