@@ -81,13 +81,13 @@ const Home = () => {
               Virtual Library
             </div>
             <div className="rounded-lg mt-3">
-              {showGame && <GameCard />}
+              {/* {showGame && <GameCard />} */}
             </div> 
           </div> {/*End game*/}
 
           <div className="bg-gray-100 h-auto">
             <div className="p-5 " id='about'>
-              <div className="ct-subheadline ">
+              <div className="ct-subheadline">
                 What is the <span className="text-pornhub-200 ml-2 mr-2">Libhub</span> product?
               </div>
               <div className="flex items-center justify-center font-medium max-w-5xl mx-auto mb-3">

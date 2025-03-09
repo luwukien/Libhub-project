@@ -27,23 +27,24 @@ function TextToggle() {
       </div>
       {isExpanded && (
         <div>
-          <div className='flex items-center justify-center font-medium max-w-5xl mx-auto mb-3'>
+          <div className='flex items-center justify-center font-medium max-w-5xl mx-auto mb-3 px-4 sm:px-6 lg:px-8'>
             <p>
               We are BoyFóur from Team 4 JS Club. With Libhub, we bridge technology and education, helping students access academic materials anytime, anywhere. Meet our team!
             </p>
           </div>
-          <hr className='border-x border-pornhub-200 my-4 mx-auto w-28 ' />
           <div>
-            <div className='flex justify-center gap-10'>
+            <hr className='border-pornhub-200 my-4 mx-auto w-28 sm:w-40 md:w-56' />
+            <div className='flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8'>
               {teamMembers.slice(0, 4).map((member, index) => (
-                <div key={index} className='text-center'>
+                <div key={index} className='text-center w-18 sm:w-20 md:w-24'>
                   <img src={member.image} alt={member.name} className='ct-avatar' />
                   <p className='text-xs font-bold text-gray-600 mt-1'>{member.name}</p>
                   <p className='text-xs font-semibold text-gray-400'>{member.role}</p>
                 </div>
               ))}
             </div>
-            <div className='flex justify-center gap-10 mt-1'>
+
+            <div className='flex flex-wrap justify-center gap-10 mt-1'>
               {teamMembers.slice(4).map((member, index) => (
                 <div key={index + 4} className='text-center'>
                   <img src={member.image} alt={member.name} className='ct-avatar' />
