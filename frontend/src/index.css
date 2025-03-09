@@ -95,3 +95,6 @@
   @apply flex justify-center items-center font-extrabold text-2xl sm:text-3xl lg:text-4xl pt-6 pb-9;
 }
 
+.ct-avatar {
+  @apply w-20 h-20 rounded-full object-cover block mx-auto hover:translate-y-1 hover:scale-105 duration-300;
+}

@@ -119,7 +119,7 @@
           {/* Menu */}
           <ul id="ct-top-menu" className="basis-5/12 sm:ml-2 lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
             <li><a className="ct-top-menu-item" href="/home">Home</a></li>
-            <li><a className="ct-top-menu-item" onClick={scrollToAbout}>About</a></li>
+            <li><a className="ct-top-menu-item" onClick={scrollToAbout}>About </a></li>
             <li>
               <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
                   Category

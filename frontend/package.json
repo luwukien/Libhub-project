@@ -8,9 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dev:frontend": "cd D:\\Project\\ClubProject\\lib-hub-project\\frontend&& vite",
-    "dev:backend": "cd D:\\Project\\ClubProject\\lib-hub-project\\backend && node index.js",
-    "dev:mock-api": "D:\\Project\\ClubProject\\lib-hub-project\\backend && npx json-server db.json",
+    "dev:frontend": "cd D:\\Project\\ClubProject\\LibHub\\frontend&& vite",
+    "dev:backend": "cd D:\\Project\\ClubProject\\LibHub\\backend && node index.js",
+    "dev:mock-api": "D:\\Project\\ClubProject\\LibHub\\backend && npx json-server db.json",
     "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:mock-api\""
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "concurrently": "^9.1.2",
     "framer-motion": "^12.4.7",
     "moment": "^2.30.1",
+    "mongoose": "^8.12.1",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-day-picker": "^9.5.1",

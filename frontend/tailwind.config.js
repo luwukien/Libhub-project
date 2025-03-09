@@ -11,7 +11,7 @@ export default {
         secondary: "#EF863E",
         pornhub: { 
           200: '#ff9900',
-          300: '#ffbb00',
+          300: '#ffa31a',
         }
       },
       fontFamily: {

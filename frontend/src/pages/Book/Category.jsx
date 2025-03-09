@@ -8,7 +8,7 @@ import Modal from 'react-modal';
 import AddEditBook from "./AddEditBook";
 import { ToastContainer, toast } from 'react-toastify';
 import Footer from "../../components/layouts/Footer";
-import ViewBook from "../Home/ViewBook";
+import ViewBook from "./ViewBook";
 import "./styles.css";
 
 const Category = () => {

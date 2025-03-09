@@ -7,116 +7,124 @@ import TextToggle from "../../components/TextToggle";
 import CardCategory from "../../components/Cards/CardCategory";
 import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
-import CardSlider from "../../components/CardSlider";
+import CardSlider from "../../components/Cards/CardSlider";
 
 
-const Home = () =>{
-    // fetching data category
-    const [categories, setCategories] = useState([]);
-    const [error, setError] = useState(null);
+const Home = () => {
+  // fetching data category
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/categories");
-        setCategories(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/categories");
+      setCategories(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  // get Inforamation user
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState(null);
+
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      if (response.data && response.data.user) {
+        setUserInfo(response.data.user);
       }
-    };
-
-    // get Inforamation user
-    const navigate = useNavigate();
-    const [userInfo, setUserInfo] = useState(null);
-
-    const getUserInfo = async () => {
-      try{
-        const response = await axiosInstance.get("/get-user");
-        if(response.data && response.data.user) {
-            setUserInfo(response.data.user);
-        }
-      } catch(error) {
-          if (error.response.status === 401) {
-              localStorage.clear();
-              navigate("/home");
-          }
-        }
-      };
-
-      //scroll 
-      const scrollToFooter = () => {
-        const footer = document.getElementById("footer");
-        footer.scrollIntoView({behavior: "smooth"});
+    } catch (error) {
+      if (error.response.status === 401) {
+          rage.clear();
+        navigate("/home");
       }
+    }
+  };
 
-      const scrollToAbout = () => {
-        const about = document.getElementById("about");
-        about.scrollIntoView({behavior: "smooth"});
-      }
-      
-    useEffect(() => {
-      getUserInfo();  
-        }, []);
+  //scroll 
+  const scrollToFooter = () => {
+    const footer = document.getElementById("footer");
+    footer.scrollIntoView({ behavior: "smooth" });
+  }
 
-        const [showGame, setShowGame] = useState(() => {
-          return localStorage.getItem("unityGameVisible") === "true";
-      });
-  
-      useEffect(() => {
-          localStorage.setItem("unityGameVisible", "true"); // Khi vào HomePage, game sẽ hiển thị
-      }, []);
+  const scrollToAbout = () => {
+    const about = document.getElementById("about");
+    about.scrollIntoView({ behavior: "smooth" });
+  }
 
-    return(
-        <>
-          <div className="content-wrapper font-NunitoSans">
-            <header>
-                  <Header userInfo={userInfo} scrollToFooter={scrollToFooter}/>
-              </header>
-      
-              <main className="">
-                <div className="rounded-lg">
-                {showGame && <GameCard />}
-                </div> {/*End game*/}
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
-                <div className="bg-gray-100 h-auto">
-                  <div className="p-5">
-                      <div className="ct-subheadline ">
-                        What is the <span className="text-pornhub-200 ml-2 mr-2">Libhub</span> product?
-                      </div>
-                    <div className="flex items-center justify-center font-medium">
-                      <TextToggle scrollToAbout={scrollToAbout}/>
-                    </div> 
-                  </div> 
-                </div> {/*End about*/}
-                
-                <div className="bg-white">
-                  <div className="p-9">
-                    <div className="ct-subheadline">
-                      Categories
-                    </div> 
-                    {/* Render CardCategories and CardSlider from data */}
-                    <CardSlider />
-                  </div>
-                </div>{/*End category-previous*/}
+  const [showGame, setShowGame] = useState(() => {
+    return localStorage.getItem("unityGameVisible") === "true";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("unityGameVisible", "true"); // Khi vào HomePage, game sẽ hiển thị
+  }, []);
+
+  return (
+    <>
+      <div className="content-wrapper font-NunitoSans">
+        <header>
+          <Header userInfo={userInfo} scrollToFooter={scrollToFooter} scrollToAbout={scrollToAbout} />
+        </header>
+
+        <main className="">
+          <div>
+            <div className="ct-subheadline">
+              Virtual Library
+            </div>
+            <div className="rounded-lg mt-3">
+              {showGame && <GameCard />}
+            </div> 
+          </div> {/*End game*/}
+
+          <div className="bg-gray-100 h-auto">
+            <div className="p-5 " id='about'>
+              <div className="ct-subheadline ">
+                What is the <span className="text-pornhub-200 ml-2 mr-2">Libhub</span> product?
+              </div>
+              <div className="flex items-center justify-center font-medium max-w-5xl mx-auto mb-3">
+                <p className=''>
+                  Libhub stands for Library Hub. This is an innovative improvement to the schools library system, designed to enhance students learning experience. It simplifies the search for academic resources, making it easier to find relevant materials. Libhub, simplifies resource searching and provides a virtual library simulation, making it easier for students to access and explore academic materials. We aim to optimize UI/UX to make the library more user-friendly and interesting.
+                </p>
+              </div>
+              <TextToggle />
+            </div>
+          </div> {/*End about*/}
+
+          <div className="bg-white">
+            <div className="p-9">
+              <div className="ct-subheadline">
+                Categories
+              </div>
+              {/* Render CardCategories and CardSlider from data */}
+              <CardSlider />
+            </div>
+          </div>{/*End category-previous*/}
 
 
-                <div className="bg-gray-100">
-                  <div className="p-9">
-                    <div className="ct-subheadline">
-                      Hot Books
-                    </div>
-                    
-                  </div>
-                </div> {/*End hot-book*/}           
+          <div className="bg-gray-100">
+            <div className="p-9">
+              <div className="ct-subheadline">
+                Hot Books
+              </div>
+            </div>
+          </div> {/*End hot-book*/}
 
-              </main> {/*End Body*/}
+        </main> {/*End Body*/}
 
-          </div> {/* End content-wrapper */}
+      </div> {/* End content-wrapper */}
 
-          <Footer />
-        </>
-    )
+      <Footer />
+    </>
+  )
 }
 
 export default Home
