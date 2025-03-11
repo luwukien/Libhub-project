@@ -2,11 +2,32 @@ import React, { useState, useEffect, useRef } from "react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import SearchBar from "../Input/SearchBar";
 
-const Header = ({ userInfo }) => {
+
+const Header = ({ userInfo,
+  searchQuery,
+  setSearchQuery,
+  onSearchNote,
+  handleClearSearch
+
+ }) => {
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  const handleSearch = () => {
+  if (searchQuery.trim()) {
+    navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+  }
+};
+
+  const onClearSearch = () => {
+    handleClearSearch();
+    setSearchQuery("");
+  };
+
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -113,19 +134,23 @@ const Header = ({ userInfo }) => {
             />
           </a>
         </div>
-        <div className="input-field relative max-w-md w-full ml-4">
-          <button className="icon-search absolute top-1/2 -translate-y-1/2 flex justify-center items-center h-full w-12 hover:text-pornhub-200 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-          </button>
-          <input
-            type="text"
-            placeholder="Title book, author, ISBN, ..."
-            className="w-full h-[40px] p-4 pl-12 rounded-full text-black focus:outline-none bg-gray-200 text-sm"
+
+        {/* Search Bar */}
+        {isToken && (
+        <>
+          <SearchBar 
+            value={searchQuery}
+            onChange={({ target }) => {
+              setSearchQuery(target.value);
+            }}
+            handleSearch={handleSearch}
+            onClearSearch={onClearSearch}
           />
-        </div>
-        <ul id="ct-top-menu" className="basis-1/2 sm:ml-2 lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap">
+        </>
+        )}
+
+        {/* Menu */}
+        <ul id="ct-top-menu" className="basis-1/2 sm:ml-2 lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
           <li><a className="ct-top-menu-item" href="/home">Home</a></li>
           <li><a className="ct-top-menu-item" href="#">About</a></li>
           <li>

@@ -19,6 +19,10 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 
+function removeAccents(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 //Creat Account
 app.post("/signup", async (req, res) => {
     const { fullName, email, password, Image } = req.body;
@@ -72,6 +76,7 @@ app.post("/login", async (req, res) => {
         return res.status(400).json({ message: "Email and Password are required" });
     }
     const user = await User.findOne({ email });
+    
     if (!user) {
         return res.status(400).json({ message: "User not found" });
     }
@@ -101,7 +106,13 @@ app.post("/login", async (req, res) => {
 app.get("/get-user", authenticateToken, async (req, res) => {
     const { userId } = req.user
     const isUser = await User.findOne({ _id: userId });
-    //console.log(userId, "\n");
+
+    if(isUser._id == "67c555f027c03ae03a6533e1") {
+        isUser.isAdmin = true;
+    }else{
+        isUser.isAdmin = false;
+    }
+    
     if (!isUser) {
         return res.sendStatus(401);
     }
@@ -150,6 +161,25 @@ app.get("/get-all-book", authenticateToken, async (req, res) => {
             return { ...book.toObject(), isFavourite };
         });
         res.status(200).json({ stories: booksWithFavourite });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+app.get("/get-book/:id", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    const { id } = req.params;
+
+    try {
+        const book = await Book.findById(id);
+        if (!book) {
+            return res.status(404).json({ error: true, message: "Book not found" });
+        }
+
+        const user = await User.findById(userId);
+        const isFavourite = user.favourites.includes(book._id);
+
+        res.status(200).json({ story: { ...book.toObject(), isFavourite } });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
@@ -223,7 +253,7 @@ app.put("/edit-book/:id", authenticateToken, async (req, res) => {
     const { id } = req.params;
     const { userId } = req.user;
 
-    if (!req.body.title || !req.body.category || !req.body.story || !req.body.date) {
+    if (!req.body.title || !req.body.category || !req.body.author || !req.body.story || !req.body.date) {
         return res.status(400).json({ error: true, message: "All fields are required" });
     }
 
@@ -239,6 +269,7 @@ app.put("/edit-book/:id", authenticateToken, async (req, res) => {
         book.title = req.body.title;
         book.story = req.body.story;
         book.category = req.body.category;
+        book.author = req.body.author;
         book.imageUrl = req.body.imageUrl || placeholderImgUrl;
         book.date = parsedDate;
         book.remainingBook = req.body.remainingBook;
@@ -317,6 +348,38 @@ app.delete("/delete-book/:id", authenticateToken, async (req, res) => {
         });
         res.status(200).json({ error: "Book delete successfully" });
 
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+//Search Book
+
+app.get("/search", authenticateToken, async (req, res) => {
+    const { query } = req.query;
+    const { userId } = req.user;
+
+    if (!query) {
+        return res.status(404).json({ error: true, message: "query is required" });
+    }
+    // Hàm loại bỏ dấu
+    
+    removeAccents(req.query.query);
+    const regex = new RegExp(req.query.query, "i");
+
+    try {
+        const searchResults = await Book.find({
+            $or: [
+                { title: regex },
+                { titleNoDiacritics: regex },
+                { story: regex },
+                { storyNoDiacritics: regex },
+            ],
+        }).sort({ isFavourite: -1 });
+
+
+
+        res.status(200).json({ stories: searchResults });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }

@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import React from "react";
-import { GameProvider } from "./utils/GameProvider";
 import Login from "./pages/Auth/Login"
 import SignUp from "./pages/Auth/SignUp";
 import Home from "./pages/Home/Home";
-import Account from "./pages/Auth/Account";
+import Account from "./pages/User/Account";
 import Category from "./pages/Book/Category";
-import GameCard from "./components/Cards/GameCard";
+import BookDetail from "./pages/Book/BookDetail";
+import Search from "./pages/Book/Search"
 
 const App = () => {
 
@@ -20,6 +20,8 @@ const App = () => {
               <Route path="/signup" exact element={<SignUp/>} />
               <Route path="/account" exact element={<Account/>} />
               <Route path="/category" exact element={<Category/>} />
+              <Route path="/book/:id" element={<BookDetail />} />
+              <Route path="/search" element={<Search />} />
             </Routes>
           </Router>
         </div>

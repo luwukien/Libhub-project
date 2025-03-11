@@ -13,6 +13,15 @@ const Home = () =>{
     // fetching data category
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState(null);
+    // get Inforamation user
+    const navigate = useNavigate();
+    const [userInfo, setUserInfo] = useState(null);
+
+
+    const [allBooks, setAllBooks] = useState([]);
+    const [filterType, setFilterType] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    
 
     const fetchData = async () => {
       try {
@@ -25,9 +34,37 @@ const Home = () =>{
       }
     };
 
-    // get Inforamation user
-    const navigate = useNavigate();
-    const [userInfo, setUserInfo] = useState(null);
+    const getAllBooks = async () => {
+      try{
+          const response = await axiosInstance.get("/get-all-book");
+          if(response.data && response.data.stories){
+              setAllBooks(response.data.stories);
+          }
+      }catch(error){
+          console.log("An unexpected error occurred. Please try again");
+      }
+    }
+
+    const onSearchBook = async (query) => {
+      try{
+        const response = await axiosInstance.get("/search", {
+          params:{
+            query,
+          },
+        });
+        if(response.data && response.data.stories){
+          setFilterType("search");
+          setAllBooks(response.data.stories);
+        }
+    }catch(error){
+        setError("An unexpected error occurred.Please try again!")
+      }
+    }
+
+    const handleClearSearch = () => {
+    setFilterType("");
+    getAllBooks();
+    }
 
     const getUserInfo = async () => {
       try{
@@ -45,28 +82,27 @@ const Home = () =>{
 
     useEffect(() => {
       fetchData();
-      getUserInfo();  
+      getUserInfo();
+      getAllBooks();
         }, []);
-
-        const [showGame, setShowGame] = useState(() => {
-          return localStorage.getItem("unityGameVisible") === "true";
-      });
-  
-      useEffect(() => {
-          localStorage.setItem("unityGameVisible", "true"); // Khi vào HomePage, game sẽ hiển thị
-      }, []);
 
     return(
         <>
           <div className="content-wrapper font-NunitoSans">
             <header>
-                  <Header userInfo={userInfo}/>
-              </header>
+              <Header 
+                userInfo={userInfo} 
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                onSearchNote={onSearchBook}
+                handleClearSearch={handleClearSearch}
+              />  
+            </header>
       
               <main className="">
                 <div className="rounded-lg">
-                {showGame && <GameCard />}
-                </div> {/*End game*/}
+                  
+                </div> 
 
                 <div className="bg-gray-100 h-auto">
                   <div className="p-5">
@@ -82,7 +118,7 @@ const Home = () =>{
                       </div>   
                     </div> 
                   </div> 
-                </div> {/*End about*/}
+                </div> 
                 
                 <div className="bg-white">
                   <div className="p-9">

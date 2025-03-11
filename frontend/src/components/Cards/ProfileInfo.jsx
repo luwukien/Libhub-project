@@ -41,10 +41,10 @@ const ProfileInfo = ({userInfo}) => {
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-50">
               <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 100, y: 15 }}
+              animate={{ opacity: 100, y: 0 }}
               exit={{ opacity: 0, y: 15 }}
-              style={{ translateX: "-50%" }}
+              style={{ translateX: "-70%" }}
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="absolute left-1/2 shadow-lg top-0 z-100 rounded-lg"
             >

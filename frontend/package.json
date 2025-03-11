@@ -8,9 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dev:frontend": "cd D:\\LibHubproject\\frontend && vite",
-    "dev:backend": "cd D:\\LibHubproject\\backend && node index.js",
-    "dev:mock-api": "cd D:\\LibHubproject\\backend && npx json-server db.json",
+    "dev:frontend": "cd C:\\Users\\Admin\\Desktop\\LibHub\\frontend && vite",
+    "dev:backend": "cd C:\\Users\\Admin\\Desktop\\LibHub\\backend && node index.js",
+    "dev:mock-api": "cd C:\\Users\\Admin\\Desktop\\LibHub\\backend && npx json-server db.json",
     "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:mock-api\""
   },
   "dependencies": {

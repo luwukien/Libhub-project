@@ -8,16 +8,19 @@ import Modal from 'react-modal';
 import AddEditBook from "./AddEditBook";
 import { ToastContainer, toast } from 'react-toastify';
 import Footer from "../../components/layouts/Footer";
-import ViewBook from "../Home/ViewBook";
+import ViewBook from "../Home/ViewBook";    
 import "./styles.css";
 
 const Category = () => {
 
     const navigate = useNavigate();
-    const [allBooks, setAllBooks] = useState([]);
+    const [error, setError] = useState(null);
     const [userInfo, setUserInfo] = useState(null);
-    const [category, setCategory] = useState("");
-    
+    const [allBooks, setAllBooks] = useState([]);
+
+    const [filterType, setFilterType] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+
     const [openAddEditModal, setopenAddEditModal] = useState({
         isShown: false,
         type:"add",
@@ -27,7 +30,7 @@ const Category = () => {
     const [openViewModal, setOpenViewModal] = useState({
       isShown: false,
       data: null,
-    })
+    });
 
     const getUserInfo = async () => {
         try{
@@ -96,6 +99,27 @@ const Category = () => {
         }
     };
 
+    const onSearchBook = async (query) => {
+        try{
+          const response = await axiosInstance.get("/search", {
+            params:{
+              query,
+            },
+          });
+          if(response.data && response.data.stories){
+            setFilterType("search");
+            setAllBooks(response.data.stories);
+          }
+      }catch(error){
+          setError("An unexpected error occurred.Please try again!")
+        }
+    }
+  
+    const handleClearSearch = () => {
+        setFilterType("");
+        getAllBooks();
+    }
+
     useEffect(() => {
         getAllBooks();
         getUserInfo(); 
@@ -107,9 +131,15 @@ const Category = () => {
     )
 
 
-  return (
+  return ( 
     <>
-        <Header className="absolute left-1/2 top-full -translate-x-1/2 w-[250px] bg-white shadow-xl rounded-md z-[100]" userInfo={userInfo}/>
+        <Header className="absolute left-1/2 top-full -translate-x-1/2 w-[250px] bg-white shadow-xl rounded-md z-[100]" 
+            userInfo={userInfo}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onSearchNote={onSearchBook}
+            handleClearSearch={handleClearSearch}
+        />
               <div className="container mx-auto py-10">
                 <div className="flex gap-7">
                     <div className="flex-1">
@@ -127,7 +157,7 @@ const Category = () => {
                                         remainingBook={item.remainingBook}
                                         isFavourite={item.isFavourite}
                                         onEdit={() => handleEdit(item)}
-                                        onClick={() => handleViewBook(item)}
+                                        onClick={() => userInfo?.role === "admin" ? handleViewBook(item) : navigate(`/book/${item._id}`)}
                                         onFavouriteClick={() => updateIsFavourite(item)}
                                         />
                                     );
@@ -139,6 +169,8 @@ const Category = () => {
                     </div>
                 </div>
             </div>
+            
+            <div>
             <Modal 
               isOpen={openAddEditModal.isShown}
               onRequestClose={() => {}}
@@ -159,7 +191,7 @@ const Category = () => {
                 }}
                 getAllBooks={getAllBooks} 
             />
-        </Modal>
+            </Modal>
         
         <Modal 
               isOpen={openViewModal.isShown}
@@ -175,6 +207,7 @@ const Category = () => {
             >
               <ViewBook 
                 bookInfo={openViewModal.data || null}
+                userInfo={userInfo}
                 onClose={() => {
                     setOpenViewModal((prevState) => ({ ...prevState, isShown: false}));
                 }}
@@ -184,21 +217,26 @@ const Category = () => {
                 }}
                 onDeleteClick={() => {
                     deleteBook(openViewModal.data || null);
+                    
                 }}
+                isAdmin={userInfo?.role === "admin"}
               />
             </Modal>
-
-        <button
-        className="w-16 h-16 flex items-center justify-center rounded-full bg-black hover:bg-pornhub-200 fixed right-10 bottom-10"
-        onClick={() => {
-            setopenAddEditModal({isShown: true, type: "add", data: null});
-        }}
-        >
-            <MdAdd className="text-[32px] text-white"/>
-        </button>
-
-        <ToastContainer />
-
+            
+            {userInfo?.role === "admin" && (
+            <button
+                className="w-16 h-16 flex items-center justify-center rounded-full bg-black hover:bg-pornhub-200 fixed right-10 bottom-10"
+                onClick={() => {
+                setopenAddEditModal({ isShown: true, type: "add", data: null });
+                }}
+            >
+                <MdAdd className="text-[32px] text-white" />
+            </button>
+            )}
+        
+        <ToastContainer />  
+        </div>
+        
         <Footer />
     </>
   );

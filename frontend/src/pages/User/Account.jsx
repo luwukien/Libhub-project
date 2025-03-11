@@ -5,18 +5,30 @@ import Navbar from "../../components/layouts/Header";
 import Footer from "../../components/layouts/Footer";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import EditUser from "./EditUser";
+import ViewUser from "./ViewUser";
+import Modal from 'react-modal';
+import { ToastContainer, toast } from 'react-toastify';
 
 const GetUser = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
 
+    const [openAddEditModal, setopenAddEditModal] = useState({
+        isShown: false,
+        type:"add",
+        data:null,
+    });
+
+    const [openViewModal, setOpenViewModal] = useState({
+      isShown: false,
+      data: null,
+    });
+
   const getUserInfo = async () => {
     try {
       const response = await axiosInstance.get("/get-user");
-      if(response.data.user._id === "67c555f027c03ae03a6533e1"){
-        response.data.user.isAdmin = true;
-      }
       if (response.data && response.data.user) {
         setUserInfo(response.data.user);
       }
@@ -26,6 +38,14 @@ const GetUser = () => {
         navigate("/home");
       }
     }
+  };
+
+  const handleEdit = () => {
+    setopenAddEditModal({ isShown: true, type: "edit", data: userInfo});
+  };
+  
+  const handleViewUser = () => {
+  setOpenViewModal({isShown: true});
   };
 
   useEffect(() => {
@@ -51,6 +71,7 @@ const GetUser = () => {
       <header>
         <Navbar userInfo={userInfo} />
       </header>
+
       <main className="flex flex-col lg:flex-row items-start justify-center min-h-screen p-4 bg-gradient-to-r from-gray-100 to-gray-300" style={{ paddingTop: '80px' }}>
         {userInfo ? (
           <>
@@ -67,7 +88,7 @@ const GetUser = () => {
                   
                   <div className="absolute -bottom-20 left-4 w-40 h-40 rounded-full bg-white border-4 border-white" data-aos="fade-up" data-aos-once="false">
                     <img
-                      src={userInfo.avatar || "https://placehold.co/200x200"}
+                      src={userInfo.avatar}
                       alt="User Avatar"
                       className="w-full h-full rounded-full object-cover"
                     />
@@ -89,11 +110,7 @@ const GetUser = () => {
                     </div>
                     <div className="flex items-center text-gray-600 text-lg">
                       <i className="fas fa-phone mr-4 w-6"></i>
-                      <span>{userInfo.phone || "Phone number: 0981583316"}</span>
-                    </div>
-                    <div className="flex items-center text-gray-600 text-lg">
-                      <i className="fas fa-map-marker-alt mr-4 w-6"></i>
-                      <span>{userInfo.address || "Address: Son Tay, Ha Noi"}</span>
+                      <span>{userInfo.phoneNumber}</span>
                     </div>
                     <div className="flex items-center text-gray-600 text-lg">
                       <i className="fas fa-info-circle mr-4 w-6"></i>
@@ -112,7 +129,6 @@ const GetUser = () => {
                   <li>Activity 4</li>
                 </ul>
               </div>
-              {userInfo.isAdmin ? <div>1</div> : <div>0</div>}
             </div>
             
             <div className="w-full lg:w-1/5 bg-white rounded-lg shadow-lg mt-4 lg:mt-0 lg:ml-4 p-4" data-aos="fade-up" data-aos-once="false">
@@ -130,23 +146,77 @@ const GetUser = () => {
                     <i className="fas fa-book"></i>
                     <span>Book in borrowing</span>
                   </button>
-                  <button className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-start space-x-2" onClick={() => handleNavigation('/account-settings')}>
+                  <button className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-start space-x-2" 
+                    onEdit={() => handleEdit()}
+                    onClick={() => handleViewUser()}
+                  >
                     <i className="fas fa-cog"></i>
                     <span>Account Settings</span>
                   </button>
-                  <button className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-start space-x-2" onClick={() => handleNavigation('/logout')}>
+                  <button className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-start space-x-2" onClick={() => handleNavigation('/login')}>
                     <i className="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                   </button>
                 </div>
               </div>
-              {userInfo.isAdmin ? <div>1</div> : <div>0</div>}
             </div>
           </>
         ) : (
           <p className="text-gray-500 text-lg">Loading user information...</p>
         )}
       </main>
+
+      <div>
+            <Modal 
+              isOpen={openAddEditModal.isShown}
+              onRequestClose={() => {}}
+              style={{
+                  overlay: {
+                      backgroundColor: "rgba(0,0,0,0.2)",
+                      zIndex: 999,
+                  },
+              }}
+              appElement={document.getElementById("root")}
+              className="model-box relative"
+            >
+            <EditUser
+                type={openAddEditModal.type}
+                userInfo={userInfo}
+                onClose={() => {
+                    setopenAddEditModal({ isShown: false, type: "add", data: null});
+                }}
+                getUserInfo={getUserInfo} 
+            />
+            </Modal>
+        
+        <Modal 
+              isOpen={openViewModal.isShown}
+              onRequestClose={() => {}}
+              style={{
+                  overlay: {
+                      backgroundColor: "rgba(0,0,0,0.2)",
+                      zIndex: 999,
+                  },
+              }}
+              appElement={document.getElementById("root")}
+              className="model-box relative"
+            >
+              <ViewUser 
+                userInfo={userInfo}
+                onClose={() => {
+                    setOpenViewModal((prevState) => ({ ...prevState, isShown: false}));
+                }}
+                onEditClick={() => {
+                    setOpenViewModal((prevState) => ({ ...prevState, isShown: false}));
+                    handleEdit(openViewModal.data || null);
+                }}
+                
+              />
+            </Modal>
+        
+        <ToastContainer />  
+        </div>
+
       <Footer />
     </>
   );

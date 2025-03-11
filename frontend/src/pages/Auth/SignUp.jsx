@@ -41,10 +41,10 @@ const SignUp = () => {
         email:email,
         password:password,
       });
-      console.log(response.data);
-      if(response.data && response.data.accsessToken) {
+      if(response.data && response.data.accessToken) {
+        console.log(response.data.accessToken)
         localStorage.setItem("token", response.data.accsessToken);
-        navigate("/home");
+        navigate("/login");
       }
     } catch(error){
       if(error.response && 

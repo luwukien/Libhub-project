@@ -9,6 +9,7 @@ const UserSchema = new Schema({
     MSSV:String,
     Birth:Date,
     favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
+    role: { type: String, enum: ["admin", "user"], default: "user" },
 });
 
 module.exports = mongoose.model("User", UserSchema);  
