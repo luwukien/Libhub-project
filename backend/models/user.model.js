@@ -5,9 +5,9 @@ const UserSchema = new Schema({
     fullName : String,
     email: String,
     password: String,
-    avatar:String,
-    MSSV:String,
-    Birth:Date,
+    avatar:{type: String, default: "http://localhost:8000/assets/placeholder.png"},
+    MSSV:{type: String, default: ""},
+    phoneNumber:{type: Number, default: ""},
     favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
     role: { type: String, enum: ["admin", "user"], default: "user" },
 });

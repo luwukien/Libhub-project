@@ -3,9 +3,11 @@ import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import SearchBar from "../Input/SearchBar";
+import useLogout from "../../utils/useLogout";
+import { useNavigationScroll } from "../../utils/navigationScroll";
 
-
-const Header = ({ userInfo,
+const Header = ({ 
+  userInfo,
   searchQuery,
   setSearchQuery,
   onSearchNote,
@@ -15,6 +17,7 @@ const Header = ({ userInfo,
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const menuRef = useRef(null);
   const navigate = useNavigate();
 
   const handleSearch = () => {
@@ -28,6 +31,9 @@ const Header = ({ userInfo,
     setSearchQuery("");
   };
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const logout = useLogout();
+  const { handleAboutClick, handleContactClick, handleScrollAfterNavigation } = useNavigationScroll();
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -38,12 +44,16 @@ const Header = ({ userInfo,
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
+    handleScrollAfterNavigation();
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [handleScrollAfterNavigation]);
 
   const isToken = localStorage.getItem("token");
   const onLogin = () => {
@@ -150,25 +160,85 @@ const Header = ({ userInfo,
         )}
 
         {/* Menu */}
-        <ul id="ct-top-menu" className="basis-1/2 sm:ml-2 lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
+        <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
           <li><a className="ct-top-menu-item" href="/home">Home</a></li>
-          <li><a className="ct-top-menu-item" href="#">About</a></li>
+          <li><a className="ct-top-menu-item" onClick={handleAboutClick}>About </a></li>
           <li>
             <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
               Category
             </FlyoutLink>
           </li>
-          <li><a className="ct-top-menu-item" href="#">Contact Us</a></li>
+          <li><a className="ct-top-menu-item" onClick={handleContactClick}>Contact Us</a></li>
+
+          {/* Avatar with Dropdown */}
           {isToken ? <ProfileInfo userInfo={userInfo} /> : (<button className="ct-top-menu-item" onClick={onLogin}>Login</button>)}
         </ul>
         <div className="lg:hidden flex items-center cursor-pointer px-3 sm:px-8 ml-auto">
-          <svg id="ct-toggle-top-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+          <svg id="ct-toggle-top-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
+            className="size-6"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
           </svg>
         </div>
+        {/*Mobile Menu*/}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              ref={menuRef}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="ct-top-menu-expand"
+              style={{ padding: "1rem 0" }}
+            >
+              <a href="/home" className="w-full">
+                <li className="ct-top-menu-expand-item">
+                  Home
+                </li>
+              </a>
+              <a className="w-full" onClick={() => { handleAboutClick(); setIsMenuOpen(false); }}>
+                <li className="ct-top-menu-expand-item">
+                  About
+                </li>
+              </a>
+              <a href="/category" className="w-full">
+                <li className="ct-top-menu-expand-item">
+                  Category
+                </li>
+              </a>
+              <a className="w-full" onClick={() => { handleContactClick(); setIsMenuOpen(false); }}>
+                <li className="ct-top-menu-expand-item">
+                  Contact Us
+                </li>
+              </a>
+              <a href="/account" className="w-full">
+                <li className="ct-top-menu-expand-item">
+                  View Profile
+                </li>
+              </a>
+              {isToken ?
+                <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer" onClick={(e) => {
+                  e.stopPropagation();
+                  alert("Log out successfully!");
+                  logout();
+                }}>
+                  Log Out
+                </li> :
+                <a href="/login" className="w-full">
+                  <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
+                    Log In
+                  </li>
+                </a>
+              }
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
   );
 };
+
 
 export default Header;

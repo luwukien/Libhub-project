@@ -8,10 +8,11 @@ import Modal from 'react-modal';
 import AddEditBook from "./AddEditBook";
 import { ToastContainer, toast } from 'react-toastify';
 import Footer from "../../components/layouts/Footer";
-import ViewBook from "../Home/ViewBook";    
+import ViewBook from "./ViewBook";
 import "./styles.css";
 
 const Category = () => {
+
 
     const navigate = useNavigate();
     const [error, setError] = useState(null);
@@ -23,8 +24,8 @@ const Category = () => {
 
     const [openAddEditModal, setopenAddEditModal] = useState({
         isShown: false,
-        type:"add",
-        data:null,
+        type: "add",
+        data: null,
     });
 
     const [openViewModal, setOpenViewModal] = useState({
@@ -33,13 +34,13 @@ const Category = () => {
     });
 
     const getUserInfo = async () => {
-        try{
+        try {
             const response = await axiosInstance.get("/get-user");
-            if(response.data && response.data.user){
+            if (response.data && response.data.user) {
                 setUserInfo(response.data.user);
             }
-        }catch(error){
-            if(error.response.status === 401){
+        } catch (error) {
+            if (error.response.status === 401) {
                 localStorage.clear();
                 navigate("/home");
             }
@@ -47,51 +48,51 @@ const Category = () => {
     };
 
     const getAllBooks = async () => {
-        try{
+        try {
             const response = await axiosInstance.get("/get-all-book");
-            if(response.data && response.data.stories){
+            if (response.data && response.data.stories) {
                 setAllBooks(response.data.stories);
             }
-        }catch(error){
+        } catch (error) {
             console.log("An unexpected error occurred. Please try again");
         }
     }
 
 
     const handleEdit = (data) => {
-        setopenAddEditModal({ isShown: true, type: "edit", data: data});
+        setopenAddEditModal({ isShown: true, type: "edit", data: data });
     };
     const handleViewBook = (data) => {
-      setOpenViewModal({isShown: true, data});
+        setOpenViewModal({ isShown: true, data });
     };
-    
+
     const deleteBook = async (data) => {
         const bookId = data._id;
 
-        try{
+        try {
             const response = await axiosInstance.delete("/delete-book/" + bookId);
             console.log(response.data);
-            if(response.data && response.data.error){
+            if (response.data && response.data.error) {
                 toast.error("Book deleted successfully!", {
                     autoClose: 1000,
-                  });
-                setOpenViewModal((prevState) => ({ ...prevState, isShown : false}));
+                });
+                setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
                 getAllBooks();
             }
-        }catch(error){
+        } catch (error) {
             setError("An unexpected error occurred.Please try again!")
-          }
+        }
     }
 
     const updateIsFavourite = async (bookData) => {
         const bookId = bookData._id;
         try {
             const response = await axiosInstance.put(`/update-is-favourite/${bookId}`);
-            
+
             if (response.data && response.data.story) {
                 toast.success("Update Successfully", {
                     autoClose: 1000,
-                  });
+                });
                 getAllBooks();
             }
         } catch (error) {
@@ -122,12 +123,12 @@ const Category = () => {
 
     useEffect(() => {
         getAllBooks();
-        getUserInfo(); 
+        getUserInfo();
         return () => {
-            
+
         }
 
-        },[]
+    }, []
     )
 
 
@@ -163,7 +164,7 @@ const Category = () => {
                                     );
                                 })}
                             </div>
-                        ): (
+                        ) : (
                             <>Empty Card Here</>
                         )}
                     </div>

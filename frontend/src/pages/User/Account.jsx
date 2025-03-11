@@ -14,6 +14,9 @@ const GetUser = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [allBooks, setAllBooks] = useState([]);
+  const [filterType, setFilterType] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
     const [openAddEditModal, setopenAddEditModal] = useState({
         isShown: false,
@@ -47,6 +50,38 @@ const GetUser = () => {
   const handleViewUser = () => {
   setOpenViewModal({isShown: true});
   };
+  
+  const getAllBooks = async () => {
+    try{
+        const response = await axiosInstance.get("/get-all-book");
+        if(response.data && response.data.stories){
+            setAllBooks(response.data.stories);
+        }
+    }catch(error){
+        console.log("An unexpected error occurred. Please try again");
+    }
+  }
+
+  const onSearchBook = async (query) => {
+    try{
+      const response = await axiosInstance.get("/search", {
+        params:{
+          query,
+        },
+      });
+      if(response.data && response.data.stories){
+        setFilterType("search");
+        setAllBooks(response.data.stories);
+      }
+  }catch(error){
+      setError("An unexpected error occurred.Please try again!")
+    }
+  }
+
+  const handleClearSearch = () => {
+  setFilterType("");
+  getAllBooks();
+  }
 
   useEffect(() => {
     getUserInfo();
@@ -69,7 +104,12 @@ const GetUser = () => {
   return (
     <>
       <header>
-        <Navbar userInfo={userInfo} />
+        <Navbar 
+          userInfo={userInfo}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onSearchNote={onSearchBook}
+          handleClearSearch={handleClearSearch} />
       </header>
 
       <main className="flex flex-col lg:flex-row items-start justify-center min-h-screen p-4 bg-gradient-to-r from-gray-100 to-gray-300" style={{ paddingTop: '80px' }}>

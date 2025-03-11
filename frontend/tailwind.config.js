@@ -11,7 +11,10 @@ export default {
         secondary: "#EF863E",
         pornhub: { 
           200: '#ff9900',
-          300: '#ffbb00',
+          300: '#ffa31a',
+        },
+        gray: {
+          150: '#e5e7eb'
         }
       },
       fontFamily: {
@@ -26,10 +29,7 @@ export default {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateY(0)' },
         },
-      },
-      maxWidth: {
-        'cardCategory' : '21rem',
-      }
+      },  
     },
   },
   plugins: [],

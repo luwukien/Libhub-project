@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import Footer from "../../components/layouts/Footer";
+import Footer from "../../components/layouts/Footer";
 import { Navigate, useNavigate } from "react-router-dom"
 import axiosInstance from "../../utils/axiosInstance";
 import Header from "../../components/layouts/Header";
@@ -7,32 +7,32 @@ import TextToggle from "../../components/TextToggle";
 import CardCategory from "../../components/Cards/CardCategory";
 import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
+import CardSlider from "../../components/Cards/CardSlider";
 
-
-const Home = () =>{
-    // fetching data category
-    const [categories, setCategories] = useState([]);
-    const [error, setError] = useState(null);
+const Home = () => {
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState(null);
     // get Inforamation user
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(null);
 
-
     const [allBooks, setAllBooks] = useState([]);
     const [filterType, setFilterType] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-    
+    const [loading, setLoading] = useState(true);
 
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/categories");
-        setCategories(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
+
+  // fetching data category
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/categories");
+      setCategories(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
 
     const getAllBooks = async () => {
       try{
@@ -66,19 +66,21 @@ const Home = () =>{
     getAllBooks();
     }
 
-    const getUserInfo = async () => {
-      try{
-        const response = await axiosInstance.get("/get-user");
-        if(response.data && response.data.user) {
-            setUserInfo(response.data.user);
-        }
-      } catch(error) {
-          if (error.response.status === 401) {
-              localStorage.clear();
-              navigate("/home");
-          }
-        }
-      };
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      if (response.data && response.data.user) {
+        setUserInfo(response.data.user);
+        
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        
+        rage.clear();
+        navigate("/home");
+      }
+    }
+  };
 
     useEffect(() => {
       fetchData();
@@ -104,57 +106,46 @@ const Home = () =>{
                   
                 </div> 
 
-                <div className="bg-gray-100 h-auto">
-                  <div className="p-5">
-                    <div className="ct-subheadline">
-                      About
-                    </div>
-                    <div className="flex w-11/12">
-                      <div className="flex-1 w-40  font-extrabold text-5xl flex justify-center items-center tracking-wide">
-                        What is <span className="text-pornhub-200 ml-2">Libhub?</span>
-                      </div>
-                      <div className="flex-1 w-64 font-medium">
-                        <TextToggle />
-                      </div>   
-                    </div> 
-                  </div> 
-                </div> 
-                
-                <div className="bg-white">
-                  <div className="p-9">
-                    <div className="ct-subheadline">
-                      Categories
-                    </div> 
-                    <div className="flex flex-wrap justify-center gap-6 min-h-screen">
-                      {/* Render CardCategories from data */}
-                      {categories.map((category, index) => {
-                        return (
-                          <CardCategory
-                          key={index} 
-                          title={category.title}
-                          description={category.description}  
-                          imageUrl={category.imageUrl}
-                          linkCategory={category.linkCategory}
-                          />
-                        );
+          <div className="bg-gray-100 h-auto">
+            <div className="p-5 " id='about'>
+              <div className="ct-subheadline">
+                What is the <span className="text-pornhub-200 ml-2 mr-2">Libhub</span> product?
+              </div>
+              <div className="flex items-center justify-center font-medium max-w-5xl mx-auto mb-3">
+                <p className=''>
+                  Libhub stands for Library Hub. This is an innovative improvement to the schools library system, designed to enhance students learning experience. It simplifies the search for academic resources, making it easier to find relevant materials. Libhub, simplifies resource searching and provides a virtual library simulation, making it easier for students to access and explore academic materials. We aim to optimize UI/UX to make the library more user-friendly and interesting.
+                </p>
+              </div>
+              <TextToggle />
+            </div>
+          </div> {/*End about*/}
 
-                      })}
-                    </div>
-                  </div>
-                </div>{/*End category-previous*/}
+          <div className="bg-white">
+            <div className="p-9">
+              <div className="ct-subheadline">
+                Categories
+              </div>
+              {/* Render CardCategories and CardSlider from data */}
+              <CardSlider />
+            </div>
+          </div>{/*End category-previous*/}
 
 
-                <div className="">
-                  Hot Book
-                </div> {/*End hot-book*/}           
+          <div className="bg-gray-100">
+            <div className="p-9">
+              <div className="ct-subheadline">
+                Hot Books
+              </div>
+            </div>
+          </div> {/*End hot-book*/}
 
-              </main> {/*End Body*/}
+        </main> {/*End Body*/}
 
-          </div> {/* End content-wrapper */}
+      </div> {/* End content-wrapper */}
 
-          {/* <Footer /> */}
-        </>
-    )
+      <Footer />
+    </>
+  )
 }
 
 export default Home

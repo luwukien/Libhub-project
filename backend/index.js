@@ -106,12 +106,6 @@ app.post("/login", async (req, res) => {
 app.get("/get-user", authenticateToken, async (req, res) => {
     const { userId } = req.user
     const isUser = await User.findOne({ _id: userId });
-
-    if(isUser._id == "67c555f027c03ae03a6533e1") {
-        isUser.isAdmin = true;
-    }else{
-        isUser.isAdmin = false;
-    }
     
     if (!isUser) {
         return res.sendStatus(401);
@@ -276,6 +270,37 @@ app.put("/edit-book/:id", authenticateToken, async (req, res) => {
 
         await book.save();
         res.status(200).json({ story: book, message: 'Update successful' });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+
+});
+
+//Edit User
+app.put("/edit-user", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+
+    if (!req.body.fullName || !req.body.password || !req.body.avatar || !req.body.MSSV || !req.body.phoneNumber) {
+        return res.status(400).json({ error: true, message: "All fields are required" });
+    }
+
+    try {
+        const user = await User.findOne({ _id: userId });
+
+        if (!user) {
+            return res.status(400).json({ error: true, message: "User not found" });
+        }
+
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+        user.fullName = req.body.fullName;
+        user.password = hashedPassword;
+        user.MSSV = req.body.MSSV;
+        user.avatar = req.body.avatar;
+        user.phoneNumber = req.body.phoneNumber;
+
+        await user.save();
+        res.status(200).json({ user: user, message: 'Update successful' });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }

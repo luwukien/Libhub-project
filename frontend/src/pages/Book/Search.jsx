@@ -9,8 +9,8 @@ import { MdAdd } from "react-icons/md"
 import Modal from 'react-modal';
 import AddEditBook from "./AddEditBook";
 import { ToastContainer, toast } from 'react-toastify'; 
-import ViewBook from "../Home/ViewBook";
 import "./styles.css";
+import ViewBook from "./ViewBook";
 
 const SearchResult = () => {
     

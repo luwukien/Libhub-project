@@ -15,18 +15,24 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
+    "@glidejs/glide": "^3.7.1",
     "aos": "^2.3.4",
     "axios": "^1.7.9",
     "concurrently": "^9.1.2",
     "framer-motion": "^12.4.7",
     "moment": "^2.30.1",
+    "mongoose": "^8.12.1",
+    "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-day-picker": "^9.5.1",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-modal": "^3.16.3",
     "react-router-dom": "^7.1.5",
-    "react-toastify": "^11.0.5"
+    "react-slick": "^0.30.3",
+    "react-toastify": "^11.0.5",
+    "slick-carousel": "^1.8.1",
+    "swiper": "^11.2.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
