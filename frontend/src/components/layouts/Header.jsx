@@ -5,14 +5,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import useLogout from "../../utils/useLogout";
 import { useNavigationScroll } from "../../utils/navigationScroll";
 
-const Header = ({ userInfo}) => {
+const Header = ({ userInfo }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const menuRef = useRef(null);  
+  const menuRef = useRef(null);
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logout = useLogout();
-  const {handleAboutClick, handleContactClick, handleScrollAfterNavigation} = useNavigationScroll();
+  const { handleAboutClick, handleContactClick, handleScrollAfterNavigation } = useNavigationScroll();
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -20,7 +20,7 @@ const Header = ({ userInfo}) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) { 
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -31,7 +31,7 @@ const Header = ({ userInfo}) => {
     handleScrollAfterNavigation();
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-    };  
+    };
   }, [handleScrollAfterNavigation]);
 
   const isToken = localStorage.getItem("token");
@@ -127,7 +127,7 @@ const Header = ({ userInfo}) => {
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
           <li><a className="ct-top-menu-item" href="/home">Home</a></li>
           <li><a className="ct-top-menu-item" onClick={handleAboutClick}>About </a></li>
-            <li>
+          <li>
             <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
               Category
             </FlyoutLink>
@@ -156,47 +156,47 @@ const Header = ({ userInfo}) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="lg:hidden absolute top-20 left-0 w-full bg-gray-200 flex flex-col items-center gap-5 font-semibold text-lg rounded-xl z-50 shadow-lg"
+              className="ct-top-menu-expand"
               style={{ padding: "1rem 0" }}
-            > 
+            >
               <a href="/home" className="w-full">
-                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer"> 
+                <li className="ct-top-menu-expand-item">
                   Home
                 </li>
               </a>
-              <a className="w-full" onClick={() => {handleAboutClick(); setIsMenuOpen(false); }}>
-                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
+              <a className="w-full" onClick={() => { handleAboutClick(); setIsMenuOpen(false); }}>
+                <li className="ct-top-menu-expand-item">
                   About
                 </li>
               </a>
               <a href="/category" className="w-full">
-                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer"> 
+                <li className="ct-top-menu-expand-item">
                   Category
                 </li>
               </a>
               <a className="w-full" onClick={() => { handleContactClick(); setIsMenuOpen(false); }}>
-                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
+                <li className="ct-top-menu-expand-item">
                   Contact Us
                 </li>
               </a>
               <a href="/account" className="w-full">
-                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
+                <li className="ct-top-menu-expand-item">
                   View Profile
                 </li>
               </a>
-              {isToken ? 
-              <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer" onClick={(e) => {
-                e.stopPropagation();
-                alert("Log out successfully!");
-                logout();
-              }}>
-                Log Out
-              </li> : 
-              <a href="/login" className="w-full">
-                <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
-                  Log In
-                </li>
-              </a>
+              {isToken ?
+                <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer" onClick={(e) => {
+                  e.stopPropagation();
+                  alert("Log out successfully!");
+                  logout();
+                }}>
+                  Log Out
+                </li> :
+                <a href="/login" className="w-full">
+                  <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
+                    Log In
+                  </li>
+                </a>
               }
             </motion.div>
           )}

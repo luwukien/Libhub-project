@@ -14,7 +14,7 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  
+
   // fetching data category
   const fetchData = async () => {
     try {
@@ -39,13 +39,13 @@ const Home = () => {
       }
     } catch (error) {
       if (error.response.status === 401) {
-          rage.clear();
+        rage.clear();
         navigate("/home");
       }
     }
   };
 
-  
+
   useEffect(() => {
     getUserInfo();
   }, []);
@@ -72,7 +72,7 @@ const Home = () => {
             </div>
             <div className="rounded-lg mt-3">
               {/* {showGame && <GameCard />} */}
-            </div> 
+            </div>
           </div> {/*End game*/}
 
           <div className="bg-gray-100 h-auto">
