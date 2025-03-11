@@ -9,13 +9,13 @@ import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
 
-
 const Home = () => {
-  // fetching data category
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  
+  // fetching data category
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:3000/categories");
@@ -45,17 +45,7 @@ const Home = () => {
     }
   };
 
-  //scroll 
-  const scrollToFooter = () => {
-    const footer = document.getElementById("footer");
-    footer.scrollIntoView({ behavior: "smooth" });
-  }
-
-  const scrollToAbout = () => {
-    const about = document.getElementById("about");
-    about.scrollIntoView({ behavior: "smooth" });
-  }
-
+  
   useEffect(() => {
     getUserInfo();
   }, []);
@@ -72,7 +62,7 @@ const Home = () => {
     <>
       <div className="content-wrapper font-NunitoSans">
         <header>
-          <Header userInfo={userInfo} scrollToFooter={scrollToFooter} scrollToAbout={scrollToAbout} />
+          <Header userInfo={userInfo} />
         </header>
 
         <main className="">

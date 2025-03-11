@@ -12,6 +12,9 @@ export default {
         pornhub: { 
           200: '#ff9900',
           300: '#ffa31a',
+        },
+        gray: {
+          150: '#e5e7eb'
         }
       },
       fontFamily: {

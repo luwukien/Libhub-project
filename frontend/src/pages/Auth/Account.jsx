@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import Navbar from "../../components/layouts/Header";
+import Footer from "../../components/layouts/Footer";
 
 const GetUser = () => {
   const navigate = useNavigate();
@@ -54,6 +55,8 @@ const GetUser = () => {
           <p className="text-gray-500 text-lg">Loading user information...</p>
         )}
       </main>
+
+      <Footer />
     </>
   );
 };

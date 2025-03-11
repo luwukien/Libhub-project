@@ -2,15 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import useLogout from "../../utils/useLogout";
+import { useNavigationScroll } from "../../utils/navigationScroll";
 
-
-const Header = ({ userInfo, scrollToFooter, scrollToAbout }) => {
+const Header = ({ userInfo}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const menuRef = useRef(null);  
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-
+  const logout = useLogout();
+  const {handleAboutClick, handleContactClick, handleScrollAfterNavigation} = useNavigationScroll();
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -18,15 +20,19 @@ const Header = ({ userInfo, scrollToFooter, scrollToAbout }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) { 
         setIsDropdownOpen(false);
+      }
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
+    handleScrollAfterNavigation();
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    };  
+  }, [handleScrollAfterNavigation]);
 
   const isToken = localStorage.getItem("token");
   const onLogin = () => {
@@ -66,7 +72,7 @@ const Header = ({ userInfo, scrollToFooter, scrollToAbout }) => {
               exit={{ opacity: 0, y: 15 }}
               style={{ translateX: "-50%" }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute left-1/2 top-12 z-100"
+              className="absolute left-1/2 top-12 z-50"
             >
               <div className="absolute -top-6 left-0 right-0 h-6 bg-transparent" />
 
@@ -94,7 +100,7 @@ const Header = ({ userInfo, scrollToFooter, scrollToAbout }) => {
   }
 
   return (
-    <header className="font-KumbhSans z-50 mx-2 ">
+    <header className="font-KumbhSans z-40 mx-2 ">
       <nav className="flex justify-between items-center relative py-1 font-bold drop-shadow-sm bg-slate-50 h-[90px]">
         {/* Logo */}
         <div className="flex justify-start lg:basis-1/12 lg:mx-auto ">
@@ -104,7 +110,7 @@ const Header = ({ userInfo, scrollToFooter, scrollToAbout }) => {
         </div>
 
         {/* Search Bar */}
-        <div className="basis-1/2 lg:basis-5/12 relative hidden md:flex flex-col items-center text-black text-center ml-4">
+        <div className="basis-1/2 lg:basis-5/12 relative md:flex flex-col items-center text-black text-center ml-4">
           <fieldset className="w-full max-w-3xl items-center mx-auto">
             <div className="relative w-full">
               <button className="icon-search absolute top-1/2 -translate-y-1/2 flex justify-center items-center h-full w-16 hover:text-pornhub-200 hover:transition-colors ">
@@ -120,13 +126,13 @@ const Header = ({ userInfo, scrollToFooter, scrollToAbout }) => {
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
           <li><a className="ct-top-menu-item" href="/home">Home</a></li>
-          <li><a className="ct-top-menu-item" onClick={scrollToAbout}>About </a></li>
-          <li>
+          <li><a className="ct-top-menu-item" onClick={handleAboutClick}>About </a></li>
+            <li>
             <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
               Category
             </FlyoutLink>
           </li>
-          <li><a className="ct-top-menu-item" onClick={scrollToFooter}>Contact Us</a></li>
+          <li><a className="ct-top-menu-item" onClick={handleContactClick}>Contact Us</a></li>
 
           {/* Avatar with Dropdown */}
           {isToken ? <ProfileInfo userInfo={userInfo} /> : (<button className="ct-top-menu-item" onClick={onLogin}>Login</button>)}
@@ -134,22 +140,67 @@ const Header = ({ userInfo, scrollToFooter, scrollToAbout }) => {
 
         {/* Mobile Menu Icon */}
         <div className="lg:hidden flex items-center cursor-pointer px-3 sm:px-8 ml-auto">
-          <svg id="ct-toggle-top-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
-          className="size-6"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          <svg id="ct-toggle-top-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
+            className="size-6"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
           </svg>
         </div>
-        <div className={`absolute sm:hidden top-24 left-0 w-full bg-gray-200 flex flex-col items-center gap-6 font-semibold text-log transform transition-transform rounded-xl  ${isMenuOpen ? "opacity-100" : "opacity-0"}`} style={{transition: "transform 0.3s ease-in-out, opacity 0.3s"}}>
-          <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl  cursor-pointer">Home</li>
-          <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl  cursor-pointer">About</li>
-          <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl  cursor-pointer">Category</li>
-          <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl   cursor-pointer">Contact us</li>
-          <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl   cursor-pointer">Your account</li>
-          <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl  cursor-pointer">Log out</li>
-
-        </div>
+        {/*Mobile Menu*/}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              ref={menuRef}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="lg:hidden absolute top-20 left-0 w-full bg-gray-200 flex flex-col items-center gap-5 font-semibold text-lg rounded-xl z-50 shadow-lg"
+              style={{ padding: "1rem 0" }}
+            > 
+              <a href="/home" className="w-full">
+                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer"> 
+                  Home
+                </li>
+              </a>
+              <a className="w-full" onClick={() => {handleAboutClick(); setIsMenuOpen(false); }}>
+                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
+                  About
+                </li>
+              </a>
+              <a href="/category" className="w-full">
+                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer"> 
+                  Category
+                </li>
+              </a>
+              <a className="w-full" onClick={() => { handleContactClick(); setIsMenuOpen(false); }}>
+                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
+                  Contact Us
+                </li>
+              </a>
+              <a href="/account" className="w-full">
+                <li className="list-none w-full text-center p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
+                  View Profile
+                </li>
+              </a>
+              {isToken ? 
+              <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer" onClick={(e) => {
+                e.stopPropagation();
+                alert("Log out successfully!");
+                logout();
+              }}>
+                Log Out
+              </li> : 
+              <a href="/login" className="w-full">
+                <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
+                  Log In
+                </li>
+              </a>
+              }
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
 
