@@ -13,8 +13,8 @@ function TextToggle() {
     { name: "Ngọc Mai", role: "Takecare", image: "./public/Members/team-member-1.jpg" },
     { name: "Nguyễn Dũng", role: "Takecare", image: "./public/Members/team-member-1.jpg" },
     { name: "Đặng Cường", role: "Frontend-Leader", image: "./public/Members/team-member-1.jpg" },
-    { name: "Trần Dũng", role: "Backend-TechLead", image: "./public/Members/team-member-1.jpg" },
-    { name: "Nguyễn Hiệp", role: "Backend", image: "./public/Members/team-member-1.jpg" },
+    { name: "Lê Dũng", role: "Backend-TechLead", image: "./public/Members/team-member-1.jpg" },
+    { name: "Nguyễn Hiệp", role: "Backend", image: "./public/Members/nguyen-hiep-store.jpg" },
     { name: "Quốc Anh", role: "Frontend", image: "./public/Members/team-member-1.jpg" },
     { name: "Hoàng Thảo", role: "Frontend", image: "./public/Members/team-member-1.jpg" },
     { name: "Lưu Kiên", role: "Frontend", image: "./public/Members/team-member-1.jpg" },
@@ -29,7 +29,7 @@ function TextToggle() {
         <div>
           <div className='flex items-center justify-center font-medium max-w-5xl mx-auto mb-3 px-4 sm:px-6 lg:px-8'>
             <p>
-              We are BoyFóur from Team 4 JS Club. With Libhub, we bridge technology and education, helping students access academic materials anytime, anywhere. Meet our team!
+              We are BoyFốur from Team 4 JS Club. With Libhub, we bridge technology and education, helping students access academic materials anytime, anywhere. Meet our team!
             </p>
           </div>
           <div>

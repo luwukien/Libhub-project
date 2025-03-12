@@ -7,6 +7,7 @@ import Account from "./pages/User/Account";
 import Category from "./pages/Book/Category";
 import BookDetail from "./pages/Book/BookDetail";
 import Search from "./pages/Book/Search"
+import BorrowedBooks from "./pages/Admin/BorrowedBooks";
 
 const App = () => {
 
@@ -22,6 +23,7 @@ const App = () => {
               <Route path="/category" exact element={<Category/>} />
               <Route path="/book/:id" element={<BookDetail />} />
               <Route path="/search" element={<Search />} />
+              <Route path="/admin/borrowedbooks" element={<BorrowedBooks />} />
             </Routes>
           </Router>
         </div>

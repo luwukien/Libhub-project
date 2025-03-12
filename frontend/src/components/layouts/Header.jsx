@@ -127,14 +127,14 @@ const Header = ({
           boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <div className="lg:basis-1/6 lg:mx-auto">
+        <div className="lg:basis-1/6 lg:ml-4">
           <a
-            href="#"
+            href="/home"
             className="inline-flex items-center justify-center w-auto h-auto relative"
           >
             <img
-              className="lg:w-36 md:w-32 w-28 lg:h-auto"
-              src="public/Lib-hub.svg"
+              className="lg:w-20 md:w-32 w-28 lg:h-auto"
+              src="/lib-hub-logo.png"
               alt="Logo-lib-hub"
               style={{
                 transition: "transform 0.3s ease",
@@ -147,16 +147,16 @@ const Header = ({
 
         {/* Search Bar */}
         {isToken && (
-        <>
-          <SearchBar 
-            value={searchQuery}
-            onChange={({ target }) => {
-              setSearchQuery(target.value);
-            }}
-            handleSearch={handleSearch}
-            onClearSearch={onClearSearch}
-          />
-        </>
+        <div className="relative left-[-100px]"> {/* Dịch sang trái */}
+        <SearchBar 
+          value={searchQuery}
+          onChange={({ target }) => {
+            setSearchQuery(target.value);
+          }}
+          handleSearch={handleSearch}
+          onClearSearch={onClearSearch}
+        />
+        </div>
         )}
 
         {/* Menu */}
@@ -219,13 +219,13 @@ const Header = ({
                 </li>
               </a>
               {isToken ?
-                <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer" onClick={(e) => {
-                  e.stopPropagation();
-                  alert("Log out successfully!");
-                  logout();
-                }}>
-                  Log Out
-                </li> :
+                  <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer" onClick={(e) => {
+                    e.stopPropagation();
+                    alert("Log out successfully!");
+                    logout();
+                  }}>
+                    Log Out
+                  </li> :
                 <a href="/login" className="w-full">
                   <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
                     Log In

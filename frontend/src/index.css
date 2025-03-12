@@ -15,6 +15,11 @@
     --rdp-selected-font: bold medium var(--rdp-font-family);
   }
 
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-webkit-credentials-auto-fill-button {
+      display: none;
+  }
+
 @layer base{
 
   html{

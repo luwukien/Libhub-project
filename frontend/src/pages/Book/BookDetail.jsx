@@ -7,6 +7,7 @@ import { TfiAgenda } from "react-icons/tfi";
 import { ToastContainer, toast } from 'react-toastify';
 import { FaHeart } from "react-icons/fa6";
 import Header from "../../components/layouts/Header";
+import Footer from "../../components/layouts/Footer";
 
 const BookDetail = ({ userInfo }) => {
   const { id } = useParams(); 
@@ -87,6 +88,7 @@ const BookDetail = ({ userInfo }) => {
         </div>
       )}
       <ToastContainer />
+      <Footer />
     </div>
   );
 };
