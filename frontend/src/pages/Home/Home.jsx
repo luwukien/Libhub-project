@@ -1,31 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../../components/layouts/Footer";
 import { Navigate, useNavigate } from "react-router-dom"
-import axiosInstance from "../../utils/axiosInstance";
 import Header from "../../components/layouts/Header";
+import Footer from "../../components/layouts/Footer";
+import axiosInstance from "../../utils/axiosInstance";
 import TextToggle from "../../components/TextToggle";
-import CardCategory from "../../components/Cards/CardCategory";
 import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
 
 const Home = () => {
-  const [categories, setCategories] = useState([]);
+  const [items, setItems] = useState({ categories: [], hotBooks: [] });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
-
-  // fetching data category
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/categories");
-      setCategories(response.data);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
 
   // get Inforamation user
   const navigate = useNavigate();
@@ -45,8 +31,33 @@ const Home = () => {
     }
   };
 
-
   useEffect(() => {
+    // fetching data category and hotbook
+    const fetchData = async () => {
+      try {
+        const [categoriesResponse, hotBooksResponse] = await Promise.all([
+          axios.get("http://localhost:3000/categories"),
+          axios.get("http://localhost:3000/categories")
+        ]);
+        setItems({
+          categories: categoriesResponse.data.map(item => ({
+            ...item,
+            variant: 'category',
+            linkCategory: `/category`
+          })),
+          hotBooks: hotBooksResponse.data.map(item => ({
+            ...item,
+            variant: 'hotbook',
+            linkCategory: `/hotbook/`
+          }))
+        });
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+    fetchData();
     getUserInfo();
   }, []);
 
@@ -95,16 +106,17 @@ const Home = () => {
                 Categories
               </div>
               {/* Render CardCategories and CardSlider from data */}
-              <CardSlider />
+              <CardSlider items={items.categories} />
             </div>
           </div>{/*End category-previous*/}
-
 
           <div className="bg-gray-100">
             <div className="p-9">
               <div className="ct-subheadline">
                 Hot Books
               </div>
+              {/* Render CardCategories and CardSlider from data */}
+              <CardSlider items={items.hotBooks} />
             </div>
           </div> {/*End hot-book*/}
 

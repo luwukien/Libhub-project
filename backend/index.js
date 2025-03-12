@@ -78,11 +78,11 @@ app.post("/login", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
         return res.status(400).json({ message: "Inalid Credentials" });
-    } 
+    }
 
     const accessToken = jwt.sign(
         { userId: user.id },
-        
+
         process.env.ACCESS_TOKEN_SECRET,
         {
             expiresIn: "72h",
@@ -140,7 +140,7 @@ app.post("/add-book", authenticateToken, async (req, res) => {
 //get book
 
 app.get("/get-all-book", authenticateToken, async (req, res) => {
-    const{ userId } = req.user;
+    const { userId } = req.user;
     try {
         const books = await Book.find({}).sort({ favouriteCount: -1 });
         const user = await User.findById(userId);
@@ -176,7 +176,7 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
 app.post("/image-upload-url", async (req, res) => {
     try {
         const { imageUrl } = req.body;
-        
+
         if (!imageUrl) {
             return res.status(400).json({ error: true, message: "Image URL is required" });
         }
@@ -253,16 +253,16 @@ app.put("/edit-book/:id", authenticateToken, async (req, res) => {
 
 //Update Is Favourite
 app.put("/update-is-favourite/:id", authenticateToken, async (req, res) => {
-    const { id } = req.params; 
-    const { userId } = req.user; 
+    const { id } = req.params;
+    const { userId } = req.user;
 
     try {
-        const book = await Book.findOne({ _id: id});
+        const book = await Book.findOne({ _id: id });
         if (!book) {
             return res.status(404).json({ error: true, message: "Book not found" });
         }
 
-        
+
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ error: true, message: "User not found" });

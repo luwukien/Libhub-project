@@ -30,7 +30,7 @@ onFavouriteClick,
       >
         <FaHeart className={`icon-btn transition-colors duration-300 ${isFavourite ? "text-red-500" : "text-white"}`}
         />
-      </button>
+      </button> 
 
       <div className="p-4" onClick={onClick}>
         <div className="flex items-center gap-3">
