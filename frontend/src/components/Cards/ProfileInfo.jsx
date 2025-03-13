@@ -2,18 +2,36 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from "framer-motion";
 import useLogout from '../../utils/useLogout';
-const ProfileInfo = ({ userInfo }) => {
+import axiosInstance from '../../utils/axiosInstance';
+
+
+const ProfileInfo = ({ }) => {
 
   const navigate = useNavigate();
-
+  const [userInfo, setUserInfo] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const logout = useLogout();
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
+    console.log(userInfo);
+  };
+
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      if (response.data && response.data.user) {
+        setUserInfo(response.data.user);  
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        navigate("/home");
+      }
+    }
   };
 
   useEffect(() => {
+    getUserInfo();
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
@@ -28,33 +46,38 @@ const ProfileInfo = ({ userInfo }) => {
 
   return (
     <div className="z-50" ref={dropdownRef}>
+      {userInfo &&
       <button onClick={handleDropdownToggle} className=''>
-        <img className="w-[52px] h-[52px] p-1 rounded-full object-cover translate-y-1 " src="public/default-avatar.jpg" alt="avatar-user" />
+        <img className="w-[52px] h-[52px] p-1 rounded-full object-cover translate-y-1" 
+        src={userInfo.avatar} 
+        alt="User Avatar" 
+        />
       </button>
+      }
 
-      {/* Dropdown Menu */}
-      {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-40 rounded-md shadow-lg">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 15 }}
-            style={{ translateX: "-50%" }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="absolute left-1/2 shadow-lg top-0 rounded-lg bg-gray-150"
-          >
-            <button className="block px-4 py-3 w-full text-left text-sm text-black hover:bg-pornhub-300 hover:rounded-lg" onClick={() => { navigate("/account") }}>View Profile</button>
-            <button className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-pornhub-300 cursor-pointer hover:rounded-lg" onClick={(e) => {
-              e.stopPropagation();
-              logout();
-            }}>
-              Logout
-            </button>
-          </motion.div>
+          {/* Dropdown Menu */}
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-50">
+              <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 100, y: 15 }}
+              style={{ translateX: "-30%" }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="absolute left-1/2 shadow-lg top-0 z-100 rounded-lg bg-white"
+            >
+              <button className="block px-4 py-2 w-full text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => {navigate("/account")}}>View Profile</button>
+              <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer" onClick={(e) => {
+                e.stopPropagation();
+                logout();
+              }}>
+                Logout
+              </button>
+              </motion.div>
+            </div>
+          )}
         </div>
-      )}
-    </div>
-  )
+    )
 }
 
 export default ProfileInfo

@@ -57,7 +57,6 @@ const AddEditBook = ({
         toast.success("Book updated successfully", {
           autoClose: 1000,
         });
-        getAllBooks();
         onClose();
       }
 

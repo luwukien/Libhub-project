@@ -1,65 +1,96 @@
-import { useParams } from 'react-router-dom';
-import Header from '../../components/layouts/Header';
-import Footer from '../../components/layouts/Footer';
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import moment from "moment";
+import axiosInstance from "../../utils/axiosInstance";
+import { MdArrowBack } from "react-icons/md";
+import { TfiAgenda } from "react-icons/tfi";
+import { ToastContainer, toast } from 'react-toastify';
+import { FaHeart } from "react-icons/fa6";
+import Header from "../../components/layouts/Header";
+import Footer from "../../components/layouts/Footer";
 
-const BookDetails = () => {
-  const { bookName } = useParams(); // Get parameter from URL
-  const products = [
-    {
-      image: "https://via.placeholder.com/150", // Thay bằng URL hình ảnh thực tế
-      title: "Toán 1",
-      description:
-        "Nhà xuất bản Giáo dục Việt Nam xuất bản Đại học Sư phạm. Tác giả: GS.TSKH Đỗ Đức Thái (Tổng Chủ biên), PGS. TS Đỗ Tiến Đạt (Chủ biên), TS Nguyễn Hòa Anh, TS Trần Thủy Ngân, CN Nguyễn Thị Thanh Sơn",
-      price: "26.900 VNĐ",
-      code: "HOTCO",
-      category: "Sách Giáo Khoa",
-      publisher: "Nhà xuất bản Đại học Sư phạm",
-      authors:
-        "GS.TSKH Đỗ Đức Thái (Tổng Chủ biên), PGS. TS Đỗ Tiến Đạt (Chủ biên), TS Nguyễn Hòa Anh, TS Trần Thủy Ngân, CN Nguyễn Thị Thanh Sơn",
-    },
-    {
-      image: "https://via.placeholder.com/150", // Thay bằng URL hình ảnh khác
-      title: "Toán 2",
-      description:
-        "Nhà xuất bản Giáo dục Việt Nam xuất bản Đại học Sư phạm. Tác giả: GS.TSKH Đỗ Đức Thái (Tổng Chủ biên), PGS. TS Đỗ Tiến Đạt (Chủ biên), TS Nguyễn Hòa Anh, TS Trần Thủy Ngân, CN Nguyễn Thị Thanh Sơn",
-      price: "29.500 VNĐ",
-      code: "HOTCO2",
-      category: "Sách Giáo Khoa",
-      publisher: "Nhà xuất bản Đại học Sư phạm",
-      authors:
-        "GS.TSKH Đỗ Đức Thái (Tổng Chủ biên), PGS. TS Đỗ Tiến Đạt (Chủ biên), TS Nguyễn Hòa Anh, TS Trần Thủy Ngân, CN Nguyễn Thị Thanh Sơn",
-    },
-  ];
+const BookDetails = ({ userInfo }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [bookInfo, setBookInfo] = useState(null);
+
+  const fetchBook = async () => {
+    try {
+      const response = await axiosInstance.get(`/get-book/${id}`);
+      if (response.data && response.data.story) {
+        setBookInfo(response.data.story);
+      }
+    } catch (error) {
+      console.log("An unexpected error occurred. Please try again");
+    }
+  };
+
+  const updateIsFavourite = async () => {
+    try {
+      const response = await axiosInstance.put(`/update-is-favourite/${id}`);
+
+      if (response.data && response.data.story) {
+        toast.success("Update Successfully", {
+          autoClose: 1000,
+        });
+        fetchBook();
+      }
+    } catch (error) {
+      console.log("An unexpected error occurred. Please try again");
+    }
+  };
+
+  useEffect(() => {
+
+    fetchBook();
+  }, [id]);
+
+  if (!bookInfo) return <p>Loading...</p>;
+
   return (
-    <>
-      <div className="content-wrapper font-NunitoSans">
-        <header>
-          <Header />
-        </header> {/*End header */}
+    <div className="">
+      <Header />
+      <button className="btn-back" onClick={() => navigate(-1)}>
+        <MdArrowBack className="text-xl" /> Back
+      </button>
 
-        <main className='bg-[##fffefa] min-h-screen py-8'>
-          <div className='container mx-auto max-w-screen-2xl    '>
-            <div className='product-container'>
+      <h1 className="text-2xl font-bold">{bookInfo.title}</h1>
 
-              <div className='product-main bg-slate-600 '>
-                <div className='bg-black'>
-                  <div>Kiên</div>
-                </div>
-              </div>{/* End product main */}
+      <div className="flex items-center justify-between mt-2">
+        <span className="text-sm text-gray-500">
+          {moment(bookInfo.date).format("Do MMM YYYY")}
+        </span>
 
-              <div className='product-description'>
-                <div></div>
-              </div>{/* End product description */}
+        <div className="inline-flex items-center gap-2 text-sm text-yellow-600 bg-yellow-100 rounded px-2 py-1">
+          <TfiAgenda className="text-sm" />
+          {bookInfo.category?.join(", ")}
+        </div>
+      </div>
 
-            </div> {/* End product-container */}
-          </div> {/* End container */}
-        </main> {/* End main */}
+      <img
+        src={bookInfo.imageUrl}
+        alt={bookInfo.title}
+        className="w-full h-[300px] object-cover rounded-lg mt-4"
+      />
+      <button className="w-6 h-6 flex items-center justify-center bg-white/40 rounded-lg border border-white/30 absolute top-1 right-1"
+        onClick={updateIsFavourite}
+      >
+        <FaHeart className={`icon-btn transition-colors duration-300 ${bookInfo.isFavourite ? "text-red-500" : "text-white"}`}
+        />
+      </button>
 
-        <footer>
-          {/* <Footer /> */}
-        </footer> {/*End footer */}
-      </div>  {/*End content-wrapper */}
-    </>
+      <p className="mt-4 text-gray-700">{bookInfo.story}</p>
+
+      {userInfo?.role === "admin" && (
+        <div className="mt-6 flex gap-3">
+          <button className="btn-edit" onClick={() => navigate(`/edit-book/${id}`)}>Edit Book</button>
+          <button className="btn-delete" onClick={() => deleteBook(bookInfo)}>Delete Book</button>
+        </div>
+      )}
+      <ToastContainer />
+      <Footer />
+    </div>
   );
 };
+
 export default BookDetails;

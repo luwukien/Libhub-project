@@ -2,14 +2,35 @@ import React, { useState, useEffect, useRef } from "react";
 import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import SearchBar from "../Input/SearchBar";
 import useLogout from "../../utils/useLogout";
 import { useNavigationScroll } from "../../utils/navigationScroll";
 
-const Header = ({ userInfo }) => {
+const Header = ({
+  userInfo,
+  searchQuery,
+  setSearchQuery,
+  onSearchNote,
+  handleClearSearch
+
+}) => {
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const menuRef = useRef(null);
   const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
+  const onClearSearch = () => {
+    handleClearSearch();
+    setSearchQuery("");
+  };
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logout = useLogout();
   const { handleAboutClick, handleContactClick, handleScrollAfterNavigation } = useNavigationScroll();
@@ -37,9 +58,7 @@ const Header = ({ userInfo }) => {
   const isToken = localStorage.getItem("token");
   const onLogin = () => {
     navigate("/login");
-  }
-
-  {/* Flyout Category */ }
+  };
 
   const FlyoutLink = ({ children, href, FlyoutContent }) => {
     const [open, setOpen] = useState(false);
@@ -50,7 +69,7 @@ const Header = ({ userInfo }) => {
       <div
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
-        className="relative w-fit h-fit"
+        className="relative w-fit h-fit z-50"
       >
         <a href="/category" className="ct-top-menu-item flex items-center group">
           {children}
@@ -64,7 +83,7 @@ const Header = ({ userInfo }) => {
 
           />
         </a>
-        <AnimatePresence >
+        <AnimatePresence>
           {showFlyout && (
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -83,7 +102,7 @@ const Header = ({ userInfo }) => {
       </div>
     );
   };
-  // box content flying out
+
   const CategoryContent = () => {
     return (
       <div className="h-auto w-[250px] bg-white shadow-xl font-NunitoSans rounded-md">
@@ -97,7 +116,7 @@ const Header = ({ userInfo }) => {
         </ul>
       </div>
     );
-  }
+  };
 
   return (
     <header className="font-KumbhSans z-40 mx-2 ">
@@ -110,18 +129,18 @@ const Header = ({ userInfo }) => {
         </div>
 
         {/* Search Bar */}
-        <div className="basis-1/2 lg:basis-5/12 relative md:flex flex-col items-center text-black text-center ml-4">
-          <fieldset className="w-full max-w-3xl items-center mx-auto">
-            <div className="relative w-full">
-              <button className="icon-search absolute top-1/2 -translate-y-1/2 flex justify-center items-center h-full w-16 hover:text-pornhub-200 hover:transition-colors ">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="size-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                </svg>
-              </button>
-              <input type="text" placeholder="Tittle book, author, ISBN, ..." className="w-full h-3 p-6 pl-16 rounded-full text-black focus:outline-none bg-gray-200 font-NunitoSans font-normal focus:bg-slate-100 focus:outline-pornhub-200 duration-75" />
-            </div>
-          </fieldset>
-        </div>
+        {isToken && (
+          <div className="basis-1/2 lg:basis-5/12 relative md:flex flex-col items-center text-black text-center ml-4"> {/* Dịch sang trái */}
+            <SearchBar
+              value={searchQuery}
+              onChange={({ target }) => {
+                setSearchQuery(target.value);
+              }}
+              handleSearch={handleSearch}
+              onClearSearch={onClearSearch}
+            />
+          </div>
+        )}
 
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
@@ -137,8 +156,6 @@ const Header = ({ userInfo }) => {
           {/* Avatar with Dropdown */}
           {isToken ? <ProfileInfo userInfo={userInfo} /> : (<button className="ct-top-menu-item" onClick={onLogin}>Login</button>)}
         </ul>
-
-        {/* Mobile Menu Icon */}
         <div className="lg:hidden flex items-center cursor-pointer px-3 sm:px-8 ml-auto">
           <svg id="ct-toggle-top-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
             className="size-6"
@@ -203,7 +220,6 @@ const Header = ({ userInfo }) => {
         </AnimatePresence>
       </nav>
     </header>
-
   );
 };
 

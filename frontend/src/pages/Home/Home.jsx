@@ -12,19 +12,57 @@ const Home = () => {
   const [items, setItems] = useState({ categories: [], hotBooks: [] });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
   // get Inforamation user
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
+
+  const [allBooks, setAllBooks] = useState([]);
+  const [filterType, setFilterType] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+
+  const getAllBooks = async () => {
+    try {
+      const response = await axiosInstance.get("/get-all-book");
+      if (response.data && response.data.stories) {
+        setAllBooks(response.data.stories);
+      }
+    } catch (error) {
+      console.log("An unexpected error occurred. Please try again");
+    }
+  }
+
+  const onSearchBook = async (query) => {
+    try {
+      const response = await axiosInstance.get("/search", {
+        params: {
+          query,
+        },
+      });
+      if (response.data && response.data.stories) {
+        setFilterType("search");
+        setAllBooks(response.data.stories);
+      }
+    } catch (error) {
+      setError("An unexpected error occurred.Please try again!")
+    }
+  }
+
+  const handleClearSearch = () => {
+    setFilterType("");
+    getAllBooks();
+  }
 
   const getUserInfo = async () => {
     try {
       const response = await axiosInstance.get("/get-user");
       if (response.data && response.data.user) {
         setUserInfo(response.data.user);
+
       }
     } catch (error) {
       if (error.response.status === 401) {
+
         rage.clear();
         navigate("/home");
       }
@@ -32,7 +70,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // fetching data category and hotbook
     const fetchData = async () => {
       try {
         const [categoriesResponse, hotBooksResponse] = await Promise.all([
@@ -57,34 +94,29 @@ const Home = () => {
         setLoading(false);
       }
     };
+
     fetchData();
     getUserInfo();
-  }, []);
-
-  const [showGame, setShowGame] = useState(() => {
-    return localStorage.getItem("unityGameVisible") === "true";
-  });
-
-  useEffect(() => {
-    localStorage.setItem("unityGameVisible", "true"); // Khi vào HomePage, game sẽ hiển thị
+    getAllBooks();
   }, []);
 
   return (
     <>
       <div className="content-wrapper font-NunitoSans">
         <header>
-          <Header userInfo={userInfo} />
-        </header> {/*End Header*/}
+          <Header
+            userInfo={userInfo}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onSearchNote={onSearchBook}
+            handleClearSearch={handleClearSearch}
+          />
+        </header>
 
         <main className="">
-          <div>
-            <div className="ct-subheadline">
-              Virtual Library
-            </div>
-            <div className="rounded-lg mt-3">
-              {/* {showGame && <GameCard />} */}
-            </div>
-          </div> {/*End game*/}
+          <div className="rounded-lg">
+
+          </div>
 
           <div className="bg-gray-100 h-auto">
             <div className="p-5 " id='about'>

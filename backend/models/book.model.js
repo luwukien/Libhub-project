@@ -5,9 +5,11 @@ const Schema = mongoose.Schema;
 
 const book = new Schema({
     title: { type:String, required: true},
+    titleNoDiacritics: { type: String},
     category: {type: [String], default: []},
     author: { type: String, required: true},
     story: { type:String, required: true},
+    storyNoDiacritics: { type:String},
     isFavourite:{type:Boolean, required:false},
     imageUrl: {type: String, required: true},
     date: Date,
