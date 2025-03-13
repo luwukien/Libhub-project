@@ -7,7 +7,7 @@ import Home from "./pages/Home/Home";
 import Account from "./pages/Auth/Account";
 import Category from "./pages/Book/Category";
 import GameCard from "./components/Cards/GameCard";
-
+import BookDetails from "./pages/BookDetails/BookDetails";
 const App = () => {
 
     return(
@@ -20,6 +20,7 @@ const App = () => {
               <Route path="/signup" exact element={<SignUp/>} />
               <Route path="/account" exact element={<Account/>} />
               <Route path="/category" exact element={<Category/>} />
+              <Route path="/:bookName" exact element={<BookDetails/>} />
             </Routes>
           </Router>
         </div>

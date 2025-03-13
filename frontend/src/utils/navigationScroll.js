@@ -33,11 +33,11 @@ export const useNavigationScroll = () => {
   const handleScrollAfterNavigation = () => {
     if (location.state && location.state.scrollTo === 'about') {
       scrollToAbout();
-      // Xóa state sau khi cuộn bằng cách thay thế lịch sử
+      // Xóa state sau khi cuộn để tranh cuộn lại
       navigate(location.pathname, { replace: true, state: {} });
     } else if (location.state && location.state.scrollTo === 'footer') {
       scrollToFooter();
-      // Xóa state sau khi cuộn
+      // Xóa state sau khi cuộn để tranh cuộn lại
       navigate(location.pathname, { replace: true, state: {} });
     }
   };

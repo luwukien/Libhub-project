@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Card = ({ variant = 'category', title, description, imageUrl, linkCategory, author, withHoverEffect = false }) => {
   //TODO: Add borrowedCount to the card
+  //divied the card into two types: category and hotbook and book in category
   const isHotBook = variant === 'hotbook';
   const cardClass = withHoverEffect ? 'cursor-pointer px-5 py-5  md:w-[85%] m-auto hover:-translate-y-3 duration-300' : 'cursor-pointer px-5 py-5';
 

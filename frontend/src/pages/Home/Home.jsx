@@ -74,7 +74,7 @@ const Home = () => {
       <div className="content-wrapper font-NunitoSans">
         <header>
           <Header userInfo={userInfo} />
-        </header>
+        </header> {/*End Header*/}
 
         <main className="">
           <div>
@@ -122,9 +122,11 @@ const Home = () => {
 
         </main> {/*End Body*/}
 
+        <footer>
+          <Footer />
+        </footer>
       </div> {/* End content-wrapper */}
 
-      <Footer />
     </>
   )
 }
