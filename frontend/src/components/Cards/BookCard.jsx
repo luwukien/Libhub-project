@@ -17,7 +17,7 @@ onFavouriteClick,
 }) => {
 
   return (
-    <div className="border rounded-lg overflow-hidden bg-white hover:shadow-lg hover:shadow-slate-200 cursor-pointer h-[250px]">
+    <div className="border rounded-lg overflow-hidden bg-white hover:shadow-lg hover:shadow-slate-200 cursor-pointer h-[280px]">
       <img
         src={imgUrl}
         alt={title}

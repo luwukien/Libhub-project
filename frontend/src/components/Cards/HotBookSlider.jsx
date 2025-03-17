@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
-import CardCategory from "./CardCategory";  
+import HotBookCard from "./HotBookCard";
 import axiosInstance from "../../utils/axiosInstance";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate } from "react-router-dom";
 import { PrevArrow, NextArrow } from "../Arrow";
 
-const CardSlider = () => {
+const HotBookSlider = () => {
 
-  const [categories, setCategories] = useState([]);
+  const [HotBooks, setHotBooks] = useState([]);
   const [loading, setLoading] = useState([true]);
   const [error, setError] = useState(null);
+  
+  const navigate = useNavigate();
 
   //fetching data category
   const fetchData = async () => { 
     try {
-      const response = await axiosInstance.get("/home");
-      setCategories(response.data.categories);
-      console.log(response.data.categories);
+      const response = await axiosInstance.get("/get-all-book");
+      setHotBooks(response.data.stories);
       setLoading(false);
     } catch (err) {
       setError(err.message);
@@ -67,13 +69,13 @@ const CardSlider = () => {
     <div className="relative w-full max-w-7xl mx-auto bg-transparent">
       <Slider {...settings}>
         {/* Render CardCategories from data */}
-        {categories.map((category, index) => {
+        {Array.isArray(HotBooks) && HotBooks.slice(0, Math.min(10, HotBooks.length)).map((book) => {
           return (
-            <CardCategory
-            key={index} 
-            title={category.title}
-            description={category.description}  
-            imageUrl={category.imageUrl}
+            <HotBookCard
+            key={book._id} 
+            title={book.title}
+            imgUrl={book.imageUrl}
+            onClick={() => navigate(`/book/${book._id}`)}
             />
           );
         })}
@@ -82,4 +84,5 @@ const CardSlider = () => {
   );
 };
 
-export default CardSlider;
+export default HotBookSlider;
+

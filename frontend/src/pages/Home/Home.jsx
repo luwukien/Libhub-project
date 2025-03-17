@@ -8,6 +8,7 @@ import CardCategory from "../../components/Cards/CardCategory";
 import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
+import HotBookSlider from "../../components/Cards/HotBookSlider";
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
@@ -25,8 +26,8 @@ const Home = () => {
   // fetching data category
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/categories");
-      setCategories(response.data);
+      const response = await axiosInstance.get("/categories");
+      setCategories(response.data.story);
       setLoading(false);
     } catch (err) {
       setError(err.message);
@@ -103,7 +104,7 @@ const Home = () => {
       
               <main className="">
                 <div className="rounded-lg">
-                  
+                  <GameCard />
                 </div> 
 
           <div className="bg-gray-100 h-auto">
@@ -136,6 +137,7 @@ const Home = () => {
               <div className="ct-subheadline">
                 Hot Books
               </div>
+              <HotBookSlider />
             </div>
           </div> {/*End hot-book*/}
 

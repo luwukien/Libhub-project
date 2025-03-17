@@ -8,10 +8,12 @@ const cors = require("cors");
 const User = require("./models/user.model");
 const Book = require("./models/book.model");
 const { authenticateToken } = require("./utilities");
-
+const Filter = require("./models/filter.model");
 const upload = require("./multer");
 const fs = require("fs");
 const path = require("path");
+const Category = require("./models/category.model");
+
 
 mongoose.connect(config.connectionString);
 
@@ -99,7 +101,22 @@ app.post("/login", async (req, res) => {
         //user: { fullName: user.fullName, email: user.email },
         accessToken,
     });
+    
+});
 
+//Home
+app.get("/home", authenticateToken, async (req, res) => {
+    const { userId } = req.user
+    const isUser = await User.findOne({ _id: userId });
+    //console.log(userId, "\n");
+    if (!isUser) {
+        return res.sendStatus(401);
+    }
+    const categories = await Category.find({});
+    return res.json({
+        categories: categories,
+        message: "",
+    });
 });
 
 //Get User
@@ -291,10 +308,15 @@ app.put("/edit-user", authenticateToken, async (req, res) => {
             return res.status(400).json({ error: true, message: "User not found" });
         }
 
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const isPasswordValid = req.body.password === user.password;
+        
+        if (!isPasswordValid) {
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            user.password = hashedPassword;
+        } 
+
 
         user.fullName = req.body.fullName;
-        user.password = hashedPassword;
         user.MSSV = req.body.MSSV;
         user.avatar = req.body.avatar;
         user.phoneNumber = req.body.phoneNumber;
@@ -409,6 +431,62 @@ app.get("/search", authenticateToken, async (req, res) => {
         res.status(500).json({ error: true, message: error.message });
     }
 });
+
+app.post("/add-filter", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    req.body.userId = userId;
+
+    if (!req.body.title) {
+        return res.status(400).json({ error: true, message: "All fields are required" });
+    }
+
+    try {
+        const filter = new Filter({
+            title: req.body.title,
+        });
+
+        await filter.save();
+        res.status(201).json({ story: filter, message: "Added Successfully" });
+    } catch (error) {
+        res.status(400).json({ error: true, message: error.message });
+    }
+
+});
+
+//Get Category
+app.get("/categories", authenticateToken, async (req, res) => {
+    const{ userId } = req.user;
+    try {
+        const filters = await Filter.find({});
+    
+        res.status(200).json({ categories: filters });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+//Add Category
+app.post("/add-category", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    req.body.userId = userId;
+
+    if (!req.body.title || !req.body.imageUrl || !req.body.description) {
+        return res.status(400).json({ error: true, message: "All fields are required" });
+    }
+
+    try {
+        const category = new Category({
+            ...req.body,
+        });
+
+        await category.save();
+        res.status(201).json({ story: category, message: "Added Successfully" });
+    } catch (error) {
+        res.status(400).json({ error: true, message: error.message });
+    }
+
+});
+
 
 app.listen(8000);
 module.exports = app;

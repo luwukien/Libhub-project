@@ -35,9 +35,9 @@ const Header = ({
   const logout = useLogout();
   const { handleAboutClick, handleContactClick, handleScrollAfterNavigation } = useNavigationScroll();
 
-  const handleDropdownToggle = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
+    const handleDropdownToggle = () => {
+      setIsDropdownOpen((prev) => !prev);
+    };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -134,7 +134,7 @@ const Header = ({
           >
             <img
               className="lg:w-36 md:w-32 w-28 lg:h-auto"
-              src="public/Lib-hub.svg"
+              src="public/lib-hub-logo.png"
               alt="Logo-lib-hub"
               style={{
                 transition: "transform 0.3s ease",
@@ -241,4 +241,4 @@ const Header = ({
 };
 
 
-export default Header;
+  export default Header;

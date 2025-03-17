@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import CardCategory from "./CardCategory";  
-import axiosInstance from "../../utils/axiosInstance";
+import CardCategory from "./CardCategory/CardCategory";
+import axios from 'axios';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { PrevArrow, NextArrow } from "../Arrow";
+import { PrevArrow, NextArrow } from "./Arrow";
+import axiosInstance from "../utils/axiosInstance";
 
 const CardSlider = () => {
 
@@ -15,9 +16,9 @@ const CardSlider = () => {
   //fetching data category
   const fetchData = async () => { 
     try {
-      const response = await axiosInstance.get("/home");
-      setCategories(response.data.categories);
-      console.log(response.data.categories);
+      const response = await axiosInstance.get("/categories");
+      // const response = await axios.get("http://localhost:3000/categories");
+      setCategories(response.data);
       setLoading(false);
     } catch (err) {
       setError(err.message);
@@ -74,6 +75,7 @@ const CardSlider = () => {
             title={category.title}
             description={category.description}  
             imageUrl={category.imageUrl}
+            linkCategory={category.linkCategory}
             />
           );
         })}
@@ -83,3 +85,4 @@ const CardSlider = () => {
 };
 
 export default CardSlider;
+
