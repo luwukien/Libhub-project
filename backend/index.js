@@ -163,15 +163,26 @@ app.post("/add-book", authenticateToken, async (req, res) => {
 
 app.get("/get-all-book", authenticateToken, async (req, res) => {
     const{ userId } = req.user;
+    const { page = 1, limit = 16 } = req.query;
     try {
-        const books = await Book.find({}).sort({ favouriteCount: -1 });
+        const books = await Book.find({}).sort({ favouriteCount: -1 })
+        .skip((page - 1) * limit)
+        .limit(Number(limit));
+
+        const totalBooks = await Book.countDocuments(); 
+        const totalPages = Math.ceil(totalBooks / limit);
+
         const user = await User.findById(userId);
 
         const booksWithFavourite = books.map(book => {
             const isFavourite = user.favourites.includes(book._id);
             return { ...book.toObject(), isFavourite };
         });
-        res.status(200).json({ stories: booksWithFavourite });
+        res.status(200).json({ 
+            stories: booksWithFavourite,
+            totalPages,
+            currentpage : Number(page),
+        });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
@@ -222,7 +233,7 @@ app.post("/image-upload-url", async (req, res) => {
             return res.status(400).json({ error: true, message: "Image URL is required" });
         }
 
-        if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(imageUrl)) {
+        if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|avif|jfif)$/i.test(imageUrl)) {
             return res.status(400).json({ error: true, message: "Invalid image URL format" });
         }
         res.status(201).json({ imageUrl });

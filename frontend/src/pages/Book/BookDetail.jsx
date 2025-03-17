@@ -7,6 +7,8 @@ import { TfiAgenda } from "react-icons/tfi";
 import { ToastContainer, toast } from 'react-toastify';
 import { FaHeart } from "react-icons/fa6";
 import Header from "../../components/layouts/Header";
+import Footer from "../../components/layouts/Footer";
+
 
 const BookDetail = ({ userInfo }) => {
   const { id } = useParams(); 
@@ -30,7 +32,7 @@ const BookDetail = ({ userInfo }) => {
             
             if (response.data && response.data.story) {
                 toast.success("Update Successfully", {
-                    autoClose: 1000,
+                    autoClose: 500,
                   });
                   fetchBook();
             }
@@ -49,43 +51,68 @@ const BookDetail = ({ userInfo }) => {
   return (
     <div className="">
       <Header />
-      <button className="btn-back" onClick={() => navigate(-1)}>
-        <MdArrowBack className="text-xl" /> Back
-      </button>
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 ">
+        <button
+          className="text-gray-500 hover:text-gray-700 flex items-center mb-4"
+          onClick={() => navigate(-1)}
+        >
+          <MdArrowBack className="text-xl mr-2" /> Back
+        </button>
 
-      <h1 className="text-2xl font-bold">{bookInfo.title}</h1>
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div className="relative">
+            <img
+              src={bookInfo.imageUrl}
+              alt={bookInfo.title}
+              className="w-35  h-30 sm:w-3/4 rounded-lg shadow-md object-cover"
+            />
+          
+          </div>
 
-      <div className="flex items-center justify-between mt-2">
-        <span className="text-sm text-gray-500">
-          {moment(bookInfo.date).format("Do MMM YYYY")}
-        </span>
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold text-gray-800">{bookInfo.title}</h1>
+            <div className="flex items-center justify-between mt-2 text-sm text-gray-500">
+              <span>{moment(bookInfo.date).format("Do MMM YYYY")}</span>
+              <div className="inline-flex items-center gap-2 text-yellow-600 bg-yellow-100 rounded px-2 py-1">
+                <TfiAgenda className="text-sm" />
+              
+              </div>
+            </div>
+            <p className="mt-4 text-gray-700"> 
+              <strong>Category: </strong> 
+              {bookInfo?.category?.length > 0 ? bookInfo.category.map((category) => category).join(", ") : "None"}
+            </p>
+            <br />
+            
+            <div className="mt-2">
+              <p className="text-sm text-gray-600"><strong>Author:</strong> {bookInfo.author ? `${bookInfo.author}` : "None"}</p>
+              <p className="text-sm text-gray-600"> {bookInfo.story || "None"}</p>
+              <p className="text-sm text-gray-600"><strong>Remaining Book:</strong> {bookInfo.remainingBook ? `${bookInfo.remainingBook}` : "None"}</p>
+            </div>
 
-        <div className="inline-flex items-center gap-2 text-sm text-yellow-600 bg-yellow-100 rounded px-2 py-1">
-          <TfiAgenda className="text-sm" />
-          {bookInfo.category?.join(", ")}
+            <div className="flex gap-3 mt-6">
+              <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-pornhub-300 text-semibold">
+                Borrow!
+              </button>
+              <button
+                className={`p-2 rounded-full border transition-colors duration-300 flex items-center justify-center w-10 h-10
+                ${bookInfo.isFavourite ? "bg-red-500 text-white border-red-500 hover:bg-red-600" : "bg-gray-200 text-gray-600 hover:bg-gray-300"}`}
+                onClick={updateIsFavourite}
+              >
+                <FaHeart className="text-lg" />
+              </button>
+            </div>
+          </div>
         </div>
+
+        {userInfo?.role === "admin" && (
+          <div className="mt-6 flex gap-3">
+            <button className="btn-edit" onClick={() => navigate(`/edit-book/${id}`)}>Edit Book</button>
+            <button className="btn-delete" onClick={() => deleteBook(bookInfo)}>Delete Book</button>
+          </div>
+        )}
       </div>
-
-      <img
-        src={bookInfo.imageUrl}
-        alt={bookInfo.title}
-        className="w-full h-[300px] object-cover rounded-lg mt-4"
-      />
-      <button className="w-6 h-6 flex items-center justify-center bg-white/40 rounded-lg border border-white/30 absolute top-1 right-1"
-              onClick={updateIsFavourite}
-            >
-              <FaHeart className={`icon-btn transition-colors duration-300 ${bookInfo.isFavourite ? "text-red-500" : "text-white"}`}
-              />
-            </button>
-
-      <p className="mt-4 text-gray-700">{bookInfo.story}</p>
-
-      {userInfo?.role === "admin" && (
-        <div className="mt-6 flex gap-3">
-          <button className="btn-edit" onClick={() => navigate(`/edit-book/${id}`)}>Edit Book</button>
-          <button className="btn-delete" onClick={() => deleteBook(bookInfo)}>Delete Book</button>
-        </div>
-      )}
+      <Footer />
       <ToastContainer />
     </div>
   );

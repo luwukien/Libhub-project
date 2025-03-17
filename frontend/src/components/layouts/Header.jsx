@@ -134,7 +134,7 @@ const Header = ({
           >
             <img
               className="lg:w-36 md:w-32 w-28 lg:h-auto"
-              src="public/lib-hub-logo.png"
+              src="/lib-hub-logo.png"
               alt="Logo-lib-hub"
               style={{
                 transition: "transform 0.3s ease",

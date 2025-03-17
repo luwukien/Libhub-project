@@ -43,8 +43,8 @@ const Category = () => {
         title: "All",
     });
     const [filters, setFilters] = useState([]);
-    const [currentPage, setCurrentPage] = useState(null);
-    const totalPages = 10;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     const getUserInfo = async () => {
         try {
@@ -60,16 +60,21 @@ const Category = () => {
         }
     };
 
-    const getAllBooks = async () => {
-        try {
-            const response = await axiosInstance.get("/get-all-book");
-            if (response.data && response.data.stories) {
-                setAllBooks(response.data.stories);
-            }
-        } catch (error) {
-            console.log("An unexpected error occurred. Please try again");
-        }
-    }
+    const getAllBooks = async (page) => {
+      setLoading(true);
+      try {
+          const response = await axiosInstance.get(`/get-all-book?page=${page}&limit=16`);
+  
+          if (response.data && response.data.stories) {
+              setAllBooks(response.data.stories);
+              setTotalPages(response.data.totalPages || 1);
+          }
+      } catch (error) {
+          console.error("An unexpected error occurred. Please try again", error);
+      } finally {
+          setLoading(false);
+      }
+  };
 
 
     const handleEdit = (data) => {
@@ -136,9 +141,9 @@ const Category = () => {
 
   useEffect(() => {
     getUserInfo();
-    getAllBooks();
+    getAllBooks(currentPage);
     return () => {};
-  }, []);
+  }, [currentPage]);
 
   const fetchFilters = async () => {
     try {
