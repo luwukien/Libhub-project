@@ -257,29 +257,7 @@ const Category = () => {
             )}
           </div>
 
-          <div className="inner-category basis-3/4 max-w-[75%] pl-4 pr-4 pb-8">
-            <div className="inner-des relative mb">
-              <div className=" flex flex-row justify-between w-full">
-                <div className="max-h-full flex flex-row items-center font-text">
-                  <div className="sort-dropdown m-7">
-                    <form className="my-1.25 mx-0 w-[300px]" method="get">
-                      <select
-                        name="orderby"
-                        className="orderby rounded-[40px] border border-amber-100 w-full text-center"
-                        aria-label="Yêu cầu thuê sách"
-                      >
-                        <option value="alphabet" selected="selected">
-                          Thứ tự từ A-Z
-                        </option>
-                        <option value="alphabet-2">Thứ tự từ Z-A</option>
-                      </select>
-                      <input type="hidden" name="paged" defaultValue={1} />
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+          <div className="inner-category basis-3/4 max-w-[75%] pl-4 pr-4 pb-8 mt-[40px]">
             <div className="inner-wrap c-container">
               <div className="list-book flex flex-row flex-wrap gap-[50px]">
                 {allBooks.length > 0 ? (
