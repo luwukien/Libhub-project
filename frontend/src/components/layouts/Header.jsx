@@ -118,18 +118,17 @@ const Header = ({
   return (
     <header className="font-KumbhSans">
       <nav
-        className="flex justify-between items-center py-1 font-bold drop-shadow-sm bg-white h-[50px] z-50"
+        className="flex justify-between items-center py-1 font-bold drop-shadow-sm bg-white h-[50px] z-50 scr:z-1000 vsm:z-0"
         style={{
           position: "sticky",
           top: 0,
-          zIndex: 1000,
           backgroundColor: "white",
           boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
         }}
       >
         <div className="lg:basis-1/6 lg:mx-auto">
           <a
-            href="#"
+            href="/home"
             className="inline-flex items-center justify-center w-auto h-auto relative"
           >
             <img

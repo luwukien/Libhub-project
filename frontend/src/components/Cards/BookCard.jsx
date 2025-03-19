@@ -17,11 +17,11 @@ onFavouriteClick,
 }) => {
 
   return (
-    <div className="border rounded-lg overflow-hidden bg-white hover:shadow-lg hover:shadow-slate-200 cursor-pointer h-[280px]">
+    <div className="box md:w-[calc(50%-55.5px)] lg:w-[calc(33.3%-53.3px)] vlg:w-[calc(25%-42.5px)] flex flex-col vlg:h-[371px] lg:h-[300px] md:h-[239px]">
       <img
         src={imgUrl}
         alt={title}
-        className="w-30 h-auto object-contain rounded-lg"
+        className="basis-3/4 rounded-[30px] h-[75%] object-cover"
         onClick={onClick}
       />
 
@@ -32,11 +32,11 @@ onFavouriteClick,
         />
       </button>
 
-      <div className="p-4" onClick={onClick}>
+      <div className="p-4 basis-1/4" onClick={onClick}>
         <div className="flex items-center gap-3">
-          <div className="flex-1">
-            <h6 className="text-xs font-medium">{title}</h6>
-            <span className="text-xs text-slate-500">
+          <div className="flex-1 w-fit h-[25%] text-center">
+            <p className="text-black vsm:text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px] vlg:text-[16px]">{title}</p>
+            <span className="text-white-1 vsm:text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px] vlg:text-[16px]">
               {date ? moment(date).format("Do MMM YYYY") : "-"}
             </span>
           </div>

@@ -11,7 +11,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         onClick={() => handlePageChange(currentPage - 1)} 
         disabled={currentPage === 1}
       >
-        &lt;
+        <i class="fa-solid fa-less-than"></i>
       </button>
 
       {[...Array(totalPages)].map((_, index) => {
@@ -31,7 +31,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         onClick={() => handlePageChange(currentPage + 1)} 
         disabled={currentPage === totalPages}
       >
-        &gt;
+        <i class="fa-solid fa-greater-than"></i>
       </button>
     </div>
   );

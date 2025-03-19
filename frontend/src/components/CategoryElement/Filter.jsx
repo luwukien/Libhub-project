@@ -7,7 +7,6 @@ const Filter = ({ id, title, selectedCategory, setSelectedCategory}) => {
             id={id}
             name="category"
             checked={selectedCategory.id === id}
-            // onClick={handleClick}
             onChange={() => setSelectedCategory({ id, title })}
             className="flex-none"
           />

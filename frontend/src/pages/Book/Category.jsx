@@ -163,12 +163,12 @@ const Category = () => {
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isScreenInRange, setIsScreenInRange] = useState(
-    window.innerWidth >= 100 && window.innerWidth <= 772
+    window.innerWidth >= 100 && window.innerWidth <= 871
   );
 
   useEffect(() => {
     const handleResize = () => {
-      setIsScreenInRange(window.innerWidth >= 100 && window.innerWidth <= 772);
+      setIsScreenInRange(window.innerWidth >= 100 && window.innerWidth <= 871);
     };
 
     window.addEventListener("resize", handleResize);
@@ -197,16 +197,16 @@ const Category = () => {
         handleClearSearch={handleClearSearch}/>
       </header>
       <main id="main">
-        <div className="inner-wrap flex flex-row justify-center box-border pb-0">
+        <div className="inner-wrap flex flex-row justify-center pb-0">
           <div className="relative p-4">
             {isScreenInRange ? (
               <>
                 {/* This is the filter button for mobile view */}
                 <SortFilter onFilterClick={() => setIsFilterOpen(true)} />
                 {isFilterOpen && (
-                  <div className="fixed top-0 right-0 h-full w-full bg-white shadow-lg transition-transform duration-300 z-50 translate-x-0">
+                  <div className="fixed top-0 right-0 h-full w-full bg-white shadow-lg z-50 translate-x-0 transition-all duration-500 ease-in-out">
                     <button
-                      className="p-4 text-red-500 font-bold"
+                      className="p-4 text-red-500 font-bold transition-all duration-500 ease-in-out"
                       onClick={() => setIsFilterOpen(false)}
                     >
                       Đóng
@@ -219,8 +219,8 @@ const Category = () => {
                         <ul className="list flex flex-wrap flex-col list-none m-0 p-0 border-none line-inherit">
                           {filters.map((filter) => (
                             <Filter
-                              key={filter.id}
-                              id={filter.id}
+                              key={filter._id}
+                              id={filter._id}
                               title={filter.title}
                               selectedCategory={selectedCategory}
                               setSelectedCategory={setSelectedCategory}
@@ -259,9 +259,9 @@ const Category = () => {
 
           <div className="inner-category basis-3/4 max-w-[75%] pl-4 pr-4 pb-8 mt-[40px]">
             <div className="inner-wrap c-container">
-              <div className="list-book flex flex-row flex-wrap gap-[50px]">
+              <div>
                 {allBooks.length > 0 ? (
-                            <div className="grid grid-cols-8 gap-8">
+                            <div className="list-book flex flex-row flex-wrap gap-[50px]">
                                 {filteredBooks.map((item) => {
                                     return (
                                         <BookCard 
