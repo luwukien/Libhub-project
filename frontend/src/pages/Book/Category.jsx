@@ -14,6 +14,7 @@ import Filter from "../../components/CategoryElement/Filter";
 import SortFilter from "../../components/CategoryElement/SortFilter";
 import Pagination from "../../components/CategoryElement/Pagination";
 import { useMemo } from "react";
+import { getCookie } from "../../utils/getCookie";
 
 const Category = () => {
 
@@ -46,26 +47,31 @@ const Category = () => {
     const [currentPage, setCurrentPage] = useState(null);
     const totalPages = 10;
 
+    const isCookie = getCookie('token');
     const getUserInfo = async () => {
         try {
-            const response = await axiosInstance.get("/get-user");
-            if (response.data && response.data.user) {
-                setUserInfo(response.data.user);
-            }
+          const response = await axiosInstance.get("/get-user");
+          if (response.data && response.data.user) {
+              setUserInfo(response.data.user);
+          }
         } catch (error) {
-            if (error.response.status === 401) {
-                localStorage.clear();
-                navigate("/home");
-            }
+          console.error("An unexpected error occurred. Please try again", error);
         }
     };
 
     const getAllBooks = async () => {
         try {
-            const response = await axiosInstance.get("/get-all-book");
-            if (response.data && response.data.stories) {
-                setAllBooks(response.data.stories);
-            }
+          let response = null;
+          if(isCookie){
+            response = await axiosInstance.get("/get-all-book-user");
+          }
+          else{
+            response = await axiosInstance.get("/get-all-book");
+          }
+          console.log(response.data);
+          if (response.data && response.data.stories) {
+            setAllBooks(response.data.stories);
+          }
         } catch (error) {
             console.log("An unexpected error occurred. Please try again");
         }
@@ -135,7 +141,7 @@ const Category = () => {
     }
 
   useEffect(() => {
-    getUserInfo();
+    isCookie && getUserInfo();
     getAllBooks();
     return () => {};
   }, []);

@@ -1,14 +1,19 @@
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from './axiosInstance';
 
 const useLogout = () => {
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.clear();
+  const logout = async () => {
+    // // localStorage.clear();
+    // res.clearCookie("token");
+    const res = await axiosInstance.post("/logout");
     navigate("/home");
   };
 
   return logout;
 };
+
 
 export default useLogout;

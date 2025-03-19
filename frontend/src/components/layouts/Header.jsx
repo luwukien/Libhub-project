@@ -5,6 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import SearchBar from "../Input/SearchBar";
 import useLogout from "../../utils/useLogout";
 import { useNavigationScroll } from "../../utils/navigationScroll";
+import { useAuthStore } from "../../pages/store/useAuthStore";
+import { getCookie } from "../../utils/getCookie";
+
 
 const Header = ({ 
   userInfo,
@@ -15,6 +18,7 @@ const Header = ({
 
  }) => {
   
+  const {checkAuth} = useAuthStore(); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const menuRef = useRef(null);
@@ -55,7 +59,9 @@ const Header = ({
     };
   }, [handleScrollAfterNavigation]);
 
-  const isToken = localStorage.getItem("token");
+  const isToken = getCookie('token');
+  console.log(isToken);
+
   const onLogin = () => {
     navigate("/login");
   };
@@ -171,7 +177,7 @@ const Header = ({
           <li><a className="ct-top-menu-item" onClick={handleContactClick}>Contact Us</a></li>
 
           {/* Avatar with Dropdown */}
-          {isToken ? <ProfileInfo userInfo={userInfo} /> : (<button className="ct-top-menu-item" onClick={onLogin}>Login</button>)}
+          {Boolean(isToken) ? <ProfileInfo user={userInfo} /> : (<button className="ct-top-menu-item" onClick={onLogin}>Login</button>)}
         </ul>
         <div className="lg:hidden flex items-center cursor-pointer px-3 sm:px-8 ml-auto">
           <svg id="ct-toggle-top-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"

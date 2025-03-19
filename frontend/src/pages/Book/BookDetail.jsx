@@ -7,6 +7,7 @@ import { TfiAgenda } from "react-icons/tfi";
 import { ToastContainer, toast } from 'react-toastify';
 import { FaHeart } from "react-icons/fa6";
 import Header from "../../components/layouts/Header";
+import { getCookie } from "../../utils/getCookie";
 
 const BookDetail = ({ userInfo }) => {
   const { id } = useParams(); 
@@ -14,14 +15,21 @@ const BookDetail = ({ userInfo }) => {
   const [bookInfo, setBookInfo] = useState(null);
 
   const fetchBook = async () => {
+    const isCookie = getCookie('token');
     try {
-       const response = await axiosInstance.get(`/get-book/${id}`);
-        if (response.data && response.data.story) {
-            setBookInfo(response.data.story);
-          }
-        } catch (error) {
-          console.log("An unexpected error occurred. Please try again");
+      let response = null;
+      if(isCookie){
+        response = await axiosInstance.get(`/get-book-user/${id}`);
+      }
+      else{
+        response = await axiosInstance.get(`/get-book/${id}`);
+      }
+      if (response.data && response.data.story) {
+          setBookInfo(response.data.story);
         }
+      } catch (error) {
+        console.log("An unexpected error occurred. Please try again");
+      }
   };
 
   const updateIsFavourite = async () => {
