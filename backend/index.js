@@ -12,6 +12,7 @@ const Filter = require("./models/filter.model");
 const upload = require("./multer");
 const fs = require("fs");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const Category = require("./models/category.model");
 
 
@@ -19,11 +20,32 @@ mongoose.connect(config.connectionString);
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(cookieParser());
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+}));
 
 function removeAccents(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
+
+// 
+app.get("/auth/check", async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ error: true, message: "Not authenticated" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const user = await User.findById(decoded.userId).select("-password");
+        return res.status(200).json({ authUser: user });
+    } catch (error) {
+        return res.status(401).json({ error: true, message: "Invalid token" });
+    }
+});
 
 //Creat Account
 app.post("/signup", async (req, res) => {
@@ -72,46 +94,58 @@ app.post("/signup", async (req, res) => {
 
 //Login
 app.post("/login", async (req, res) => {
-
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).json({ message: "Email and Password are required" });
     }
     const user = await User.findOne({ email });
-    
+
     if (!user) {
         return res.status(400).json({ message: "User not found" });
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
         return res.status(400).json({ message: "Inalid Credentials" });
-    } 
+    }
 
     const accessToken = jwt.sign(
         { userId: user.id },
-        
+
         process.env.ACCESS_TOKEN_SECRET,
         {
             expiresIn: "72h",
         }
     );
+
+    res.cookie('token', accessToken, {
+        httpOnly: false,   // Prevents client-side JavaScript from accessing the cookie
+        maxAge: 24 * 60 * 60 * 1000,  // 1 day
+    });
+
     return res.json({
         error: false,
         message: "Login Successful",
         //user: { fullName: user.fullName, email: user.email },
-        accessToken,
+        // accessToken,
     });
-    
+
 });
 
+// Logout
+app.post("/logout", async (req, res) => {
+    res.clearCookie("token");
+    res.json({ message: "Logged out successfully" });
+});
+
+
 //Home
-app.get("/home", authenticateToken, async (req, res) => {
-    const { userId } = req.user
-    const isUser = await User.findOne({ _id: userId });
+app.get("/home", async (req, res) => {
+    // const { userId } = req.user
+    // const isUser = await User.findOne({ _id: userId });
     //console.log(userId, "\n");
-    if (!isUser) {
-        return res.sendStatus(401);
-    }
+    // if (!isUser) {
+    //     return res.sendStatus(401);
+    // }
     const categories = await Category.find({});
     return res.json({
         categories: categories,
@@ -123,7 +157,7 @@ app.get("/home", authenticateToken, async (req, res) => {
 app.get("/get-user", authenticateToken, async (req, res) => {
     const { userId } = req.user
     const isUser = await User.findOne({ _id: userId });
-    
+
     if (!isUser) {
         return res.sendStatus(401);
     }
@@ -161,8 +195,9 @@ app.post("/add-book", authenticateToken, async (req, res) => {
 
 //get book
 
-app.get("/get-all-book", authenticateToken, async (req, res) => {
-    const{ userId } = req.user;
+app.get("/get-all-book-user", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+
     try {
         const books = await Book.find({}).sort({ favouriteCount: -1 });
         const user = await User.findById(userId);
@@ -177,7 +212,19 @@ app.get("/get-all-book", authenticateToken, async (req, res) => {
     }
 });
 
-app.get("/get-book/:id", authenticateToken, async (req, res) => {
+app.get("/get-all-book", async (req, res) => {
+    try {
+        const books = await Book.find({}).sort({ favouriteCount: -1 })
+        console.log(books);
+        res.status(200).json({
+            stories: books,
+        });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+app.get("/get-book-user/:id", authenticateToken, async (req, res) => {
     const { userId } = req.user;
     const { id } = req.params;
 
@@ -191,6 +238,21 @@ app.get("/get-book/:id", authenticateToken, async (req, res) => {
         const isFavourite = user.favourites.includes(book._id);
 
         res.status(200).json({ story: { ...book.toObject(), isFavourite } });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+app.get("/get-book/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const book = await Book.findById(id);
+        if (!book) {
+            return res.status(404).json({ error: true, message: "Book not found" });
+        }
+
+        res.status(200).json({ story: { book} });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
@@ -217,7 +279,7 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
 app.post("/image-upload-url", async (req, res) => {
     try {
         const { imageUrl } = req.body;
-        
+
         if (!imageUrl) {
             return res.status(400).json({ error: true, message: "Image URL is required" });
         }
@@ -309,11 +371,11 @@ app.put("/edit-user", authenticateToken, async (req, res) => {
         }
 
         const isPasswordValid = req.body.password === user.password;
-        
+
         if (!isPasswordValid) {
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             user.password = hashedPassword;
-        } 
+        }
 
 
         user.fullName = req.body.fullName;
@@ -331,16 +393,16 @@ app.put("/edit-user", authenticateToken, async (req, res) => {
 
 //Update Is Favourite
 app.put("/update-is-favourite/:id", authenticateToken, async (req, res) => {
-    const { id } = req.params; 
-    const { userId } = req.user; 
+    const { id } = req.params;
+    const { userId } = req.user;
 
     try {
-        const book = await Book.findOne({ _id: id});
+        const book = await Book.findOne({ _id: id });
         if (!book) {
             return res.status(404).json({ error: true, message: "Book not found" });
         }
 
-        
+
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ error: true, message: "User not found" });
@@ -410,7 +472,7 @@ app.get("/search", authenticateToken, async (req, res) => {
         return res.status(404).json({ error: true, message: "query is required" });
     }
     // Hàm loại bỏ dấu
-    
+
     removeAccents(req.query.query);
     const regex = new RegExp(req.query.query, "i");
 
@@ -454,11 +516,10 @@ app.post("/add-filter", authenticateToken, async (req, res) => {
 });
 
 //Get Category
-app.get("/categories", authenticateToken, async (req, res) => {
-    const{ userId } = req.user;
+app.get("/categories", async (req, res) => {
     try {
         const filters = await Filter.find({});
-    
+
         res.status(200).json({ categories: filters });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });

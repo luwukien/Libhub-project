@@ -18,7 +18,7 @@
       "id": 4,
       "title": "History BookShelf",
       "description": "Tên sách",
-      "imageUrl": "/public/tech-category.jpg",
+      "imageUrl": "",
       "linkCategory": "http://localhost:5173/category"
     },
     {
