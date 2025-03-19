@@ -233,7 +233,7 @@ const Category = () => {
                 )}
               </>
             ) : (
-              <div className="inner-filter inline-block basis-1/4 max-w-fit col-auto border-list rounded-filter pl-4 pr-4 pb-8 mt-5 mb-10 max-h-fit sticky top-10">
+              <div className="inner-filter inline-block basis-1/4 vlg:w-[300px] lg:w-[259px] scr:w-[200px] col-auto border-list rounded-[30px] pl-4 pr-4 pb-8 mt-5 mb-10 max-h-fit sticky top-10">
                 <div className="main-filter">
                   <h4 className="pt-4 pl-4 pr-4 pb-0 items-center">
                     <span className="text-2xl text-porn-hub-200">Category</span>
