@@ -22,9 +22,7 @@ function TextToggle() {
 
   return (
     <div>
-      <div className='flex justify-center items-center my-3 font-KumbhSans'>
-        <button className='py-3 px-6 rounded-full text-black bg-pornhub-200 hover:bg-pornhub-300 font-semibold' onClick={toggleText}>More details</button>
-      </div>
+
       {isExpanded && (
         <div>
           <div className='flex items-center justify-center font-medium max-w-5xl mx-auto mb-3 px-4 sm:px-6 lg:px-8'>

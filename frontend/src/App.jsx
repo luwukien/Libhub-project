@@ -5,9 +5,11 @@ import SignUp from "./pages/Auth/SignUp";
 import Home from "./pages/Home/Home";
 import Account from "./pages/User/Account";
 import Category from "./pages/Book/Category";
+import About from "./pages/About/About";
 import BookDetails from "./pages/BookDetails/BookDetails";
 import Search from "./pages/Book/Search"
 import BorrowedBooks from "./pages/Admin/BorrowedBooks";
+
 
 const App = () => {
 
@@ -24,6 +26,7 @@ const App = () => {
               <Route path="/book/:id" element={<BookDetails />} />
               <Route path="/search" element={<Search />} />
               <Route path="/admin/borrowedbooks" element={<BorrowedBooks />} />
+              <Route path="/about" element={<About/>} />
             </Routes>
           </Router>
         </div>

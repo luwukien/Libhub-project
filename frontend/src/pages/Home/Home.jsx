@@ -7,6 +7,7 @@ import TextToggle from "../../components/TextToggle";
 import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
+import { useSearch } from "../../utils/useSearch";  // Import the custom hook
 
 const Home = () => {
   const [items, setItems] = useState({ categories: [], hotBooks: [] });
@@ -15,44 +16,6 @@ const Home = () => {
   // get Inforamation user
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
-
-  const [allBooks, setAllBooks] = useState([]);
-  const [filterType, setFilterType] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-
-
-  const getAllBooks = async () => {
-    try {
-      const response = await axiosInstance.get("/get-all-book");
-      if (response.data && response.data.stories) {
-        setAllBooks(response.data.stories);
-      }
-    } catch (error) {
-      console.log("An unexpected error occurred. Please try again");
-    }
-  }
-
-  const onSearchBook = async (query) => {
-    try {
-      const response = await axiosInstance.get("/search", {
-        params: {
-          query,
-        },
-      });
-      if (response.data && response.data.stories) {
-        setFilterType("search");
-        setAllBooks(response.data.stories);
-      }
-    } catch (error) {
-      setError("An unexpected error occurred.Please try again!")
-    }
-  }
-
-  const handleClearSearch = () => {
-    setFilterType("");
-    getAllBooks();
-  }
-
   const getUserInfo = async () => {
     try {
       const response = await axiosInstance.get("/get-user");
@@ -68,6 +31,13 @@ const Home = () => {
       }
     }
   };
+
+  const {
+    searchQuery,
+    setSearchQuery,
+    onSearchBook,
+    handleClearSearch,
+  } = useSearch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,13 +67,12 @@ const Home = () => {
 
     fetchData();
     getUserInfo();
-    getAllBooks();
   }, []);
 
   return (
     <>
       <div className="content-wrapper font-NunitoSans">
-        <header>
+        <header className="mb-0">
           <Header
             userInfo={userInfo}
             searchQuery={searchQuery}
@@ -114,11 +83,7 @@ const Home = () => {
         </header>
 
         <main className="">
-          <div className="rounded-lg">
-
-          </div>
-
-          <div className="bg-gray-100 h-auto">
+          <div className="bg-gradient-to-tl from-gray-150 via-gray-200 to-white rounded-3xl">
             <div className="p-5 " id='about'>
               <div className="ct-subheadline">
                 What is the <span className="text-pornhub-200 ml-2 mr-2">Libhub</span> product?
@@ -128,7 +93,10 @@ const Home = () => {
                   Libhub stands for Library Hub. This is an innovative improvement to the schools library system, designed to enhance students learning experience. It simplifies the search for academic resources, making it easier to find relevant materials. Libhub, simplifies resource searching and provides a virtual library simulation, making it easier for students to access and explore academic materials. We aim to optimize UI/UX to make the library more user-friendly and interesting.
                 </p>
               </div>
-              <TextToggle />
+              <div className='flex justify-center items-center my-3 font-KumbhSans'>
+                <button className='py-3 px-6 rounded-full text-black bg-pornhub-200 hover:bg-pornhub-300 font-semibold'>More details</button>
+              </div>
+
             </div>
           </div> {/*End about*/}
 

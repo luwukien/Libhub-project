@@ -1,11 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import moment from "moment";
 import axiosInstance from "../../utils/axiosInstance";
-import { MdArrowBack } from "react-icons/md";
-import { TfiAgenda } from "react-icons/tfi";
-import { ToastContainer, toast } from 'react-toastify';
-import { FaHeart } from "react-icons/fa6";
+import { ToastContainer, toast } from 'react-toastify'; //push notification
 import Header from "../../components/layouts/Header";
 import Footer from "../../components/layouts/Footer";
 
@@ -41,55 +37,54 @@ const BookDetails = ({ userInfo }) => {
   };
 
   useEffect(() => {
-
     fetchBook();
   }, [id]);
 
-  if (!bookInfo) return <p>Loading...</p>;
+  if (!bookInfo) return <p>Not to found</p>;
 
   return (
-    <div className="">
-      <Header />
-      <button className="btn-back" onClick={() => navigate(-1)}>
-        <MdArrowBack className="text-xl" /> Back
-      </button>
+    <>
+      <div className="content-wrapper font-NunitoSans">
+        <header>
+          <Header />
+        </header> 
 
-      <h1 className="text-2xl font-bold">{bookInfo.title}</h1>
+        <main className='bg-[#fffefa] min-h-screen py-8'>
+          <div className='container max-w-[1350px] mx-auto '>
+            <div className='product-container'>
 
-      <div className="flex items-center justify-between mt-2">
-        <span className="text-sm text-gray-500">
-          {moment(bookInfo.date).format("Do MMM YYYY")}
-        </span>
+              <div className='product-main'>
+                <div className='bg-white p-8 pb-5 rounded-xl h-auto border-gray-200 border-solid border-2 mb-0 grid grid-cols-3'> 
+                  <img src={bookInfo.imageUrl} alt={bookInfo.title} className="w-48 h-48 object-cover" />
+                  <div className="">   
+                    <div>NameBook</div>
+                    <div>ID</div>
+                    <div>Category</div>
+                    <button>Borrow</button>
+                  </div>
+                  <div>
+                    <div>Author</div>
+                    <div>Storage</div>
+                  </div>
+                </div>
+              </div>{/* End product main */}
 
-        <div className="inline-flex items-center gap-2 text-sm text-yellow-600 bg-yellow-100 rounded px-2 py-1">
-          <TfiAgenda className="text-sm" />
-          {bookInfo.category?.join(", ")}
-        </div>
-      </div>
+              <div className='product-description'>
+                <div className="bg-white p-8 pb-5 rounded-xl h-auto border-gray-200 border-solid border-2 mt-6">
+                  <div>Detail Book</div>
+                  <div>Content</div>
+                </div>
+              </div>{/* End product description */}
 
-      <img
-        src={bookInfo.imageUrl}
-        alt={bookInfo.title}
-        className="w-full h-[300px] object-cover rounded-lg mt-4"
-      />
-      <button className="w-6 h-6 flex items-center justify-center bg-white/40 rounded-lg border border-white/30 absolute top-1 right-1"
-        onClick={updateIsFavourite}
-      >
-        <FaHeart className={`icon-btn transition-colors duration-300 ${bookInfo.isFavourite ? "text-red-500" : "text-white"}`}
-        />
-      </button>
+            </div> {/* End product-container */}
+          </div> {/* End container */}
+        </main> {/* End main */}
 
-      <p className="mt-4 text-gray-700">{bookInfo.story}</p>
-
-      {userInfo?.role === "admin" && (
-        <div className="mt-6 flex gap-3">
-          <button className="btn-edit" onClick={() => navigate(`/edit-book/${id}`)}>Edit Book</button>
-          <button className="btn-delete" onClick={() => deleteBook(bookInfo)}>Delete Book</button>
-        </div>
-      )}
-      <ToastContainer />
-      <Footer />
-    </div>
+        <footer>
+          <Footer />
+        </footer> 
+      </div>  {/*End content-wrapper */}
+    </>
   );
 };
 

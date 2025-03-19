@@ -82,7 +82,7 @@ app.post("/login", async (req, res) => {
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-        return res.status(400).json({ message: "Inalid Credentials" });
+        return res.status(400).json({ message: "Invalid Credentials" });
     }
 
     const accessToken = jwt.sign(
