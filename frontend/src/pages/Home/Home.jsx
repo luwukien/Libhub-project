@@ -8,6 +8,7 @@ import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
 import { useSearch } from "../../utils/useSearch";  // Import the custom hook
+import Card from "../../components/Cards/Card";
 
 const Home = () => {
   const [items, setItems] = useState({ categories: [], hotBooks: [] });
@@ -96,7 +97,6 @@ const Home = () => {
               <div className='flex justify-center items-center my-3 font-KumbhSans'>
                 <button className='py-3 px-6 rounded-full text-black bg-pornhub-200 hover:bg-pornhub-300 font-semibold'>More details</button>
               </div>
-
             </div>
           </div> {/*End about*/}
 
@@ -106,7 +106,7 @@ const Home = () => {
                 Categories
               </div>
               {/* Render CardCategories and CardSlider from data */}
-              <CardSlider items={items.categories} />
+              <CardSlider items={items.categories} Component={Card}/>
             </div>
           </div>{/*End category-previous*/}
 
@@ -116,7 +116,7 @@ const Home = () => {
                 Hot Books
               </div>
               {/* Render CardCategories and CardSlider from data */}
-              <CardSlider items={items.hotBooks} />
+              <CardSlider items={items.hotBooks} Component={Card} />
             </div>
           </div> {/*End hot-book*/}
 

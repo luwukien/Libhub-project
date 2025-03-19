@@ -4,7 +4,7 @@
   import "slick-carousel/slick/slick.css";
   import "slick-carousel/slick/slick-theme.css";
   import { PrevArrow, NextArrow } from "../Arrow";
-  const CardSlider = ({ items }) => {
+  const CardSlider = ({ items, Component }) => {
     const sliderRef = useRef(null);
 
     //setting for carousel
@@ -43,17 +43,7 @@
         <PrevArrow sliderRef={sliderRef}/>
         <Slider ref={sliderRef} {...settings}>
           {items.map((item, index) => (
-            <Card
-              key={index}
-              variant={item.variant}
-              title={item.title}
-              description={item.description}
-              imageUrl={item.imageUrl}
-              linkCategory={item.linkCategory}
-              // borrowedCount={item.borrowedCount}
-              author={item.author}
-              withHoverEffect={true}
-            />
+            <Component key={index} {...item} />
           ))}
         </Slider>
         <NextArrow sliderRef={sliderRef} />

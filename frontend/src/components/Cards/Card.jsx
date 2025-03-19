@@ -6,12 +6,13 @@ const Card = ({ variant = 'category', title, description, imageUrl, linkCategory
   //divied the card into two types: category and hotbook and book in category
   const isHotBook = variant === 'hotbook';
   const cardClass = withHoverEffect ? 'cursor-pointer px-5 py-5  md:w-[85%] m-auto hover:-translate-y-3 duration-300' : 'cursor-pointer px-5 py-5';
+  
 
   return (
     <Link to={linkCategory}>
       <div className={`${cardClass}`}>
         <div className={`h-[430px] rounded-2xl overflow-hidden shadow-md hover:shadow-lg duration-300 bg-gray-100 ${isHotBook ? 'border-2 border-yellow-400' : ''} relative`}>
-          {/* Cover book */}
+          {/* Cover */}
           <div className="h-[65%] object-cover bg-black relative">
             <img
               src={imageUrl}
