@@ -8,6 +8,7 @@ import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
 import { useSearch } from "../../utils/useSearch";  // Import the custom hook
+import "../About/styles.css";
 import Card from "../../components/Cards/Card";
 
 const Home = () => {
