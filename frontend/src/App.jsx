@@ -9,6 +9,7 @@ import BookDetail from "./pages/Book/BookDetail";
 import Search from "./pages/Book/Search";
 import { getCookie } from "./utils/getCookie";
 import BorrowedBooks from "./pages/Book/BorrowedBooks";
+import Confession from "./pages/Confession/Confession";
 
 const App = () => {
     const isToken = getCookie("token"); 
@@ -26,6 +27,7 @@ const App = () => {
                     <Route path="/book/:id" element={<BookDetail />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/borrowed" element={<BorrowedBooks />} />
+                    <Route path="/confession" element={<Confession />} />
                 </Routes>
             </Router>
         </div>
