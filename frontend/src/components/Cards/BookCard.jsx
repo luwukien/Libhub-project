@@ -21,7 +21,7 @@ onFavouriteClick,
       <img
         src={imgUrl}
         alt={title}
-        className="basis-3/4 rounded-[30px] h-[75%] object-cover"
+        className="basis-3/4 rounded-[30px] h-[75%]"
         onClick={onClick}
       />
 

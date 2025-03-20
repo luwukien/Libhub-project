@@ -7,6 +7,7 @@ import { TfiAgenda } from "react-icons/tfi";
 import { ToastContainer, toast } from 'react-toastify';
 import { FaHeart } from "react-icons/fa6";
 import Header from "../../components/layouts/Header";
+import { getCookie } from "../../utils/getCookie";
 import Footer from "../../components/layouts/Footer";
 import Modal from 'react-modal';
 import ViewBorrow from "./ViewBorrow";
@@ -18,6 +19,8 @@ const BookDetail = ({  }) => {
   const [bookInfo, setBookInfo] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
 
+  const isCookie = getCookie('token');
+
   const getUserInfo = async () => {
           try {
               const response = await axiosInstance.get("/get-user");
@@ -25,10 +28,7 @@ const BookDetail = ({  }) => {
                   setUserInfo(response.data.user);
               }
           } catch (error) {
-              if (error.response.status === 401) {
-                  localStorage.clear();
-                  navigate("/home");
-              }
+            console.error("An unexpected error occurred. Please try again", error);
           }
       };
 
@@ -39,17 +39,26 @@ const BookDetail = ({  }) => {
 
   const handleViewBook = () => {
     setOpenViewModal({ isShown: true });
+
   };
   
   const fetchBook = async () => {
+    
+    
     try {
-       const response = await axiosInstance.get(`/get-book/${id}`);
-        if (response.data && response.data.story) {
-            setBookInfo(response.data.story);
-          }
-        } catch (error) {
-          console.log("An unexpected error occurred. Please try again");
+      let response = null;
+      if(isCookie){
+        response = await axiosInstance.get(`/get-book-user/${id}`);
+      }
+      else{
+        response = await axiosInstance.get(`/get-book/${id}`);
+      }
+      if (response.data && response.data.story) {
+          setBookInfo(response.data.story);
         }
+      } catch (error) {
+        console.log("An unexpected error occurred. Please try again");
+      }
   };
 
   const updateIsFavourite = async () => {
@@ -67,9 +76,13 @@ const BookDetail = ({  }) => {
         }
   };
 
+  const handleReload = () => {
+    window.location.reload();
+  };
+
   useEffect(() => {
     fetchBook();
-    getUserInfo();
+    isCookie && getUserInfo();
   }, [id]);
 
   if (!bookInfo) return <p>Loading...</p>;
@@ -118,7 +131,7 @@ const BookDetail = ({  }) => {
 
             <div className="flex gap-3 mt-6">
               {bookInfo.remainingBook > 0 ? (
-                <button 
+                isCookie && <button 
                   className="bg-black text-white px-4 py-2 rounded-lg hover:bg-pornhub-200 font-semibold transition"
                   onClick={() => handleViewBook()}
                 >
@@ -160,6 +173,7 @@ const BookDetail = ({  }) => {
                 bookInfo={bookInfo}
                 onClose={() => {
                     setOpenViewModal((prevState) => ({ ...prevState, isShown: false}));
+                    handleReload();
                 }}
               />
             </Modal>

@@ -1,34 +1,35 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import React from "react";
-import Login from "./pages/Auth/Login"
+import Login from "./pages/Auth/Login";
 import SignUp from "./pages/Auth/SignUp";
 import Home from "./pages/Home/Home";
 import Account from "./pages/User/Account";
 import Category from "./pages/Book/Category";
 import BookDetail from "./pages/Book/BookDetail";
-import Search from "./pages/Book/Search"
+import Search from "./pages/Book/Search";
+import { getCookie } from "./utils/getCookie";
 import BorrowedBooks from "./pages/Book/BorrowedBooks";
 
 const App = () => {
+    const isToken = getCookie("token"); 
 
-    return(
+    return (
         <div>
-          <Router>
-            <Routes>
-              <Route path="/" exact element={<Home/>} />
-              <Route path="/home" exact element={<Home/>} />
-              <Route path="/login" exact element={<Login/>} />
-              <Route path="/signup" exact element={<SignUp/>} />
-              <Route path="/account" exact element={<Account/>} />
-              <Route path="/category" exact element={<Category/>} />
-              <Route path="/book/:id" element={<BookDetail />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/borrowed" element={<BorrowedBooks />} />
-            </Routes>
-          </Router>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/login" element={isToken ? <Navigate to="/home" replace /> : <Login />} />
+                    <Route path="/signup" element={isToken ? <Navigate to="/home" replace /> : <SignUp />} />
+                    <Route path="/account" element={<Account />} />
+                    <Route path="/category/:title" element={<Category />} />
+                    <Route path="/book/:id" element={<BookDetail />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/borrowed" element={<BorrowedBooks />} />
+                </Routes>
+            </Router>
         </div>
-    )
-}
+    );
+};
 
-
-export default App
+export default App;

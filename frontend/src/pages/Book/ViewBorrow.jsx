@@ -4,6 +4,7 @@ import DateSelector from '../../components/Input/DateSelector';
 import axiosInstance from '../../utils/axiosInstance';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 
 const ViewBorrow = ({ onClose, bookInfo, userInfo }) => {
@@ -17,8 +18,10 @@ const ViewBorrow = ({ onClose, bookInfo, userInfo }) => {
   const [MSSV, setMSSV] = useState(userInfo?.MSSV || "");
   const [borrowNumber, setBorrowNumber] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleBorrow = async () => {
+    
     const bookId = bookInfo._id;
       try{
         const response = await axiosInstance.post(`/borrow/${bookId}`, {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import Header from "../../components/layouts/Header";
 import BookCard from "../../components/Cards/BookCard";
@@ -14,10 +14,11 @@ import Filter from "../../components/CategoryElement/Filter";
 import SortFilter from "../../components/CategoryElement/SortFilter";
 import Pagination from "../../components/CategoryElement/Pagination";
 import { useMemo } from "react";
+import { getCookie } from "../../utils/getCookie";
 
-const Category = () => {
+const Category = ({}) => {
 
-
+    const { title } = useParams();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [userInfo, setUserInfo] = useState(null);
@@ -46,12 +47,15 @@ const Category = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
+    const isCookie = getCookie('token');
+    
+
     const getUserInfo = async () => {
         try {
-            const response = await axiosInstance.get("/get-user");
-            if (response.data && response.data.user) {
-                setUserInfo(response.data.user);
-            }
+          const response = await axiosInstance.get("/get-user");
+          if (response.data && response.data.user) {
+              setUserInfo(response.data.user);
+          }
         } catch (error) {
           console.error("An unexpected error occurred. Please try again", error);
         }
@@ -60,18 +64,24 @@ const Category = () => {
     const getAllBooks = async (page) => {
       setLoading(true);
       try {
-          const response = await axiosInstance.get(`/get-all-book?page=${page}&limit=16`);
-  
-          if (response.data && response.data.stories) {
-              setAllBooks(response.data.stories);
-              setTotalPages(response.data.totalPages || 1);
-          }
+        let response = null;
+        if(isCookie){
+          response = await axiosInstance.get(`/get-all-book-user?page=${page}&limit=16`);
+        }
+        else{
+          response = await axiosInstance.get(`/get-all-book?page=${page}&limit=16`);
+        }
+        
+        if (response.data && response.data.stories) {
+          setAllBooks(response.data.stories);
+          setTotalPages(response.data.totalPages || 1);
+        }
       } catch (error) {
-          console.error("An unexpected error occurred. Please try again", error);
-      } finally {
-          setLoading(false);
-      }
-  };
+          console.log("An unexpected error occurred. Please try again");
+      }finally {
+        setLoading(false);
+    }
+  }
 
 
     const handleEdit = (data) => {
@@ -137,7 +147,7 @@ const Category = () => {
     }
 
   useEffect(() => {
-    getUserInfo();
+    isCookie && getUserInfo();
     getAllBooks(currentPage);
     return () => {};
   }, [currentPage]);
@@ -153,7 +163,12 @@ const Category = () => {
     }
   };
 
+  const handleReload = () => {
+    window.location.reload();
+  };
+
   useEffect(() => {
+    setSelectedCategory(title);
     fetchFilters();
     setLoading(false);
   }, []);
@@ -180,8 +195,12 @@ const Category = () => {
   }, [allBooks, selectedCategory]);
 
   useEffect(() => {
-    setSelectedCategory({ title: "All" });
-  }, []);
+    if (title) {
+      setSelectedCategory({ title });
+    } else {
+      setSelectedCategory({ title: "All" });
+    }
+  }, [title]);
 
 
   return ( 
@@ -230,7 +249,7 @@ const Category = () => {
                 )}
               </>
             ) : (
-              <div className="inner-filter inline-block basis-1/4 max-w-fit col-auto border-list rounded-filter pl-4 pr-4 pb-8 mt-5 mb-10 max-h-fit sticky top-10">
+              <div className="inner-filter inline-block basis-1/4 vlg:w-[300px] lg:w-[259px] scr:w-[200px] col-auto border-list rounded-[30px] pl-4 pr-4 pb-8 mt-5 mb-10 max-h-fit sticky top-10">
                 <div className="main-filter">
                   <h4 className="pt-4 pl-4 pr-4 pb-0 items-center">
                     <span className="text-2xl text-porn-hub-200">Category</span>
@@ -316,6 +335,7 @@ const Category = () => {
                 bookInfo={openAddEditModal.data}
                 onClose={() => {
                     setopenAddEditModal({ isShown: false, type: "add", data: null});
+                    handleReload();
                 }}
                 getAllBooks={getAllBooks} 
             />
