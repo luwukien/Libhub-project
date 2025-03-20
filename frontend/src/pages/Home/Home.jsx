@@ -86,7 +86,7 @@ const Home = () => {
 
         <main className="">
           <div className="bg-gradient-to-tl from-gray-150 via-gray-200 to-white rounded-3xl">
-            <div className="p-5 " id='about'>
+            <div className="p-5">
               <div className="ct-subheadline">
                 What is the <span className="text-pornhub-200 ml-2 mr-2">Libhub</span> product?
               </div>
@@ -96,7 +96,9 @@ const Home = () => {
                 </p>
               </div>
               <div className='flex justify-center items-center my-3 font-KumbhSans'>
+                <a href="/about">
                 <button className='py-3 px-6 rounded-full text-black bg-pornhub-200 hover:bg-pornhub-300 font-semibold'>More details</button>
+                </a>
               </div>
             </div>
           </div> {/*End about*/}

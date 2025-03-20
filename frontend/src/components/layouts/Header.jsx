@@ -119,7 +119,7 @@ const Header = ({
   };
 
   return (
-    <header className="font-KumbhSans z-40 mx-2 ">
+    <header className="font-KumbhSans z-50 mx-2 top-0">
       <nav className="flex justify-between items-center relative py-1 font-bold drop-shadow-sm bg-slate-50 h-[90px]">
         {/* Logo */}
         <div className="flex justify-start lg:basis-1/12 lg:mx-auto ">
@@ -145,7 +145,7 @@ const Header = ({
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
           <li><a className="ct-top-menu-item" href="/home">Home</a></li>
-          <li><a className="ct-top-menu-item" onClick={handleAboutClick}>About </a></li>
+          <li><a className="ct-top-menu-item" href="/about" onClick={handleAboutClick}>About </a></li>
           <li>
             <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
               Category

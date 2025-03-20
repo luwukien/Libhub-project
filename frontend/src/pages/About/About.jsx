@@ -100,17 +100,17 @@ const About = () => {
         />
       </header>
 
-      <main className=" ">
-        <div className="relative h-[400px]">
+      <main className="" id='about'>
+        <div className=" h-[400px] z-0">
           <div
-            className="absolute flex flex-col items-center justify-center top-0 bottom-0 bg-slate-500 w-full h-[400px] bg-center bg-no-repeat bg-cover"
+            className="flex flex-col items-center justify-center top-0 bottom-0 bg-slate-500 w-full h-[400px] bg-center bg-no-repeat bg-cover"
             style={{
               backgroundImage: "url('./public/bg-about-2.jpg')",
             }}
           >
             <h1 className="text-white text-[80px] font-bold">About Us</h1>
             <h2 className="text-white text-2xl font-bold">
-              For explorers everywhere.
+            Connecting knowledge seekers.
             </h2>
           </div>
         </div>
@@ -120,7 +120,7 @@ const About = () => {
               Libhub stands for Library Hub. This is an innovative improvement
               to the schools library system, designed to enhance students
               learning experience. It simplifies the search for academic
-              resources, making it easier to find relevant materials.{" "}
+              resources, making it easier to find relevant materials.
             </p>
 
             <p className="mt-4">
