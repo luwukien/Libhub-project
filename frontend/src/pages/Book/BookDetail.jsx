@@ -8,13 +8,39 @@ import { ToastContainer, toast } from 'react-toastify';
 import { FaHeart } from "react-icons/fa6";
 import Header from "../../components/layouts/Header";
 import Footer from "../../components/layouts/Footer";
+import Modal from 'react-modal';
+import ViewBorrow from "./ViewBorrow";
 
 
-const BookDetail = ({ userInfo }) => {
+const BookDetail = ({  }) => {
   const { id } = useParams(); 
   const navigate = useNavigate();
   const [bookInfo, setBookInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
+  const getUserInfo = async () => {
+          try {
+              const response = await axiosInstance.get("/get-user");
+              if (response.data && response.data.user) {
+                  setUserInfo(response.data.user);
+              }
+          } catch (error) {
+              if (error.response.status === 401) {
+                  localStorage.clear();
+                  navigate("/home");
+              }
+          }
+      };
+
+  const [openViewModal, setOpenViewModal] = useState({
+    isShown: false,
+    data: null,
+  });
+
+  const handleViewBook = () => {
+    setOpenViewModal({ isShown: true });
+  };
+  
   const fetchBook = async () => {
     try {
        const response = await axiosInstance.get(`/get-book/${id}`);
@@ -42,8 +68,8 @@ const BookDetail = ({ userInfo }) => {
   };
 
   useEffect(() => {
-    
     fetchBook();
+    getUserInfo();
   }, [id]);
 
   if (!bookInfo) return <p>Loading...</p>;
@@ -91,29 +117,52 @@ const BookDetail = ({ userInfo }) => {
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-pornhub-300 text-semibold">
-                Borrow!
-              </button>
-              <button
-                className={`p-2 rounded-full border transition-colors duration-300 flex items-center justify-center w-10 h-10
-                ${bookInfo.isFavourite ? "bg-red-500 text-white border-red-500 hover:bg-red-600" : "bg-gray-200 text-gray-600 hover:bg-gray-300"}`}
-                onClick={updateIsFavourite}
-              >
+              {bookInfo.remainingBook > 0 ? (
+                <button 
+                  className="bg-black text-white px-4 py-2 rounded-lg hover:bg-pornhub-200 font-semibold transition"
+                  onClick={() => handleViewBook()}
+                >
+                  Borrow!
+                </button>
+                    ) : (
+                      <span className="bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed">
+                        Out of book
+                      </span>
+                    )}
+
+                    <button
+                      className={`p-2 rounded-full border transition-colors duration-300 flex items-center justify-center w-10 h-10
+                      ${bookInfo.isFavourite ? "bg-red-500 text-white border-red-500 hover:bg-red-600" : "bg-gray-200 text-gray-600 hover:bg-gray-300"}`}
+                      onClick={updateIsFavourite}
+                    >
                 <FaHeart className="text-lg" />
               </button>
             </div>
           </div>
         </div>
-
-        {userInfo?.role === "admin" && (
-          <div className="mt-6 flex gap-3">
-            <button className="btn-edit" onClick={() => navigate(`/edit-book/${id}`)}>Edit Book</button>
-            <button className="btn-delete" onClick={() => deleteBook(bookInfo)}>Delete Book</button>
-          </div>
-        )}
       </div>
       <Footer />
       <ToastContainer />
+      <Modal 
+              isOpen={openViewModal.isShown}
+              onRequestClose={() => {}}
+              style={{
+                  overlay: {
+                      backgroundColor: "rgba(0,0,0,0.2)",
+                      zIndex: 999,
+                  },
+              }}
+              appElement={document.getElementById("root")}
+              className="model-box relative"
+            >
+              <ViewBorrow 
+                userInfo={userInfo}
+                bookInfo={bookInfo}
+                onClose={() => {
+                    setOpenViewModal((prevState) => ({ ...prevState, isShown: false}));
+                }}
+              />
+            </Modal>
     </div>
   );
 };

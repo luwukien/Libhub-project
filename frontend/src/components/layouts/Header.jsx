@@ -5,9 +5,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import SearchBar from "../Input/SearchBar";
 import useLogout from "../../utils/useLogout";
 import { useNavigationScroll } from "../../utils/navigationScroll";
+import { use } from "react";
+import axiosInstance from "../../utils/axiosInstance";
+
 
 const Header = ({ 
-  userInfo,
   searchQuery,
   setSearchQuery,
   onSearchNote,
@@ -19,6 +21,23 @@ const Header = ({
   const dropdownRef = useRef(null);
   const menuRef = useRef(null);
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState(null);
+
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      if (response.data && response.data.user) {
+        setUserInfo(response.data.user);
+        
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        
+        rage.clear();
+        navigate("/home");
+      }
+    }
+  };
 
   const handleSearch = () => {
   if (searchQuery.trim()) {
@@ -114,6 +133,10 @@ const Header = ({
       </div>
     );
   };
+
+  useEffect(() => {
+    getUserInfo(); 
+  }, []);
 
   return (
     <header className="font-KumbhSans">

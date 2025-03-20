@@ -4,8 +4,6 @@ import { Navigate, useNavigate } from "react-router-dom"
 import axiosInstance from "../../utils/axiosInstance";
 import Header from "../../components/layouts/Header";
 import TextToggle from "../../components/TextToggle";
-import CardCategory from "../../components/Cards/CardCategory";
-import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
 import HotBookSlider from "../../components/Cards/HotBookSlider";
@@ -66,26 +64,8 @@ const Home = () => {
     setFilterType("");
     getAllBooks();
     }
-
-  const getUserInfo = async () => {
-    try {
-      const response = await axiosInstance.get("/get-user");
-      if (response.data && response.data.user) {
-        setUserInfo(response.data.user);
-        
-      }
-    } catch (error) {
-      if (error.response.status === 401) {
-        
-        rage.clear();
-        navigate("/home");
-      }
-    }
-  };
-
     useEffect(() => {
       fetchData();
-      getUserInfo();
       getAllBooks();
         }, []);
 
@@ -94,7 +74,6 @@ const Home = () => {
           <div className="content-wrapper font-NunitoSans">
             <header>
               <Header 
-                userInfo={userInfo} 
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 onSearchNote={onSearchBook}

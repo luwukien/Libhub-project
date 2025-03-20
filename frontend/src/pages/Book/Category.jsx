@@ -53,10 +53,7 @@ const Category = () => {
                 setUserInfo(response.data.user);
             }
         } catch (error) {
-            if (error.response.status === 401) {
-                localStorage.clear();
-                navigate("/home");
-            }
+          console.error("An unexpected error occurred. Please try again", error);
         }
     };
 
@@ -98,7 +95,7 @@ const Category = () => {
                 getAllBooks();
             }
         } catch (error) {
-            setError("An unexpected error occurred.Please try again!")
+            setError("An unexpected error occurred.Please try again!");
         }
     }
 
@@ -190,7 +187,7 @@ const Category = () => {
   return ( 
     <>
       <header>
-        <Header userInfo={userInfo} 
+        <Header  
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onSearchNote={onSearchBook}
@@ -274,7 +271,11 @@ const Category = () => {
                                         remainingBook={item.remainingBook}
                                         isFavourite={item.isFavourite}
                                         onEdit={() => handleEdit(item)}
-                                        onClick={() => userInfo?.role === "admin" ? handleViewBook(item) : navigate(`/book/${item._id}`)}
+                                        onClick={() => 
+                                          userInfo?.role === "admin" 
+                                            ? handleViewBook(item) 
+                                            : navigate(`/book/${item._id}`)
+                                        }
                                         onFavouriteClick={() => updateIsFavourite(item)}
                                         />
                                     );
@@ -289,13 +290,13 @@ const Category = () => {
         </div>
       </main>
       
-      <div>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+      <div className="flex justify-center mt-10 mb-10">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
             
             <div>
             <Modal 
