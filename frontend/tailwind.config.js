@@ -27,7 +27,8 @@ export default {
         lg:"983px",
         vsm:"100px",
         vlg:"1103px",
-        scr:"872px"
+        scr:"872px",
+        lm:"360px"
       }
     },
     animation: {
