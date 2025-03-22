@@ -4,7 +4,6 @@ import Header from "../../components/layouts/Header";
 import Footer from "../../components/layouts/Footer";
 import axiosInstance from "../../utils/axiosInstance";
 import TextToggle from "../../components/TextToggle";
-import axios from 'axios';
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
 import { useSearch } from "../../utils/useSearch";  // Import the custom hook
@@ -34,21 +33,16 @@ const Home = () => {
     }
   };
 
-  const getUserInfo = async () => {
+  const getAllBooks = async () => {
     try {
-      const response = await axiosInstance.get("/get-user");
-      if (response.data && response.data.user) {
-        setUserInfo(response.data.user);
-
+      const response = await axiosInstance.get("/get-all-book");
+      if (response.data && response.data.stories) {
+        setAllBooks(response.data.stories);
       }
     } catch (error) {
-      if (error.response.status === 401) {
-
-        rage.clear();
-        navigate("/home");
-      }
+      console.log("An unexpected error occurred. Please try again");
     }
-  };
+  }
 
   const {
     searchQuery,
@@ -56,43 +50,17 @@ const Home = () => {
     onSearchBook,
     handleClearSearch,
   } = useSearch();
-
+  
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [categoriesResponse, hotBooksResponse] = await Promise.all([
-          axios.get("http://localhost:3000/categories"),
-          axios.get("http://localhost:3000/categories")
-        ]);
-        setItems({
-          categories: categoriesResponse.data.map(item => ({
-            ...item,
-            variant: 'category',
-            linkCategory: `/category`
-          })),
-          hotBooks: hotBooksResponse.data.map(item => ({
-            ...item,
-            variant: 'hotbook',
-            linkCategory: `/hotbook/`
-          }))
-        });
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
     fetchData();
-    getUserInfo();
+    getAllBooks();
   }, []);
 
   return (
     <>
       <div className="content-wrapper font-NunitoSans">
-        <header className="mb-0">
+        <header>
           <Header
-            userInfo={userInfo}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             onSearchNote={onSearchBook}
@@ -100,9 +68,13 @@ const Home = () => {
           />
         </header>
 
-        <main className="">
-          <div className="bg-gradient-to-tl from-gray-150 via-gray-200 to-white rounded-3xl">
-            <div className="p-5">
+          <div className="rounded-lg">
+            <GameCard />
+          </div>
+        <main className="max-w-screen-xl mx-auto">
+
+          <div className="bg-gray-100 h-auto">
+            <div className="p-5 " id='about'>
               <div className="ct-subheadline">
                 What is the <span className="text-pornhub-200 ml-2 mr-2">Libhub</span> product?
               </div>
@@ -125,7 +97,7 @@ const Home = () => {
                 Categories
               </div>
               {/* Render CardCategories and CardSlider from data */}
-              <CardSlider items={items.categories} Component={Card} />
+              <CardSlider items={items.categories} Component={Card} type="category" />
             </div>
           </div>{/*End category-previous*/}
 

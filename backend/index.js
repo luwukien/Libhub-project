@@ -14,6 +14,8 @@ const fs = require("fs");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const Category = require("./models/category.model");
+const Borrow = require("./models/borrow.model");
+const Post = require("./models/post.model");
 
 
 mongoose.connect(config.connectionString);
@@ -197,27 +199,46 @@ app.post("/add-book", authenticateToken, async (req, res) => {
 
 app.get("/get-all-book-user", authenticateToken, async (req, res) => {
     const { userId } = req.user;
+    const { page = 1, limit = 16 } = req.query;
 
     try {
-        const books = await Book.find({}).sort({ favouriteCount: -1 });
+        const books = await Book.find({}).sort({ favouriteCount: -1 })
+        .skip((page - 1) * limit)
+        .limit(Number(limit));
+
+        const totalBooks = await Book.countDocuments(); 
+        const totalPages = Math.ceil(totalBooks / limit);
+
         const user = await User.findById(userId);
 
         const booksWithFavourite = books.map(book => {
             const isFavourite = user.favourites.includes(book._id);
             return { ...book.toObject(), isFavourite };
         });
-        res.status(200).json({ stories: booksWithFavourite });
+        res.status(200).json({ 
+            stories: booksWithFavourite,
+            totalPages,
+            currentpage : Number(page),
+        });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
 });
 
 app.get("/get-all-book", async (req, res) => {
+    const { page = 1, limit = 16 } = req.query;
     try {
         const books = await Book.find({}).sort({ favouriteCount: -1 })
-        console.log(books);
+        .skip((page - 1) * limit)
+        .limit(Number(limit));
+
+        const totalBooks = await Book.countDocuments(); 
+        const totalPages = Math.ceil(totalBooks / limit);
+
         res.status(200).json({
             stories: books,
+            totalPages,
+            currentpage : Number(page),
         });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
@@ -245,20 +266,19 @@ app.get("/get-book-user/:id", authenticateToken, async (req, res) => {
 
 app.get("/get-book/:id", async (req, res) => {
     const { id } = req.params;
-
     try {
         const book = await Book.findById(id);
         if (!book) {
             return res.status(404).json({ error: true, message: "Book not found" });
         }
 
-        res.status(200).json({ story: { book} });
+        res.status(200).json({ story: { ...book.toObject()} });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
 });
 
-//upload book cover
+//upload image
 app.post("/image-upload", upload.single("image"), async (req, res) => {
     try {
         if (!req.file) {
@@ -284,7 +304,7 @@ app.post("/image-upload-url", async (req, res) => {
             return res.status(400).json({ error: true, message: "Image URL is required" });
         }
 
-        if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(imageUrl)) {
+        if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|avif|jfif)$/i.test(imageUrl)) {
             return res.status(400).json({ error: true, message: "Invalid image URL format" });
         }
         res.status(201).json({ imageUrl });
@@ -548,6 +568,106 @@ app.post("/add-category", authenticateToken, async (req, res) => {
 
 });
 
+//Borrow
+app.post("/borrow/:id", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    req.body.userId = userId;
+    const { id } = req.params;
+    
+
+    if (!req.body.borrowNumber || !req.body.startDate || !req.body.endDate) {
+        return res.status(400).json({ error: true, message: "All fields are required" });
+    }
+
+    const startParsedDate = new Date(parseInt(req.body.startDate));
+    const endParsedDate = new Date(parseInt(req.body.endDate));
+    req.body.startDate = startParsedDate;
+    req.body.endDate = endParsedDate;
+
+    try {
+        const book = await Book.findOne({ _id: id });
+
+        const borrow = new Borrow({
+            borrowName: req.body.borrowName,
+            phoneNumber: req.body.phoneNumber,
+            MSSV: req.body.MSSV,
+            title: req.body.title,
+            borrowNumber: req.body.borrowNumber,
+            imageUrl: req.body.imageUrl,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
+            bookId: req.body.bookId,
+            titleNoDiacritics: removeAccents(req.body.title),
+            userId : req.body.userId,
+        });
+
+        if(req.body.borrowNumber > book.remainingBook){
+            return res.status(400).json({error : true, message : "Not enough book to borrow"});
+        }else{
+            book.remainingBook = book.remainingBook - req.body.borrowNumber;
+            await book.save();
+            await borrow.save();
+        }
+        res.status(201).json({ borrow: borrow, message: "Added Successfully" });
+    } catch (error) {
+        res.status(400).json({ error: true, message: error.message });
+    }
+
+});
+
+//Delete Borrow
+app.delete("/delete-borrow/:id", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    const { id } = req.params;
+
+    try {
+        const borrow = await Borrow.findOne({ _id: id });
+        const book = await Book.findOne({ _id: borrow.bookId });
+        book.remainingBook = book.remainingBook + borrow.borrowNumber;
+        if (!borrow) {
+            return res.status(404).json({ error: true, message: "Borrow request not found" });
+        }
+        await borrow.deleteOne({ _id: id });
+        await book.save();
+        res.status(200).json({ error: "Borrow request delete successfully" });
+
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+//Get Borrowed Books
+app.get("/get-borrowed-book", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    try {
+        const borrowed = await Borrow.find({}); 
+        const borrowedById = borrowed.filter(b => b.userId.toString() === userId); 
+
+        res.status(200).json({ 
+            borrowed,
+            borrowedById
+        });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+//Confession
+app.post("/create-post", async (req, res) => {
+    const newPost = new Post(req.body);
+    await newPost.save();
+    res.status(200).json(newPost);
+});
+
+app.get("/get-posts", async (req, res) => {
+    try {
+        const posts = await Post.find({});
+
+        res.status(200).json({posts});
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
 
 app.listen(8000);
 module.exports = app;

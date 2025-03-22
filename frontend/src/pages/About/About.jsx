@@ -35,8 +35,9 @@ const About = () => {
     {
       imageUrl: "./public/Members/nguyen-hiep-store.jpg",
       name: "Đặng Cường",
-      role: "Leader",
+      role: "Leader & Frontend Developer",
       quote: "Suc cheo khong",
+      tagline: "Sục",
       linktoFacebook: "https://www.facebook.com/caocuong.dang.7524",
       linktoIntasgram: "#",
       linktoEmail: "mailto:nguyen.hiep@example.com",
@@ -44,10 +45,11 @@ const About = () => {
     {
       imageUrl: "./public/Members/nguyen-hiep-store.jpg",
       name: "Nguyễn Dũng",
-      role: "Tech Lead, Backend Developer",
+      role: "Tech Lead & Backend Developer",
       quote: "Hat dau nho",
+      tagline: "Hát",
       linktoFacebook: "https://www.facebook.com/hat.au.nho.983082",
-      linktoIntasgram: "https://instagram.com/tran.anh",
+      linktoIntasgram: "https://instagram.com/",
       linktoEmail: "mailto:tran.anh@example.com",
     },
     {
@@ -55,8 +57,9 @@ const About = () => {
       name: "Nguyễn Hiệp",
       role: "Backend Developer",
       quote: "Boy phố làm bố các em",
+      tagline: "Phố",
       linktoFacebook: "https://www.facebook.com/hieppotato",
-      linktoIntasgram: "https://instagram.com/tran.anh",
+      linktoIntasgram: "https://instagram.com/",
       linktoEmail: "mailto:tran.anh@example.com",
     },
     {
@@ -64,8 +67,9 @@ const About = () => {
       name: "Quốc Anh",
       role: "Frontend Developer",
       quote: "dang code",
+      tagline: "gpt",
       linktoFacebook: "https://www.facebook.com/adonis.quocanh",
-      linktoIntasgram: "https://instagram.com/tran.anh",
+      linktoIntasgram: "https://instagram.com/",
       linktoEmail: "mailto:tran.anh@example.com",
     },
     {
@@ -73,8 +77,9 @@ const About = () => {
       name: "Hoàng Thảo",
       role: "Frontend Developer",
       quote: "Cac",
+      tagline: "Gay",
       linktoFacebook: "https://www.facebook.com/kingkind.k6",
-      linktoIntasgram: "https://instagram.com/tran.anh",
+      linktoIntasgram: "https://instagram.com/",
       linktoEmail: "mailto:tran.anh@example.com",
     },
     {
@@ -82,8 +87,9 @@ const About = () => {
       name: "Lưu Kiên",
       role: "Frontend Developer",
       quote: "Deo hieu code",
+      tagline: "Hít đất",
       linktoFacebook: "https://www.facebook.com/kienchiluu2910",
-      linktoIntasgram: "https://instagram.com/tran.anh",
+      linktoIntasgram: "https://instagram.com/",
       linktoEmail: "mailto:tran.anh@example.com",
     },
   ];
@@ -122,7 +128,6 @@ const About = () => {
               learning experience. It simplifies the search for academic
               resources, making it easier to find relevant materials.
             </p>
-
             <p className="mt-4">
               Libhub, simplifies resource searching and provides a virtual
               library simulation, making it easier for students to access and
@@ -146,11 +151,11 @@ const About = () => {
             </p>
           </div>
         </div>
-        <div className="pt-10 pb-10 bg-gray-100">
+        <div className="pt-10 pb-10 bg-gray-50">
           <div className="ct-subheadline text-center">
             <h2>Meeting Our Team</h2>
           </div>
-          <CardSlider items={members} Component={CardMember} />
+          <CardSlider items={members} Component={CardMember} type="member" />
         </div>
       </main>
 

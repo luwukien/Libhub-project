@@ -116,7 +116,7 @@ const SearchResult = () => {
     />
       <div className="container mx-auto py-10">
         
-        <div className="grid grid-cols-8 gap-8">
+        <div>
           {allBooks.length > 0 ? (
             allBooks.map((item) => (
                 <BookCard 

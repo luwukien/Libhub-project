@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import Header from "../../components/layouts/Header";
 import BookCard from "../../components/Cards/BookCard";
@@ -16,9 +16,9 @@ import Pagination from "../../components/CategoryElement/Pagination";
 import { useMemo } from "react";
 import { getCookie } from "../../utils/getCookie";
 
-const Category = () => {
+const Category = ({}) => {
 
-
+    const { title } = useParams();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [userInfo, setUserInfo] = useState(null);
@@ -44,10 +44,12 @@ const Category = () => {
         title: "All",
     });
     const [filters, setFilters] = useState([]);
-    const [currentPage, setCurrentPage] = useState(null);
-    const totalPages = 10;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     const isCookie = getCookie('token');
+    
+
     const getUserInfo = async () => {
         try {
           const response = await axiosInstance.get("/get-user");
@@ -59,23 +61,27 @@ const Category = () => {
         }
     };
 
-    const getAllBooks = async () => {
-        try {
-          let response = null;
-          if(isCookie){
-            response = await axiosInstance.get("/get-all-book-user");
-          }
-          else{
-            response = await axiosInstance.get("/get-all-book");
-          }
-          console.log(response.data);
-          if (response.data && response.data.stories) {
-            setAllBooks(response.data.stories);
-          }
-        } catch (error) {
-            console.log("An unexpected error occurred. Please try again");
+    const getAllBooks = async (page) => {
+      setLoading(true);
+      try {
+        let response = null;
+        if(isCookie){
+          response = await axiosInstance.get(`/get-all-book-user?page=${page}&limit=16`);
         }
+        else{
+          response = await axiosInstance.get(`/get-all-book?page=${page}&limit=16`);
+        }
+        
+        if (response.data && response.data.stories) {
+          setAllBooks(response.data.stories);
+          setTotalPages(response.data.totalPages || 1);
+        }
+      } catch (error) {
+          console.log("An unexpected error occurred. Please try again");
+      }finally {
+        setLoading(false);
     }
+  }
 
 
     const handleEdit = (data) => {
@@ -99,7 +105,7 @@ const Category = () => {
                 getAllBooks();
             }
         } catch (error) {
-            setError("An unexpected error occurred.Please try again!")
+            setError("An unexpected error occurred.Please try again!");
         }
     }
 
@@ -142,9 +148,9 @@ const Category = () => {
 
   useEffect(() => {
     isCookie && getUserInfo();
-    getAllBooks();
+    getAllBooks(currentPage);
     return () => {};
-  }, []);
+  }, [currentPage]);
 
   const fetchFilters = async () => {
     try {
@@ -157,19 +163,24 @@ const Category = () => {
     }
   };
 
+  const handleReload = () => {
+    window.location.reload();
+  };
+
   useEffect(() => {
+    setSelectedCategory(title);
     fetchFilters();
     setLoading(false);
   }, []);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isScreenInRange, setIsScreenInRange] = useState(
-    window.innerWidth >= 100 && window.innerWidth <= 772
+    window.innerWidth >= 100 && window.innerWidth <= 871
   );
 
   useEffect(() => {
     const handleResize = () => {
-      setIsScreenInRange(window.innerWidth >= 100 && window.innerWidth <= 772);
+      setIsScreenInRange(window.innerWidth >= 100 && window.innerWidth <= 871);
     };
 
     window.addEventListener("resize", handleResize);
@@ -184,30 +195,34 @@ const Category = () => {
   }, [allBooks, selectedCategory]);
 
   useEffect(() => {
-    setSelectedCategory({ title: "All" });
-  }, []);
+    if (title) {
+      setSelectedCategory({ title });
+    } else {
+      setSelectedCategory({ title: "All" });
+    }
+  }, [title]);
 
 
   return ( 
     <>
       <header>
-        <Header userInfo={userInfo} 
+        <Header  
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onSearchNote={onSearchBook}
         handleClearSearch={handleClearSearch}/>
       </header>
       <main id="main">
-        <div className="inner-wrap flex flex-row justify-center box-border pb-0">
+        <div className="inner-wrap flex flex-row justify-center pb-0">
           <div className="relative p-4">
             {isScreenInRange ? (
               <>
                 {/* This is the filter button for mobile view */}
                 <SortFilter onFilterClick={() => setIsFilterOpen(true)} />
                 {isFilterOpen && (
-                  <div className="fixed top-0 right-0 h-full w-full bg-white shadow-lg transition-transform duration-300 z-50 translate-x-0">
+                  <div className="fixed top-0 right-0 h-full w-full bg-white shadow-lg z-50 translate-x-0 transition-all duration-500 ease-in-out">
                     <button
-                      className="p-4 text-red-500 font-bold"
+                      className="p-4 text-red-500 font-bold transition-all duration-500 ease-in-out"
                       onClick={() => setIsFilterOpen(false)}
                     >
                       Đóng
@@ -220,8 +235,8 @@ const Category = () => {
                         <ul className="list flex flex-wrap flex-col list-none m-0 p-0 border-none line-inherit">
                           {filters.map((filter) => (
                             <Filter
-                              key={filter.id}
-                              id={filter.id}
+                              key={filter._id}
+                              id={filter._id}
                               title={filter.title}
                               selectedCategory={selectedCategory}
                               setSelectedCategory={setSelectedCategory}
@@ -234,7 +249,7 @@ const Category = () => {
                 )}
               </>
             ) : (
-              <div className="inner-filter inline-block basis-1/4 max-w-fit col-auto border-list rounded-filter pl-4 pr-4 pb-8 mt-5 mb-10 max-h-fit sticky top-10">
+              <div className="inner-filter inline-block basis-1/4 vlg:w-[300px] lg:w-[259px] scr:w-[200px] col-auto border-list rounded-[30px] pl-4 pr-4 pb-8 mt-5 mb-10 max-h-fit sticky top-10">
                 <div className="main-filter">
                   <h4 className="pt-4 pl-4 pr-4 pb-0 items-center">
                     <span className="text-2xl text-porn-hub-200">Category</span>
@@ -258,33 +273,11 @@ const Category = () => {
             )}
           </div>
 
-          <div className="inner-category basis-3/4 max-w-[75%] pl-4 pr-4 pb-8">
-            <div className="inner-des relative mb">
-              <div className=" flex flex-row justify-between w-full">
-                <div className="max-h-full flex flex-row items-center font-text">
-                  <div className="sort-dropdown m-7">
-                    <form className="my-1.25 mx-0 w-[300px]" method="get">
-                      <select
-                        name="orderby"
-                        className="orderby rounded-[40px] border border-amber-100 w-full text-center"
-                        aria-label="Yêu cầu thuê sách"
-                      >
-                        <option value="alphabet" selected="selected">
-                          Thứ tự từ A-Z
-                        </option>
-                        <option value="alphabet-2">Thứ tự từ Z-A</option>
-                      </select>
-                      <input type="hidden" name="paged" defaultValue={1} />
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+          <div className="inner-category basis-3/4 max-w-[75%] pl-4 pr-4 pb-8 mt-[40px]">
             <div className="inner-wrap c-container">
-              <div className="list-book flex flex-row flex-wrap gap-[50px]">
+              <div>
                 {allBooks.length > 0 ? (
-                            <div className="grid grid-cols-8 gap-8">
+                            <div className="list-book flex flex-row flex-wrap gap-[50px]">
                                 {filteredBooks.map((item) => {
                                     return (
                                         <BookCard 
@@ -297,7 +290,11 @@ const Category = () => {
                                         remainingBook={item.remainingBook}
                                         isFavourite={item.isFavourite}
                                         onEdit={() => handleEdit(item)}
-                                        onClick={() => userInfo?.role === "admin" ? handleViewBook(item) : navigate(`/book/${item._id}`)}
+                                        onClick={() => 
+                                          userInfo?.role === "admin" 
+                                            ? handleViewBook(item) 
+                                            : navigate(`/book/${item._id}`)
+                                        }
                                         onFavouriteClick={() => updateIsFavourite(item)}
                                         />
                                     );
@@ -312,13 +309,13 @@ const Category = () => {
         </div>
       </main>
       
-      <div>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+      <div className="flex justify-center mt-10 mb-10">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
             
             <div>
             <Modal 
@@ -338,6 +335,7 @@ const Category = () => {
                 bookInfo={openAddEditModal.data}
                 onClose={() => {
                     setopenAddEditModal({ isShown: false, type: "add", data: null});
+                    handleReload();
                 }}
                 getAllBooks={getAllBooks} 
             />

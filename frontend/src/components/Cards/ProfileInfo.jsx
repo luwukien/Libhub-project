@@ -14,7 +14,7 @@ const ProfileInfo = ({user}) => {
   const logout = useLogout();
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
-    console.log(userInfo);
+
   };
 
   const getUserInfo = async () => {

@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 const Filter = ({ id, title, selectedCategory, setSelectedCategory}) => {
+  const navigate = useNavigate();
   return (
       <li>
         <div className="filter-option">
@@ -6,9 +9,11 @@ const Filter = ({ id, title, selectedCategory, setSelectedCategory}) => {
             type="radio"
             id={id}
             name="category"
-            checked={selectedCategory.id === id}
-            // onClick={handleClick}
-            onChange={() => setSelectedCategory({ id, title })}
+            checked={selectedCategory.title === title}
+            onChange={() => {
+              setSelectedCategory({ title });
+              navigate(`/category/${title}`);
+            }}
             className="flex-none"
           />
           <label htmlFor={id}>{title}</label>

@@ -9,6 +9,7 @@ import EditUser from "./EditUser";
 import ViewUser from "./ViewUser";
 import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
+import { Tooltip } from "react-tooltip";
 
 const GetUser = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const GetUser = () => {
   const [allBooks, setAllBooks] = useState([]);
   const [filterType, setFilterType] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [books, setBooks] = useState([]);
 
     const [openAddEditModal, setopenAddEditModal] = useState({
         isShown: false,
@@ -28,6 +30,17 @@ const GetUser = () => {
       isShown: false,
       data: null,
     });
+
+    const getBorrowedBooks = async() => {
+      try{
+        const response = await axiosInstance.get("/get-borrowed-book");
+        if (response.data && response.data.borrowedById) {
+          setBooks(response.data.borrowedById);
+      }
+      }catch(error){
+        console.error("An unexpected error occurred. Please try again", error);
+      }
+    }
 
   const getUserInfo = async () => {
     try {
@@ -85,6 +98,7 @@ const GetUser = () => {
 
   useEffect(() => {
     getUserInfo();
+    getBorrowedBooks();
     AOS.init({
       duration: 1000,
       easing: 'ease-in-out',
@@ -162,12 +176,15 @@ const GetUser = () => {
               
               <div className="bg-white rounded-lg shadow-lg mt-4 p-6" data-aos="fade-up" data-aos-once="false" data-aos-anchor-placement="top-bottom">
                 <h2 className="text-gray-800 font-bold text-xl">Recent Activities</h2>
-                <ul className="list-disc list-inside text-gray-600">
-                  <li>Activity 1</li>
-                  <li>Activity 2</li>
-                  <li>Activity 3</li>
-                  <li>Activity 4</li>
-                </ul>
+                <div className="list-disc list-inside text-gray-600">
+                {books.map((book) => (
+                <div key={book.bookId} className="border-b border-gray-300 text-center hover:bg-gray-50">
+                  <div className="py-3 px-4">
+                    <img src={book.imageUrl} alt={book.title} className="w-16 h-20 object-cover rounded-md border border-gray-300" />
+                  </div>
+                </div>
+              ))}
+                </div>
               </div>
             </div>
             
@@ -182,10 +199,12 @@ const GetUser = () => {
                     <i className="fas fa-key"></i>
                     <span>Change password</span>
                   </button>
-                  <button className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-start space-x-2" onClick={() => handleNavigation('/book-in-borrowing')}>
+
+                  {userInfo.role === "admin" && <button className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-start space-x-2" onClick={() => handleNavigation('/borrowed')}>
                     <i className="fas fa-book"></i>
                     <span>Book in borrowing</span>
-                  </button>
+                  </button>}
+
                   <button className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-start space-x-2" 
                     onEdit={() => handleEdit()}
                     onClick={() => handleViewUser()}
