@@ -17,12 +17,19 @@ const GameCard = () => {
 
   return (
     <div>
-        <div style={{ display: visible ? "block" : "none" }}>
+        <div 
+            style={{ 
+                display: visible ? "block" : "none",
+                width: "100vw",
+                height: "100vh",
+                zIndex: -1
+             }}
+        >
            <iframe
                 id="unity-frame"
                 src="/Build/index.html"
                 width="100%"
-                height="600"
+                height="100%"
                 style={{ border: "none" }}
             ></iframe>
         </div>

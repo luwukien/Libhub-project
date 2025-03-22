@@ -10,14 +10,30 @@ import CardSlider from "../../components/Cards/CardSlider";
 import { useSearch } from "../../utils/useSearch";  // Import the custom hook
 import "../About/styles.css";
 import Card from "../../components/Cards/Card";
+import HotBookSlider from "../../components/Cards/HotBookSlider";
+
 
 const Home = () => {
   const [items, setItems] = useState({ categories: [], hotBooks: [] });
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
   // get Inforamation user
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+
+  // fetching data category
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get("/categories");
+      setCategories(response.data.story);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
   const getUserInfo = async () => {
     try {
       const response = await axiosInstance.get("/get-user");
@@ -97,7 +113,7 @@ const Home = () => {
               </div>
               <div className='flex justify-center items-center my-3 font-KumbhSans'>
                 <a href="/about">
-                <button className='py-3 px-6 rounded-full text-black bg-pornhub-200 hover:bg-pornhub-300 font-semibold'>More details</button>
+                  <button className='py-3 px-6 rounded-full text-black bg-pornhub-200 hover:bg-pornhub-300 font-semibold'>More details</button>
                 </a>
               </div>
             </div>
@@ -109,7 +125,7 @@ const Home = () => {
                 Categories
               </div>
               {/* Render CardCategories and CardSlider from data */}
-              <CardSlider items={items.categories} Component={Card}/>
+              <CardSlider items={items.categories} Component={Card} />
             </div>
           </div>{/*End category-previous*/}
 

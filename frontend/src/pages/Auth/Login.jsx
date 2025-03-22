@@ -30,23 +30,20 @@ const Login = () => {
 
     setError("");
 
+    
     try {
-      const response = await axiosInstance.post("/login", {
-        email:email,
-        password:password,
-      });
+      const response = await axiosInstance.post(
+        "/login",
+        { email, password },
+        { withCredentials: true } // Quan trọng! Để gửi cookie
+      );
+
       console.log(response.data);
-      if(response.data && response.data.accessToken) {
-        localStorage.setItem("token", response.data.accessToken);
-        navigate("/home");
-      }
-    } catch(error){
-      if(error.response && 
-        error.response.data &&
-        error.response.data.message
-      ){
+      navigate("/home");
+    } catch (error) {
+      if (error.response?.data?.message) {
         setError(error.response.data.message);
-      }else{
+      } else {
         setError("An unexpected error occurred. Please try again.");
       }
     }

@@ -5,10 +5,10 @@ import useLogout from '../../utils/useLogout';
 import axiosInstance from '../../utils/axiosInstance';
 
 
-const ProfileInfo = ({ }) => {
+const ProfileInfo = ({user}) => {
 
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState(user);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const logout = useLogout();
@@ -64,7 +64,7 @@ const ProfileInfo = ({ }) => {
               exit={{ opacity: 100, y: 15 }}
               style={{ translateX: "-30%" }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute left-1/2 shadow-lg top-0 z-100 rounded-lg bg-white"
+              className="absolute shadow-lg top-0 z-100 rounded-lg bg-white"
             >
               <button className="block px-4 py-2 w-full text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => {navigate("/account")}}>View Profile</button>
               <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer" onClick={(e) => {
