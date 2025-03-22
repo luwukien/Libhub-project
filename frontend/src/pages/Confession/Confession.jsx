@@ -12,8 +12,18 @@ const Confession = () => {
   const [posts, setPosts] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef(null);
+  const [userId, setUserId] = useState();
 
 
+  const getUserId = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      // console.log(response.data.user._id);
+      setUserId(response.data.user._id);
+    } catch (error) {
+      console.error("Lỗi khi lấy userId:", error);
+    }
+  }
 
   const getPosts = async () => {
     try {
@@ -23,6 +33,11 @@ const Confession = () => {
       console.error("Lỗi khi lấy bài đăng:", error);
     }
   };
+
+  useEffect(() => {
+    getUserId();
+  }, []);
+
   useEffect(() => {
     getPosts();
   }, []);
@@ -34,6 +49,7 @@ const Confession = () => {
       content: content,
       image: image || "",
       createdAt: new Date().toISOString(),
+      userCreate: userId,
     };
 
     try {
