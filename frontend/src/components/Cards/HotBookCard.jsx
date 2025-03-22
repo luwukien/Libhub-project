@@ -11,7 +11,7 @@ const HotBookCard = ({title, imgUrl, onClick}) => {
             alt="book-cover" 
             className="w-full h-full"
             onClick={onClick}
-            onError={(e) => (e.target.src = "./public/Lib-hub.svg")} // Fallback image
+            onError={(e) => (e.target.src = "/Lib-hub.svg")} // Fallback image
             /> 
           </div>
           

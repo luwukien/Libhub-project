@@ -1,7 +1,7 @@
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const handlePageChange = (page) => {
     if (page !== currentPage) {
-      onPageChange(page); // Gọi hàm cập nhật state
+      onPageChange(page); 
     }
   };
 

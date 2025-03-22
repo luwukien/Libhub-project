@@ -5,16 +5,16 @@ import useLogout from '../../utils/useLogout';
 import axiosInstance from '../../utils/axiosInstance';
 
 
-const ProfileInfo = ({ }) => {
+const ProfileInfo = ({user}) => {
 
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState(user);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const logout = useLogout();
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
-    console.log(userInfo);
+
   };
 
   const getUserInfo = async () => {

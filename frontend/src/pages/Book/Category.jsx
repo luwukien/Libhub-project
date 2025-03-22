@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import Header from "../../components/layouts/Header";
 import BookCard from "../../components/Cards/BookCard";
@@ -14,10 +14,11 @@ import Filter from "../../components/CategoryElement/Filter";
 import SortFilter from "../../components/CategoryElement/SortFilter";
 import Pagination from "../../components/CategoryElement/Pagination";
 import { useMemo } from "react";
+import { getCookie } from "../../utils/getCookie";
 
-const Category = () => {
+const Category = ({}) => {
 
-
+    const { title } = useParams();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [userInfo, setUserInfo] = useState(null);
@@ -46,35 +47,41 @@ const Category = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
+    const isCookie = getCookie('token');
+    
+
     const getUserInfo = async () => {
         try {
-            const response = await axiosInstance.get("/get-user");
-            if (response.data && response.data.user) {
-                setUserInfo(response.data.user);
-            }
+          const response = await axiosInstance.get("/get-user");
+          if (response.data && response.data.user) {
+              setUserInfo(response.data.user);
+          }
         } catch (error) {
-            if (error.response.status === 401) {
-                localStorage.clear();
-                navigate("/home");
-            }
+          console.error("An unexpected error occurred. Please try again", error);
         }
     };
 
     const getAllBooks = async (page) => {
       setLoading(true);
       try {
-          const response = await axiosInstance.get(`/get-all-book?page=${page}&limit=16`);
-  
-          if (response.data && response.data.stories) {
-              setAllBooks(response.data.stories);
-              setTotalPages(response.data.totalPages || 1);
-          }
+        let response = null;
+        if(isCookie){
+          response = await axiosInstance.get(`/get-all-book-user?page=${page}&limit=16`);
+        }
+        else{
+          response = await axiosInstance.get(`/get-all-book?page=${page}&limit=16`);
+        }
+        
+        if (response.data && response.data.stories) {
+          setAllBooks(response.data.stories);
+          setTotalPages(response.data.totalPages || 1);
+        }
       } catch (error) {
-          console.error("An unexpected error occurred. Please try again", error);
-      } finally {
-          setLoading(false);
-      }
-  };
+          console.log("An unexpected error occurred. Please try again");
+      }finally {
+        setLoading(false);
+    }
+  }
 
 
     const handleEdit = (data) => {
@@ -98,7 +105,7 @@ const Category = () => {
                 getAllBooks();
             }
         } catch (error) {
-            setError("An unexpected error occurred.Please try again!")
+            setError("An unexpected error occurred.Please try again!");
         }
     }
 
@@ -140,7 +147,7 @@ const Category = () => {
     }
 
   useEffect(() => {
-    getUserInfo();
+    isCookie && getUserInfo();
     getAllBooks(currentPage);
     return () => {};
   }, [currentPage]);
@@ -156,7 +163,12 @@ const Category = () => {
     }
   };
 
+  const handleReload = () => {
+    window.location.reload();
+  };
+
   useEffect(() => {
+    setSelectedCategory(title);
     fetchFilters();
     setLoading(false);
   }, []);
@@ -183,14 +195,18 @@ const Category = () => {
   }, [allBooks, selectedCategory]);
 
   useEffect(() => {
-    setSelectedCategory({ title: "All" });
-  }, []);
+    if (title) {
+      setSelectedCategory({ title });
+    } else {
+      setSelectedCategory({ title: "All" });
+    }
+  }, [title]);
 
 
   return ( 
     <>
       <header>
-        <Header userInfo={userInfo} 
+        <Header  
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onSearchNote={onSearchBook}
@@ -274,7 +290,11 @@ const Category = () => {
                                         remainingBook={item.remainingBook}
                                         isFavourite={item.isFavourite}
                                         onEdit={() => handleEdit(item)}
-                                        onClick={() => userInfo?.role === "admin" ? handleViewBook(item) : navigate(`/book/${item._id}`)}
+                                        onClick={() => 
+                                          userInfo?.role === "admin" 
+                                            ? handleViewBook(item) 
+                                            : navigate(`/book/${item._id}`)
+                                        }
                                         onFavouriteClick={() => updateIsFavourite(item)}
                                         />
                                     );
@@ -289,13 +309,13 @@ const Category = () => {
         </div>
       </main>
       
-      <div>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+      <div className="flex justify-center mt-10 mb-10">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
             
             <div>
             <Modal 
@@ -315,6 +335,7 @@ const Category = () => {
                 bookInfo={openAddEditModal.data}
                 onClose={() => {
                     setopenAddEditModal({ isShown: false, type: "add", data: null});
+                    handleReload();
                 }}
                 getAllBooks={getAllBooks} 
             />

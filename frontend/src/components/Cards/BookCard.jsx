@@ -28,7 +28,7 @@ onFavouriteClick,
       <button className="w-6 h-6 flex items-center justify-center bg-white/40 rounded-lg border border-white/30 absolute top-1 right-1"
         onClick={onFavouriteClick}
       >
-        <FaHeart className={`icon-btn transition-colors duration-300 ${isFavourite ? "text-red-500" : "text-white"}`}
+        <FaHeart className={icon-btn transition-colors duration-300 ${isFavourite ? "text-red-500" : "text-white"}}
         />
       </button>
 

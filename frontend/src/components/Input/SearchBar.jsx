@@ -5,7 +5,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6"
 
 const SearchBar = ({ value, onChange, handleSearch, onClearSearch }) => {
   return (
-    <div className="w-80 flex items-center px-4 bg-gray-100 rounded-lg">
+    <div className="w-96 flex items-center px-4 bg-gray-100 rounded-full">
         <input
           type="text"
           placeholder="Title book, author, ISBN, ..."
