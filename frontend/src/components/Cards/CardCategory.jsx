@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 const CardCategory = ({id, title, description, imageUrl, linkCategory}) => {
+  console.log(linkCategory);
   return (
     <div className="cursor-pointer p-4 md:w-[85%] m-auto hover:-translate-y-3 duration-300">
       <a href={linkCategory}>
