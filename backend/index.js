@@ -486,9 +486,9 @@ app.delete("/delete-book/:id", authenticateToken, async (req, res) => {
 
 //Search Book
 
-app.get("/search", authenticateToken, async (req, res) => {
+app.get("/search", async (req, res) => {
     const { query } = req.query;
-    const { userId } = req.user;
+    // const { userId } = req.user;
 
     if (!query) {
         return res.status(404).json({ error: true, message: "query is required" });
