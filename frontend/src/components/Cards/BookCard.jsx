@@ -15,7 +15,6 @@ onFavouriteClick,
 
 
 }) => {
-  console.log(title);
   return (
     <div className="box md:w-[calc(50%-55.5px)] lg:w-[calc(33.3%-53.3px)] vlg:w-[calc(25%-42.5px)] flex flex-col vlg:h-[371px] lg:h-[300px] md:h-[239px]">
       <img
