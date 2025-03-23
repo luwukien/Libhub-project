@@ -39,6 +39,9 @@ const CardSlider = ({ items, Component, type }) => {
   
   //setting for member card carousel
   const aboutSettings = {
+    className: "center",
+    centerMode: true,
+    centerPadding: "150px",
     dots: true,
     infinite: true,
     speed: 900,

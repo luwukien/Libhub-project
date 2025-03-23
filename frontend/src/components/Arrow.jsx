@@ -14,7 +14,7 @@ const PrevArrow = ({ sliderRef }) => {
   return (
     <button
       onClick={handlePrevClick}
-      className="absolute -left-7 top-1/2 transform -translate-y-1/2 z-10 rounded-full bg-gray-200 text-pornhub-200 hover:bg-pornhub-300 hover:text-white duration-200 w-14 h-14 flex items-center justify-center"
+      className="absolute -left-2 top-1/2 transform -translate-y-1/2 z-10 rounded-full bg-gray-200 text-pornhub-200 hover:bg-pornhub-300 hover:text-white duration-200 w-14 h-14 flex items-center justify-center"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@ const NextArrow = ({ sliderRef }) => {
   return (
     <button
       onClick={handleNextClick}
-      className="absolute -right-7 top-1/2 transform -translate-y-1/2 z-10 rounded-full bg-gray-200 text-pornhub-200 hover:bg-pornhub-300 hover:text-white duration-200 w-14 h-14 flex items-center justify-center"
+      className="absolute -right-2 top-1/2 transform -translate-y-1/2 z-10 rounded-full bg-gray-200 text-pornhub-200 hover:bg-pornhub-300 hover:text-white duration-200 w-14 h-14 flex items-center justify-center"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
