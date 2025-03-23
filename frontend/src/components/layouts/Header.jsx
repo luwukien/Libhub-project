@@ -8,6 +8,7 @@ import { useNavigationScroll } from "../../utils/navigationScroll";
 import { useAuthStore } from "../../pages/store/useAuthStore";
 import { getCookie } from "../../utils/getCookie";
 import axiosInstance from "../../utils/axiosInstance";
+import { Link } from "react-router-dom";
 
 
 const Header = ({ 
@@ -93,7 +94,7 @@ const Header = ({
         onMouseLeave={() => setOpen(false)}
         className="relative w-fit h-fit z-50"
       >
-        <a href="/category/All" className="ct-top-menu-item flex items-center group">
+        <Link to="/category/All" className="ct-top-menu-item flex items-center group">
           {children}
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-3 ml-2 transform transition-transform duration-300 group-hover:rotate-180">
             <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -103,7 +104,7 @@ const Header = ({
               transform: showFlyout ? "scaleX(1)" : "scaleX(0)",
             }}
           />
-        </a>
+        </Link>
         <AnimatePresence>
           {showFlyout && (
             <motion.div
@@ -127,12 +128,12 @@ const Header = ({
     return (
       <div className="h-auto w-[250px] bg-white shadow-xl font-NunitoSans rounded-md z-50">
         <ul className="font-normal text-base">
-          <li className="ct-flyout-menu"><a href="/category/Technology">Technology Books</a></li>
-          <li className="ct-flyout-menu"><a href="/category/Economy">Economy Books</a></li>
-          <li className="ct-flyout-menu"><a href="/category/History">History Books</a></li>
-          <li className="ct-flyout-menu"><a href="/category/Language">Language Books</a></li>
-          <li className="ct-flyout-menu"><a href="/category/Psychology">Psychology Books</a></li>
-          <li className="ct-flyout-menu"><a href="/category/Philosophy">Philosophy Books</a></li>
+          <li className="ct-flyout-menu"><Link to="/category/Technology">Technology Books</Link></li>
+          <li className="ct-flyout-menu"><Link to="/category/Economy">Economy Books</Link></li>
+          <li className="ct-flyout-menu"><Link to="/category/History">History Books</Link></li>
+          <li className="ct-flyout-menu"><Link to="/category/Language">Language Books</Link></li>
+          <li className="ct-flyout-menu"><Link to="/category/Psychology">Psychology Books</Link></li>
+          <li className="ct-flyout-menu"><Link to="/category/Philosophy">Philosophy Books</Link></li>
         </ul>
       </div>
     );
@@ -154,8 +155,8 @@ const Header = ({
         }}
       >
         <div className="lg:basis-1/6 lg:mx-auto">
-          <a
-            href="/home"
+          <Link
+            to="/home"
             className="inline-flex items-center justify-center w-auto h-auto relative"
           >
             <img
@@ -168,7 +169,7 @@ const Header = ({
               onMouseEnter={(e) => (e.target.style.transform = "scale(1.1)")}
               onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
             />
-          </a>
+          </Link>
         </div>
 
         {/* Search Bar */}
@@ -187,7 +188,7 @@ const Header = ({
 
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
-          <li><a className="ct-top-menu-item" href="/home">Home</a></li>
+          <li><Link className="ct-top-menu-item" to="/home">Home</Link></li>
           <li><a className="ct-top-menu-item" onClick={handleAboutClick}>About </a></li>
           <li>
             <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
@@ -219,31 +220,31 @@ const Header = ({
               className="ct-top-menu-expand"
               style={{ padding: "1rem 0" }}
             >
-              <a href="/home" className="w-full">
+              <Link to="/home" className="w-full">
                 <li className="ct-top-menu-expand-item">
                   Home
                 </li>
-              </a>
+              </Link>
               <a className="w-full" onClick={() => { handleAboutClick(); setIsMenuOpen(false); }}>
                 <li className="ct-top-menu-expand-item">
                   About
                 </li>
               </a>
-              <a href="/category/All" className="w-full">
+              <Link to="/category/All" className="w-full">
                 <li className="ct-top-menu-expand-item">
                   Category
                 </li>
-              </a>
+              </Link>
               <a className="w-full" onClick={() => { handleContactClick(); setIsMenuOpen(false); }}>
                 <li className="ct-top-menu-expand-item">
                   Contact Us
                 </li>
               </a>
-              <a href="/account" className="w-full">
+              <Link to="/account" className="w-full">
                 <li className="ct-top-menu-expand-item">
                   View Profile
                 </li>
-              </a>
+              </Link>
               {isToken ?
                 <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer" onClick={(e) => {
                   e.stopPropagation();
@@ -252,11 +253,11 @@ const Header = ({
                 }}>
                   Log Out
                 </li> :
-                <a href="/login" className="w-full">
+                <Link to="/login" className="w-full">
                   <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
                     Log In
                   </li>
-                </a>
+                </Link>
               }
             </motion.div>
           )}

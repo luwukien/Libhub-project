@@ -198,46 +198,66 @@ app.post("/add-book", authenticateToken, async (req, res) => {
 
 app.get("/get-all-book-user", authenticateToken, async (req, res) => {
     const { userId } = req.user;
-    const { page = 1, limit = 16 } = req.query;
-
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 16; 
+    const filter = req.query.filter;
     try {
-        const books = await Book.find({}).sort({ favouriteCount: -1 })
-        .skip((page - 1) * limit)
-        .limit(Number(limit));
+        
+        let query = {};
+        if (filter && filter !== "All") {
+            query.category = { $regex: filter, $options: "i" }; 
+        }
 
-        const totalBooks = await Book.countDocuments(); 
+        const books = await Book.find(query)
+            .sort({ }) 
+            .skip((page - 1) * limit) 
+            .limit(limit); 
+
+        const totalBooks = await Book.countDocuments(query);
         const totalPages = Math.ceil(totalBooks / limit);
 
         const user = await User.findById(userId);
 
-        const booksWithFavourite = books.map(book => {
-            const isFavourite = user.favourites.includes(book._id);
-            return { ...book.toObject(), isFavourite };
-        });
-        res.status(200).json({ 
+        const booksWithFavourite = books.map(book => ({
+            ...book.toObject(),
+            isFavourite: user.favourites.includes(book._id),
+        }));
+
+        res.status(200).json({
             stories: booksWithFavourite,
             totalPages,
-            currentpage : Number(page),
+            currentPage: page,
         });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
 });
 
-app.get("/get-all-book", async (req, res) => {
-    const { page = 1, limit = 16 } = req.query;
-    try {
-        const books = await Book.find({}).sort({ favouriteCount: -1 })
-        .skip((page - 1) * limit)
-        .limit(Number(limit));
 
-        const totalBooks = await Book.countDocuments(); 
+app.get("/get-all-book", async (req, res) => {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 16;
+    const filter = req.query.filter;
+
+    try {
+        let query = {};
+        if (filter && filter !== "All") {
+            query.category = { $regex: filter, $options: "i" }; 
+        }
+
+        const books = await Book.find(query)
+            .sort({ }) 
+            .skip((page - 1) * limit) 
+            .limit(limit); 
+        
+
+        const totalBooks = await Book.countDocuments(query); 
         const totalPages = Math.ceil(totalBooks / limit);
 
         res.status(200).json({
             stories: books,
             totalPages,
-            currentpage : Number(page),
+            currentpage : page,
         });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });

@@ -10,6 +10,7 @@ import ViewUser from "./ViewUser";
 import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
 import { Tooltip } from "react-tooltip";
+import useLogout from "../../utils/useLogout";
 
 const GetUser = () => {
   const navigate = useNavigate();
@@ -41,6 +42,8 @@ const GetUser = () => {
         console.error("An unexpected error occurred. Please try again", error);
       }
     }
+
+    const logout = useLogout();
 
   const getUserInfo = async () => {
     try {
@@ -118,12 +121,6 @@ const GetUser = () => {
   return (
     <>
       <header>
-        <Navbar 
-          userInfo={userInfo}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          onSearchNote={onSearchBook}
-          handleClearSearch={handleClearSearch} />
       </header>
 
       <main className="flex flex-col lg:flex-row items-start justify-center min-h-screen p-4 bg-gradient-to-r from-gray-100 to-gray-300" style={{ paddingTop: '80px' }}>
@@ -178,11 +175,19 @@ const GetUser = () => {
                 <h2 className="text-gray-800 font-bold text-xl">Recent Activities</h2>
                 <div className="list-disc list-inside text-gray-600">
                 {books.map((book) => (
-                <div key={book.bookId} className="border-b border-gray-300 text-center hover:bg-gray-50">
+                  <button onClick={() => {
+                    navigate(`/book/${book.bookId}`);
+                  }}>
+                  <div key={book.bookId} className="border-b border-gray-300 text-center hover:bg-gray-50">
                   <div className="py-3 px-4">
-                    <img src={book.imageUrl} alt={book.title} className="w-16 h-20 object-cover rounded-md border border-gray-300" />
+                    <img 
+                    src={book.imageUrl} 
+                    alt={book.title} 
+                    className="w-16 h-20 object-cover rounded-md border border-gray-300"
+                    />
                   </div>
                 </div>
+                </button>
               ))}
                 </div>
               </div>
@@ -212,7 +217,7 @@ const GetUser = () => {
                     <i className="fas fa-cog"></i>
                     <span>Account Settings</span>
                   </button>
-                  <button className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-start space-x-2" onClick={() => handleNavigation('/login')}>
+                  <button className="bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-start space-x-2" onClick={() => logout()}>
                     <i className="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                   </button>

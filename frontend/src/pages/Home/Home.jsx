@@ -13,8 +13,6 @@ const Home = () => {
   const [error, setError] = useState(null);
     // get Inforamation user
     const navigate = useNavigate();
-    const [userInfo, setUserInfo] = useState(null);
-
     const [allBooks, setAllBooks] = useState([]);
     const [filterType, setFilterType] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
@@ -73,18 +71,10 @@ const Home = () => {
         <>
           <div className="content-wrapper font-NunitoSans">
             <header>
-              <Header 
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                onSearchNote={onSearchBook}
-                handleClearSearch={handleClearSearch}
-              />  
             </header>
       
               <main className="">
-                <div className="rounded-lg">
-                  {/* <GameCard /> */}
-                </div> 
+              <div className=""></div>
 
           <div className="bg-gray-100 h-auto">
             <div className="p-5 " id='about'>

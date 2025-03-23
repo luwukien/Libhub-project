@@ -109,11 +109,6 @@ const SearchResult = () => {
 
   return (
     <>
-      <Header 
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
-        handleClearSearch={handleClearSearch}
-    />
       <div className="container mx-auto py-10">
         
         <div>

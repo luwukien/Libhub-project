@@ -1,40 +1,30 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import "./styles.css";
 
-const GameCard = () => {
+function PersistentGame() {
+  const location = useLocation();
+  const [isGameVisible, setIsGameVisible] = useState(true);
 
-    const location = useLocation();     
-    const isGamePage = location.pathname === "/home";
+    console.log(location.pathname);
 
-    const [visible, setVisible] = useState(() => {
-        return localStorage.getItem("unityGameVisible") === "false" ? false : true;
-    });
-
-    useEffect(() => {
-        localStorage.setItem("unityGameVisible", visible);
-        setVisible(isGamePage);
-    }, [visible]);
+  useEffect(() => {
+    setIsGameVisible(location.pathname === "/home");
+  }, [location]);
 
   return (
-    <div>
-        <div 
-            style={{ 
-                display: visible ? "block" : "none",
-                width: "100vw",
-                height: "100vh",
-                zIndex: -1
-             }}
-        >
-           <iframe
-                id="unity-frame"
-                src="/Build/index.html"
-                width="100%"
-                height="100%"
-                style={{ border: "none" }}
-            ></iframe>
-        </div>
-    </div>
+    <iframe
+      id="game-frame"
+      src="/Build/index.html" 
+      style={{
+        width: "100%",
+        height: "100vh",
+        border: "none",
+        zIndex: -1, 
+        display: isGameVisible ? "block" : "none",
+      }}
+    />
   );
-};
+}
 
-export default GameCard;
+export default PersistentGame;

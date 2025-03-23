@@ -89,7 +89,6 @@ const BookDetail = ({  }) => {
 
   return (
     <div className="">
-      <Header />
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 ">
         <button
           className="text-gray-500 hover:text-gray-700 flex items-center mb-4"
