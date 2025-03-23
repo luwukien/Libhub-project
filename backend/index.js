@@ -203,7 +203,8 @@ app.get("/get-all-book-user", authenticateToken, async (req, res) => {
     const { page = 1, limit = 16 } = req.query;
 
     try {
-        const books = await Book.find({}).sort({ favouriteCount: -1 })
+        const books = await Book.find({})
+        .sort({ favouriteCount: -1})
         .skip((page - 1) * limit)
         .limit(Number(limit));
 
@@ -216,6 +217,7 @@ app.get("/get-all-book-user", authenticateToken, async (req, res) => {
             const isFavourite = user.favourites.includes(book._id);
             return { ...book.toObject(), isFavourite };
         });
+        // console.log(books);
         res.status(200).json({ 
             stories: booksWithFavourite,
             totalPages,

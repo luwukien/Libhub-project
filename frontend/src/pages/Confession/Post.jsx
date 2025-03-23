@@ -6,7 +6,7 @@ const Post = ({ post }) => {
     <div className="bg-gray-100 p-4 rounded-lg shadow mb-4">
       <div className="flex items-center mb-2">
         <img
-          src="post.userCreate.avatar"
+          src={post.userCreate.avatar}
           alt="Avatar"
           className="w-10 h-10 rounded-full sm:hidden md:block vsm:hidden"
         />
