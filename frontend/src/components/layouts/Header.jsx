@@ -8,6 +8,8 @@ import { useNavigationScroll } from "../../utils/navigationScroll";
 import { useAuthStore } from "../../pages/store/useAuthStore";
 import { getCookie } from "../../utils/getCookie";
 import axiosInstance from "../../utils/axiosInstance";
+import { Link } from "react-router-dom";
+
 
 const Header = ({
   searchQuery,
@@ -165,8 +167,8 @@ const Header = ({
 
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap">
-          <li><a className="ct-top-menu-item" href="/home">Home</a></li>
-          <li><a className="ct-top-menu-item" onClick={handleAboutClick}>About </a></li>
+          <li><Link className="ct-top-menu-item" to="/home">Home</Link></li>
+          <li><a className="ct-top-menu-item" href="/about" onClick={handleAboutClick}>About </a></li>
           <li>
             <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
               Category

@@ -3,46 +3,20 @@ import { Navigate, useNavigate } from "react-router-dom"
 import Header from "../../components/layouts/Header";
 import Footer from "../../components/layouts/Footer";
 import axiosInstance from "../../utils/axiosInstance";
-import TextToggle from "../../components/TextToggle";
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
 import { useSearch } from "../../utils/useSearch";  // Import the custom hook
 import "../About/styles.css";
-import Card from "../../components/Cards/Card";
-import HotBookSlider from "../../components/Cards/HotBookSlider";
-
 
 const Home = () => {
   const [items, setItems] = useState({ categories: [], hotBooks: [] });
+  const [HotBooks, setHotBooks] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // get Inforamation user
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-
-  // fetching data category
-  const fetchData = async () => {
-    try {
-      const response = await axiosInstance.get("/categories");
-      setCategories(response.data.story);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
-
-  const getAllBooks = async () => {
-    try {
-      const response = await axiosInstance.get("/get-all-book");
-      if (response.data && response.data.stories) {
-        setAllBooks(response.data.stories);
-      }
-    } catch (error) {
-      console.log("An unexpected error occurred. Please try again");
-    }
-  }
 
   const {
     searchQuery,
@@ -50,15 +24,38 @@ const Home = () => {
     onSearchBook,
     handleClearSearch,
   } = useSearch();
-  
+
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetching categories from /home
+        const categoryResponse = await axiosInstance.get('/home');
+        if (categoryResponse.data && categoryResponse.data.categories) {
+          setCategories(categoryResponse.data.categories);
+        }
+
+        // Fetching books from /get-all-book
+        const bookResponse = await axiosInstance.get('/get-all-book');
+        if (bookResponse.data && bookResponse.data.stories) {
+          setHotBooks(bookResponse.data.stories);
+        }
+
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
     fetchData();
-    getAllBooks();
   }, []);
+
+  // When fetching process
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <>
-      <div className="content-wrapper font-NunitoSans">
+      <div className="font-NunitoSans">
         <header>
           <Header
             searchQuery={searchQuery}
@@ -68,13 +65,13 @@ const Home = () => {
           />
         </header>
 
-          <div className="rounded-lg">
-            <GameCard />
-          </div>
-        <main className="max-w-screen-xl mx-auto">
+        <div className="rounded-lg">
+          {/* <GameCard /> */}
+        </div>
+        <main className="w-full">
 
-          <div className="bg-gray-100 h-auto">
-            <div className="p-5 " id='about'>
+          <div className="bg-gray-100 h-auto w-full">
+            <div className="p-5 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-5 ">
               <div className="ct-subheadline">
                 What is the <span className="text-pornhub-200 ml-2 mr-2">Libhub</span> product?
               </div>
@@ -92,22 +89,34 @@ const Home = () => {
           </div> {/*End about*/}
 
           <div className="bg-white">
-            <div className="p-9">
+            <div className="p-9 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
               <div className="ct-subheadline">
                 Categories
               </div>
-              {/* Render CardCategories and CardSlider from data */}
-              <CardSlider items={items.categories} Component={Card} type="category" />
+              {/* Render CategoryCards from Card.jsx */}
+              <CardSlider
+                items={categories}
+                variant="category"
+                type="home"
+                cardType="card"
+                getKey={(item) => item.title} //return name category
+              />
             </div>
           </div>{/*End category-previous*/}
 
           <div className="bg-gray-100">
-            <div className="p-9">
+            <div className="p-9 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
               <div className="ct-subheadline">
                 Hot Books
               </div>
-              {/* Render CardCategories and CardSlider from data */}
-              <CardSlider items={items.hotBooks} Component={Card} />
+              {/* Render HotBookCards from Card.jsx */}
+              <CardSlider
+                items={HotBooks}
+                variant="hotbook"
+                type="home"
+                cardType="card"
+                getKey={(item) => item._id} //return id bookDetails 
+              />
             </div>
           </div> {/*End hot-book*/}
 

@@ -1,10 +1,17 @@
 import React, { useRef } from "react";
 import Card from "./Card";
+import CardMember from "./CardMember";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { PrevArrow, NextArrow } from "../Arrow";
-const CardSlider = ({ items, Component, type }) => {
+const CardSlider = ({
+  items,
+  variant = 'category',
+  type = 'home', //To choose setting for carousel 
+  cardType = 'card', //To choose Card or CardMember
+  getKey = (item, index) => item._id || item.title || index, //get key to return flexible value
+}) => {
   const sliderRef = useRef(null);
 
   //setting for hot books and category carousel
@@ -36,7 +43,7 @@ const CardSlider = ({ items, Component, type }) => {
       },
     ]
   };
-  
+
   //setting for member card carousel
   const aboutSettings = {
     className: "center",
@@ -52,6 +59,9 @@ const CardSlider = ({ items, Component, type }) => {
       {
         breakpoint: 1024,
         settings: {
+          className: "center",
+          centerMode: true,
+          centerPadding: "80px",
           slidesToShow: 1,
           slidesToScroll: 1,
           infinite: true,
@@ -61,6 +71,9 @@ const CardSlider = ({ items, Component, type }) => {
       {
         breakpoint: 640,
         settings: {
+          className: "center",
+          centerMode: true,
+          centerPadding: "10px",
           slidesToShow: 1,
           slidesToScroll: 1,
           initialSlide: 0,
@@ -70,14 +83,27 @@ const CardSlider = ({ items, Component, type }) => {
     ],
   };
 
-  const settings = type === "member" ? aboutSettings  : homeSettings  ;
+  const settings = type === "home" ? homeSettings : aboutSettings;
+  const SelectedCard = cardType === 'member' ? CardMember : Card;
 
   return (
     <div className="relative w-full max-w-7xl mx-auto mb-4 bg-transparent">
       <PrevArrow sliderRef={sliderRef} />
       <Slider ref={sliderRef} {...settings}>
         {items.map((item, index) => (
-          <Component key={index} {...item} />
+          <SelectedCard
+            key={getKey(item, index)} // Use getKey
+            variant={cardType === 'card' ? variant : undefined}
+            //Giải thích:
+            //Tại sao lại là variant={cardType === 'card' ? variant : undefined}
+            //Lý do là: nếu cardType là card(dùng Card): truyền prop variant vào Card để nó biết
+            //render ra là cardCategory hay cardHotBook
+            //Nếu cardType là cardMember: đặt variant là undefined, vì CardMember không cần variant(nó không cần 
+            //phân biệt như kiểu Card)
+            withHoverEffect={cardType === 'card'}
+            id={item._id || item.id} // Pass id for hotbook
+            {...item}
+          />
         ))}
       </Slider>
       <NextArrow sliderRef={sliderRef} />

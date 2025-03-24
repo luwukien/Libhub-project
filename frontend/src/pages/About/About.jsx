@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Header from '../../components/layouts/Header';
 import { useSearch } from '../../utils/useSearch';
 import Footer from '../../components/layouts/Footer';
-import CardMember from "../../components/Cards/CardMember";
 import CardSlider from "../../components/Cards/CardSlider";
 const About = () => {
   const {
@@ -107,7 +106,7 @@ const About = () => {
       </header>
 
       <main className="" id='about'>
-        <div className=" h-[400px] z-0">
+        <div className="h-[400px] z-0">
           <div
             className="flex flex-col items-center justify-center top-0 bottom-0 bg-slate-500 w-full h-[400px] bg-center bg-no-repeat bg-cover"
             style={{
@@ -144,7 +143,7 @@ const About = () => {
               We believe that reading not only helps expand knowledge but is
               also the key to developing critical thinking and creativity.
             </p>
-            <p className="mt-4">
+            <p className="mt-4 pb-3">
               Therefore, our library not only provides thousands of books in
               many different fields but also makes it easy for them to access
               the books by indicating their location on the bookshelf.
@@ -155,7 +154,12 @@ const About = () => {
           <div className="ct-subheadline text-center">
             <h2>Meeting Our Team</h2>
           </div>
-          <CardSlider items={members} Component={CardMember} type="member" />
+          <CardSlider 
+          items={members} 
+          cardType="member" 
+          type="member"
+          getKey={(item, index) => index} 
+          />
         </div>
       </main>
 
