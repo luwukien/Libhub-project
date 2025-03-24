@@ -16,6 +16,7 @@ const cookieParser = require("cookie-parser");
 const Category = require("./models/category.model");
 const Borrow = require("./models/borrow.model");
 const Post = require("./models/post.model");
+const uploadCloud = require("./uploadCloud");
 
 
 mongoose.connect(config.connectionString);
@@ -157,7 +158,7 @@ app.get("/home", async (req, res) => {
 
 //Get User
 app.get("/get-user", authenticateToken, async (req, res) => {
-    const { userId } = req.user
+    const { userId } = req.user;
     const isUser = await User.findOne({ _id: userId });
 
     if (!isUser) {
@@ -202,7 +203,8 @@ app.get("/get-all-book-user", authenticateToken, async (req, res) => {
     const { page = 1, limit = 16 } = req.query;
 
     try {
-        const books = await Book.find({}).sort({ favouriteCount: -1 })
+        const books = await Book.find({})
+        .sort({ favouriteCount: -1})
         .skip((page - 1) * limit)
         .limit(Number(limit));
 
@@ -215,6 +217,7 @@ app.get("/get-all-book-user", authenticateToken, async (req, res) => {
             const isFavourite = user.favourites.includes(book._id);
             return { ...book.toObject(), isFavourite };
         });
+        // console.log(books);
         res.status(200).json({ 
             stories: booksWithFavourite,
             totalPages,
@@ -279,7 +282,7 @@ app.get("/get-book/:id", async (req, res) => {
 });
 
 //upload image
-app.post("/image-upload", upload.single("image"), async (req, res) => {
+app.post("/image-upload", upload.single("image"), uploadCloud.uploadSingle, async (req, res) => {
     try {
         if (!req.file) {
             return res.
@@ -287,8 +290,9 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
                 .json({ error: true, message: "No image uploaded" });
         }
 
-        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
-        res.status(201).json({ imageUrl });
+        // const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+        // console.log(req.body.image);
+        res.status(201).json({ imageUrl: req.body.image });
 
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
@@ -484,9 +488,9 @@ app.delete("/delete-book/:id", authenticateToken, async (req, res) => {
 
 //Search Book
 
-app.get("/search", authenticateToken, async (req, res) => {
+app.get("/search", async (req, res) => {
     const { query } = req.query;
-    const { userId } = req.user;
+    // const { userId } = req.user;
 
     if (!query) {
         return res.status(404).json({ error: true, message: "query is required" });
@@ -661,13 +665,13 @@ app.post("/create-post", async (req, res) => {
 
 app.get("/get-posts", async (req, res) => {
     try {
-        const posts = await Post.find({});
-
-        res.status(200).json({posts});
+        const posts = await Post.find().populate("userCreate");
+        res.status(200).json({ posts });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
 });
+
 
 app.listen(8000);
 module.exports = app;

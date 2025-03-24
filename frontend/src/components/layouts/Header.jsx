@@ -152,18 +152,16 @@ const Header = ({
         </div>
 
         {/* Search Bar */}
-        {isToken && (
-          <div className="basis-1/2 lg:basis-5/12 relative md:flex flex-col items-center text-black text-center ml-4">
-            <SearchBar
-              value={searchQuery}
-              onChange={({ target }) => {
-                setSearchQuery(target.value);
-              }}
-              handleSearch={handleSearch}
-              onClearSearch={onClearSearch}
-            />
-          </div>
-        )}
+        <div className="basis-1/2 lg:basis-5/12 relative md:flex flex-col items-center text-black text-center ml-4">
+          <SearchBar 
+            value={searchQuery}
+            onChange={({ target }) => {
+              setSearchQuery(target.value);
+            }}
+            handleSearch={handleSearch}
+            onClearSearch={onClearSearch}
+          />
+        </div>
 
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap">

@@ -1,24 +1,15 @@
 const multer = require("multer");
-const path = require("path");
-//const fs = require("fs");
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb){
-        cb(null, "./uploads/");
-    },
-    filename: function (req, file, cb){
-        cb(null, Date.now() + path.extname(file.originalname));
-    },
-});
-
+// Cấu hình Multer để lưu file vào bộ nhớ (buffer)
+const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
-    if(file.mimetype.startsWith("image/")) {
+    if (file.mimetype.startsWith("image/")) {
         cb(null, true);
-    }else{
+    } else {
         cb(new Error("Only images allowed"), false);
     }
 };
 
-const upload = multer({storage, fileFilter});
+const upload = multer({ storage, fileFilter });
 
 module.exports = upload;
