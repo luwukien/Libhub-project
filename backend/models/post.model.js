@@ -10,7 +10,7 @@ const postSchema = new Schema(
       enum: ["true", "false", "pending"],
       default: "pending", // Mới đăng thì chờ duyệt
     },
-    // userCreate: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    userCreate: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );
