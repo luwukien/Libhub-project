@@ -223,33 +223,53 @@ const GetUser = () => {
           </div>
         )}
 
-        {activeSection === 'borrowing' && (
-          <div className="bg-white border-4 border-black-500 rounded-lg shadow-lg p-8 w-full min-h-full relative section-content" data-aos="fade-up">
-            <h3 className="text-4xl font-extrabold text-yellow-500 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              📚Book in Borrowing
-            </h3>
-            <div>
-              
-
-
-              
-            </div>
-          </div>
-        )}
+{activeSection === 'borrowing' && (
+  <div className="bg-white border-4 border-black-500 rounded-lg shadow-lg p-8 w-full min-h-full relative section-content" data-aos="fade-up">
+    <h3 className="text-4xl font-extrabold text-yellow-500 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+      📚Book in Borrowing
+    </h3>
+    <div className="inner-wrap flex flex-row flex-wrap justify-start space-x-5 pb-0">      <img
+        src="https://marketplace.canva.com/EAFPHUaBrFc/1/0/1003w/canva-black-and-white-modern-alone-story-book-cover-QHBKwQnsgzs.jpg"
+        style={{ width: '120px', height: 'auto' }}
+      />
+      <img
+        src="https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
+        style={{ width: '120px', height: 'auto' }}
+      />
+      <img
+        src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/art-book-cover-design-template-34323b0f0734dccded21e0e3bebf004c_screen.jpg?ts=1637015198"
+        style={{ width: '120px', height: 'auto' }}
+      />
+      <img
+        src="https://www.adobe.com/express/create/cover/media_19d5e212dbe8553614c3a9fbabd4d7f219ab01c85.png?width=750&format=png&optimize=medium"
+        style={{ width: '120px', height: 'auto' }}
+      />
+    </div>
+  </div>
+)}
 
         {activeSection === 'favourites' && (
           <div className="bg-white border-4 border-black-500 rounded-lg shadow-lg p-8 w-full min-h-full relative section-content" data-aos="fade-up">
-            <h3 className="text-4xl font-extrabold text-yellow-500 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+    <h3 className="text-4xl font-extrabold text-yellow-500 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
               ❤️Favourites
             </h3>
-            <div>
-              
-
-
-
-
-
-            </div>
+            <div className="inner-wrap flex flex-row flex-wrap justify-start space-x-5 pb-0">      <img
+        src="https://marketplace.canva.com/EAFPHUaBrFc/1/0/1003w/canva-black-and-white-modern-alone-story-book-cover-QHBKwQnsgzs.jpg"
+        style={{ width: '120px', height: 'auto' }}
+      />
+      <img
+        src="https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
+        style={{ width: '120px', height: 'auto' }}
+      />
+      <img
+        src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/art-book-cover-design-template-34323b0f0734dccded21e0e3bebf004c_screen.jpg?ts=1637015198"
+        style={{ width: '120px', height: 'auto' }}
+      />
+      <img
+        src="https://www.adobe.com/express/create/cover/media_19d5e212dbe8553614c3a9fbabd4d7f219ab01c85.png?width=750&format=png&optimize=medium"
+        style={{ width: '120px', height: 'auto' }}
+      />
+    </div>
           </div>
         )}
       </>
