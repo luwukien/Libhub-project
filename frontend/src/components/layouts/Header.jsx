@@ -12,7 +12,6 @@ const Header = ({
   setSearchQuery,
   onSearchNote,
   handleClearSearch
-
  }) => {
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -118,7 +117,7 @@ const Header = ({
   return (
     <header className="font-KumbhSans">
       <nav
-        className="flex justify-between items-center py-1 font-bold drop-shadow-sm bg-white h-[50px] z-50"
+        className="flex justify-between items-center py-1 font-bold drop-shadow-sm bg-white h-[70px] z-50"
         style={{
           position: "sticky",
           top: 0,
@@ -127,25 +126,25 @@ const Header = ({
           boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <div className="lg:basis-1/6 lg:mx-auto">
+        <div className="flex items-center lg:basis-1/6 lg:mx-auto">
           <a
             href="#"
             className="inline-flex items-center justify-center w-auto h-auto relative"
           >
             <img
-              className="lg:w-36 md:w-32 w-28 lg:h-auto"
-              src="/lib-hub-logo.png"
+              className="lg:w-16 md:w-16 w-16 lg:h-auto"
+              src="/anhchot.png"
               alt="Logo-lib-hub"
               style={{
                 transition: "transform 0.3s ease",
               }}
               onMouseEnter={(e) => (e.target.style.transform = "scale(1.1)")}
               onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+              onClick={() => { handleAboutClick(); setIsMenuOpen(false); }}
             />
           </a>
         </div>
-
-        {/* Search Bar */}
+  
         {isToken && (
         <>
           <SearchBar 
@@ -158,8 +157,7 @@ const Header = ({
           />
         </>
         )}
-
-        {/* Menu */}
+  
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
           <li><a className="ct-top-menu-item" href="/home">Home</a></li>
           <li><a className="ct-top-menu-item" onClick={handleAboutClick}>About </a></li>
@@ -169,8 +167,7 @@ const Header = ({
             </FlyoutLink>
           </li>
           <li><a className="ct-top-menu-item" onClick={handleContactClick}>Contact Us</a></li>
-
-          {/* Avatar with Dropdown */}
+  
           {isToken ? <ProfileInfo userInfo={userInfo} /> : (<button className="ct-top-menu-item" onClick={onLogin}>Login</button>)}
         </ul>
         <div className="lg:hidden flex items-center cursor-pointer px-3 sm:px-8 ml-auto">
@@ -181,7 +178,6 @@ const Header = ({
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
           </svg>
         </div>
-        {/*Mobile Menu*/}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
@@ -240,5 +236,4 @@ const Header = ({
   );
 };
 
-
-  export default Header;
+export default Header;

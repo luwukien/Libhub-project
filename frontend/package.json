@@ -8,9 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dev:frontend": "cd C:\\Users\\MSI\\Desktop\\LibHub\\LibHub\\frontend && vite",
-    "dev:backend": "cd C:\\Users\\MSI\\Desktop\\LibHub\\LibHub\\backend && node index.js",
-    "dev:mock-api": "cd C:\\Users\\MSI\\Desktop\\LibHub\\LibHub\\backend && npx json-server db.json",
+    "dev:frontend": "cd D:\\LibHubproject\\frontend && vite",
+    "dev:backend": "cd D:\\LibHubproject\\backend && node index.js",
+    "dev:mock-api": "cd D:\\LibHubproject\\backend && npx json-server db.json",
     "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:mock-api\""
   },
   "dependencies": {
@@ -32,6 +32,7 @@
     "react-router-dom": "^7.1.5",
     "react-slick": "^0.30.3",
     "react-toastify": "^11.0.5",
+    "react-tooltip": "^5.28.0",
     "slick-carousel": "^1.8.1",
     "swiper": "^11.2.4"
   },
