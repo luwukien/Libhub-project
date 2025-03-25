@@ -5,7 +5,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import React, { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-const SignUp = () => {
+const SignUp = ({ setIsToken }) => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
@@ -42,8 +42,7 @@ const SignUp = () => {
         password:password,
       });
       if(response.data && response.data.accessToken) {
-        console.log(response.data.accessToken)
-        localStorage.setItem("token", response.data.accsessToken);
+        setIsToken(true);
         navigate("/login");
       }
     } catch(error){

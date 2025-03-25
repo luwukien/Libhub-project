@@ -122,6 +122,7 @@ const Category = ({}) => {
     };
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     isCookie && getUserInfo();
     getAllBooks(currentPage);
     return () => {};
@@ -179,7 +180,7 @@ const Category = ({}) => {
       </header>
       <main id="main">
         <div className="inner-wrap flex flex-row justify-center pb-0">
-          <div className="relative p-4 h-fit">
+          <div className="relative p-4">
             {isScreenInRange ? (
               <>
                 {/* This is the filter button for mobile view */}
@@ -238,7 +239,7 @@ const Category = ({}) => {
             )}
           </div>
 
-          <div className="inner-category basis-3/4 max-w-[75%] pl-4 pr-4 pb-8 mt-[40px] vsm:relative vsm:top-[88px] vsm:right-[50px] sm:static">
+          <div className="inner-category basis-3/4 max-w-[60%] pl-4 pr-4 pb-8 mt-[30px] vsm:relative vsm:top-[88px] vsm:right-[50px] sm:static">
             <div className="inner-wrap c-container">
               <div>
                 {allBooks.length > 0 ? (

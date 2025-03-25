@@ -11,7 +11,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { Link } from "react-router-dom";
 
 
-const Header = ({ 
+const Header = ({
   searchQuery,
   setSearchQuery,
   onSearchNote,
@@ -32,21 +32,19 @@ const Header = ({
       const response = await axiosInstance.get("/get-user");
       if (response.data && response.data.user) {
         setUserInfo(response.data.user);
-        
       }
     } catch (error) {
       if (error.response.status === 401) {
-        
-        rage.clear();
+        rage.clear(); // Có thể là lỗi typo, cần kiểm tra lại
       }
     }
   };
 
   const handleSearch = () => {
-  if (searchQuery.trim()) {
-    navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-  }
-};
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
   const onClearSearch = () => {
     handleClearSearch();
@@ -57,9 +55,9 @@ const Header = ({
   const logout = useLogout();
   const { handleAboutClick, handleContactClick, handleScrollAfterNavigation } = useNavigationScroll();
 
-    const handleDropdownToggle = () => {
-      setIsDropdownOpen((prev) => !prev);
-    };
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -76,8 +74,6 @@ const Header = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [handleScrollAfterNavigation]);
-
-  
 
   const onLogin = () => {
     navigate("/login");
@@ -139,11 +135,11 @@ const Header = ({
   };
 
   useEffect(() => {
-    isToken && getUserInfo(); 
+    isToken && getUserInfo();
   }, []);
 
   return (
-    <header className="font-KumbhSans">
+    <header className="font-KumbhSans z-40 mx-2">
       <nav
         className="flex justify-between items-center py-1 font-bold drop-shadow-sm bg-white h-[70px] z-50"
         style={{
@@ -173,25 +169,27 @@ const Header = ({
         </div>
 
         {/* Search Bar */}
-        <SearchBar 
-          value={searchQuery}
-          onChange={({ target }) => {
-            setSearchQuery(target.value);
-          }}
-          handleSearch={handleSearch}
-          onClearSearch={onClearSearch}
-        />
+        <div className="basis-1/2 lg:basis-5/12 relative md:flex flex-col items-center text-black text-center ml-4">
+          <SearchBar 
+            value={searchQuery}
+            onChange={({ target }) => {
+              setSearchQuery(target.value);
+            }}
+            handleSearch={handleSearch}
+            onClearSearch={onClearSearch}
+          />
+        </div>
 
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
           <li><Link className="ct-top-menu-item" to="/home">Home</Link></li>
-          <li><a className="ct-top-menu-item" onClick={handleAboutClick}>About </a></li>
+          <li><Link className="ct-top-menu-item" to="/about">About </Link></li>
           <li>
             <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
               Category
             </FlyoutLink>
           </li>
-          <li><a className="ct-top-menu-item" onClick={handleContactClick}>Contact Us</a></li>
+          <li><Link className="ct-top-menu-item" to="/confession">Confession</Link></li>
 
           {/* Avatar with Dropdown */}
           {Boolean(isToken) ? <ProfileInfo user={userInfo} /> : (<a href="/login" className="ct-top-menu-item">Login</a>)}
@@ -221,9 +219,7 @@ const Header = ({
                 </li>
               </Link>
               <a className="w-full" onClick={() => { handleAboutClick(); setIsMenuOpen(false); }}>
-                <li className="ct-top-menu-expand-item">
-                  About
-                </li>
+                <li className="ct-top-menu-expand-item">About</li>
               </a>
               <Link to="/category/All" className="w-full">
                 <li className="ct-top-menu-expand-item">
@@ -231,9 +227,7 @@ const Header = ({
                 </li>
               </Link>
               <a className="w-full" onClick={() => { handleContactClick(); setIsMenuOpen(false); }}>
-                <li className="ct-top-menu-expand-item">
-                  Contact Us
-                </li>
+                <li className="ct-top-menu-expand-item">Contact Us</li>
               </a>
               <Link to="/account" className="w-full">
                 <li className="ct-top-menu-expand-item">

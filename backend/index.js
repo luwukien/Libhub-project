@@ -149,9 +149,13 @@ app.get("/home", async (req, res) => {
     // if (!isUser) {
     //     return res.sendStatus(401);
     // }
+
+    const hotBooks = await Book.find({}).sort({ favouriteCount: -1});
+
     const categories = await Category.find({});
     return res.json({
         categories: categories,
+        hotBooks,
         message: "",
     });
 });
@@ -214,8 +218,6 @@ app.get("/get-all-book-user", authenticateToken, async (req, res) => {
             .sort({ }) 
             .skip((page - 1) * limit) 
             .limit(limit); 
-
-        
 
         const totalBooks = await Book.countDocuments(query);
         const totalPages = Math.ceil(totalBooks / limit);

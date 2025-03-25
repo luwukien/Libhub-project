@@ -90,7 +90,7 @@ const GetUser = () => {
       anchorPlacement: 'top-bottom',
       mirror: false, 
     });
-  }, []);
+  }, [userInfo]);
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);

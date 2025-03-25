@@ -1,5 +1,4 @@
 import React from 'react'
-import Glass from '../Cards/Glass'
 import { IoMdClose } from "react-icons/io"
 import { FaMagnifyingGlass } from "react-icons/fa6"
 import { useNavigate } from 'react-router-dom'

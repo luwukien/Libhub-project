@@ -1,11 +1,11 @@
 // import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-const Login = ({ setIsToken }) => {
+const Login = ({ setIsToken, isToken }) => {
   
   const [showPassword, setShowPassword] = useState(false);
 
@@ -48,7 +48,9 @@ const Login = ({ setIsToken }) => {
     }
 
   };
-
+  useEffect(() => {
+      
+    }, [isToken]);
   return (
     <div
       className="flex items-center justify-center min-h-screen bg-cover bg-center backdrop-blur-[2px]"
@@ -61,10 +63,9 @@ const Login = ({ setIsToken }) => {
 
       <div className="bg-white bg-opacity-80 rounded-2xl p-8 shadow-lg w-96">
         {/* Title */}
-        <h2 className="text-center text-xl font-bold mb-1">Login</h2>
-        <p className="text-center text-lg text-gray-900 font-bold mb-4">
+        <h2 className="text-center text-xl text-gray-900 font-bold mb-4">
           Welcome back!
-        </p>
+        </h2>
 
         {/* Form */}
         <form onSubmit={handleLogin}>

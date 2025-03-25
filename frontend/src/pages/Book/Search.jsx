@@ -109,29 +109,45 @@ const SearchResult = () => {
 
   return (
     <>
-      <div className="container mx-auto py-10">
-        
-        <div>
-          {allBooks.length > 0 ? (
-            allBooks.map((item) => (
-                <BookCard 
-                key={item._id}
-                imgUrl={item.imageUrl}
-                title={item.title}
-                story={item.story}
-                author={item.author}
-                date={item.date}
-                remainingBook={item.remainingBook}
-                isFavourite={item.isFavourite}
-                onEdit={() => handleEdit(item)}
-                onClick={() => userInfo?.role === "admin" ? handleViewBook(item) : navigate(`/book/${item._id}`)}
-                />
-            ))
-          ) : (
-            <p>No results found.</p>
-          )}
-        </div>
-      </div>
+    <div className="inner-wrap flex flex-row justify-center pb-0">
+    <div className="relative p-4">
+    <div className="inner-category basis-3/4 max-w-[60%] pl-4 pr-4 pb-8 mt-[30px] vsm:relative vsm:top-[88px] vsm:right-[50px] sm:static">
+      <div className="inner-category basis-3/4 max-w-[100%] pl-4 pr-4 pb-8 mt-[30px] vsm:relative vsm:top-[88px] vsm:right-[50px] sm:static">
+            <div className="inner-wrap c-container">
+              <div>
+                {allBooks.length > 0 ? (
+                            <div className="list-book flex flex-row flex-wrap gap-[50px]">
+                                {allBooks.map((item) => {
+                                    return (
+                                        <BookCard 
+                                        key={item._id}
+                                        imgUrl={item.imageUrl}
+                                        title={item.title}
+                                        story={item.story}
+                                        author={item.author}
+                                        date={item.date}
+                                        remainingBook={item.remainingBook}
+                                        isFavourite={item.isFavourite}
+                                        onEdit={() => handleEdit(item)}
+                                        onClick={() => 
+                                          userInfo?.role === "admin" 
+                                            ? handleViewBook(item) 
+                                            : navigate(`/book/${item._id}`)
+                                        }
+                                        onFavouriteClick={() => updateIsFavourite(item)}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <>Empty Card Here</>
+                        )}
+              </div>
+            </div>
+          </div>
+          </div>
+          </div>
+          </div>
       <div>
             <Modal 
               isOpen={openAddEditModal.isShown}
