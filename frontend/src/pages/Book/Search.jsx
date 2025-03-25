@@ -104,7 +104,7 @@ const SearchResult = () => {
     if (query) {
       fetchSearchResults();
     }
-    getUserInfo();
+    // getUserInfo();
   }, [query]);
 
   return (

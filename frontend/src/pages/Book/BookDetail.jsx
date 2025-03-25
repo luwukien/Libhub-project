@@ -13,11 +13,12 @@ import Modal from 'react-modal';
 import ViewBorrow from "./ViewBorrow";
 
 
-const BookDetail = ({  }) => {
+const BookDetail = ({}) => {
   const { id } = useParams(); 
   const navigate = useNavigate();
   const [bookInfo, setBookInfo] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  const [isBorrowed, setIsBorrowed] = useState(false);
 
   const isCookie = getCookie('token');
 
@@ -49,12 +50,18 @@ const BookDetail = ({  }) => {
       let response = null;
       if(isCookie){
         response = await axiosInstance.get(`/get-book-user/${id}`);
+        
       }
       else{
         response = await axiosInstance.get(`/get-book/${id}`);
       }
       if (response.data && response.data.story) {
           setBookInfo(response.data.story);
+        }
+      if (response.data.isBorrowed) {
+          setIsBorrowed(response.data.isBorrowed);
+          console.log(123);
+          console.log(isBorrowed);
         }
       } catch (error) {
         console.log("An unexpected error occurred. Please try again");
@@ -109,6 +116,7 @@ const BookDetail = ({  }) => {
 
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-gray-800">{bookInfo.title}</h1>
+            {isBorrowed && <h1 className="text-xl font-bold text-gray-500"> you have borrowed this book </h1>}
             <div className="flex items-center justify-between mt-2 text-sm text-gray-500">
               <span>{moment(bookInfo.date).format("Do MMM YYYY")}</span>
               <div className="inline-flex items-center gap-2 text-yellow-600 bg-yellow-100 rounded px-2 py-1">

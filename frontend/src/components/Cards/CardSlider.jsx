@@ -74,6 +74,7 @@ const CardSlider = () => {
             title={category.title}
             description={category.description}  
             imageUrl={category.imageUrl}
+            linkCategory={`/category/${category.title}`}
             />
           );
         })}

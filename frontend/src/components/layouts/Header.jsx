@@ -173,18 +173,14 @@ const Header = ({
         </div>
 
         {/* Search Bar */}
-        {isToken && (
-        <>
-          <SearchBar 
-            value={searchQuery}
-            onChange={({ target }) => {
-              setSearchQuery(target.value);
-            }}
-            handleSearch={handleSearch}
-            onClearSearch={onClearSearch}
-          />
-        </>
-        )}
+        <SearchBar 
+          value={searchQuery}
+          onChange={({ target }) => {
+            setSearchQuery(target.value);
+          }}
+          handleSearch={handleSearch}
+          onClearSearch={onClearSearch}
+        />
 
         {/* Menu */}
         <ul id="ct-top-menu" className="basis-5 lg:basis-5/12 hidden lg:flex lg:justify-center lg:items-center lg:gap-12 text-base whitespace-nowrap ">
@@ -198,7 +194,7 @@ const Header = ({
           <li><a className="ct-top-menu-item" onClick={handleContactClick}>Contact Us</a></li>
 
           {/* Avatar with Dropdown */}
-          {Boolean(isToken) ? <ProfileInfo user={userInfo} /> : (<button className="ct-top-menu-item" onClick={onLogin}>Login</button>)}
+          {Boolean(isToken) ? <ProfileInfo user={userInfo} /> : (<a href="/login" className="ct-top-menu-item">Login</a>)}
         </ul>
         <div className="lg:hidden flex items-center cursor-pointer px-3 sm:px-8 ml-auto">
           <svg id="ct-toggle-top-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
@@ -253,11 +249,11 @@ const Header = ({
                 }}>
                   Log Out
                 </li> :
-                <Link to="/login" className="w-full">
+                <a href="/login" className="w-full">
                   <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer">
                     Log In
                   </li>
-                </Link>
+                </a>
               }
             </motion.div>
           )}

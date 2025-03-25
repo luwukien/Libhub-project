@@ -15,6 +15,8 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const Category = require("./models/category.model");
 const Borrow = require("./models/borrow.model");
+const Post = require("./models/post.model");
+const uploadCloud = require("./uploadCloud");
 
 
 mongoose.connect(config.connectionString);
@@ -156,7 +158,7 @@ app.get("/home", async (req, res) => {
 
 //Get User
 app.get("/get-user", authenticateToken, async (req, res) => {
-    const { userId } = req.user
+    const { userId } = req.user;
     const isUser = await User.findOne({ _id: userId });
 
     if (!isUser) {
@@ -270,6 +272,7 @@ app.get("/get-book-user/:id", authenticateToken, async (req, res) => {
 
     try {
         const book = await Book.findById(id);
+        const borrowed = await Borrow.find({ userId : userId, bookId : id});
         if (!book) {
             return res.status(404).json({ error: true, message: "Book not found" });
         }
@@ -277,7 +280,9 @@ app.get("/get-book-user/:id", authenticateToken, async (req, res) => {
         const user = await User.findById(userId);
         const isFavourite = user.favourites.includes(book._id);
 
-        res.status(200).json({ story: { ...book.toObject(), isFavourite } });
+        const isBorrowed = borrowed.length > 0;
+
+        res.status(200).json({ story: { ...book.toObject(), isFavourite }, isBorrowed  });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
@@ -297,8 +302,8 @@ app.get("/get-book/:id", async (req, res) => {
     }
 });
 
-//upload book cover
-app.post("/image-upload", upload.single("image"), async (req, res) => {
+//upload image
+app.post("/image-upload", upload.single("image"), uploadCloud.uploadSingle, async (req, res) => {
     try {
         if (!req.file) {
             return res.
@@ -306,8 +311,9 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
                 .json({ error: true, message: "No image uploaded" });
         }
 
-        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
-        res.status(201).json({ imageUrl });
+        // const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+        // console.log(req.body.image);
+        res.status(201).json({ imageUrl: req.body.image });
 
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
@@ -503,9 +509,9 @@ app.delete("/delete-book/:id", authenticateToken, async (req, res) => {
 
 //Search Book
 
-app.get("/search", authenticateToken, async (req, res) => {
+app.get("/search", async (req, res) => {
     const { query } = req.query;
-    const { userId } = req.user;
+    // const { userId } = req.user;
 
     if (!query) {
         return res.status(404).json({ error: true, message: "query is required" });
@@ -655,7 +661,6 @@ app.delete("/delete-borrow/:id", authenticateToken, async (req, res) => {
     }
 });
 
-
 //Get Borrowed Books
 app.get("/get-borrowed-book", authenticateToken, async (req, res) => {
     const { userId } = req.user;
@@ -671,6 +676,23 @@ app.get("/get-borrowed-book", authenticateToken, async (req, res) => {
         res.status(500).json({ error: true, message: error.message });
     }
 });
+
+//Confession
+app.post("/create-post", async (req, res) => {
+    const newPost = new Post(req.body);
+    await newPost.save();
+    res.status(200).json(newPost);
+});
+
+app.get("/get-posts", async (req, res) => {
+    try {
+        const posts = await Post.find().populate("userCreate");
+        res.status(200).json({ posts });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
 
 app.listen(8000);
 module.exports = app;

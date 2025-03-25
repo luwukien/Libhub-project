@@ -15,7 +15,6 @@ onFavouriteClick,
 
 
 }) => {
-
   return (
     <div className="box aspect-[4/3] md:w-[calc(50%-55.5px)] lg:w-[calc(33.3%-53.3px)] vlg:w-[calc(25%-42.5px)] sm:w-[182px] sm:h-[363px] flex flex-col vlg:h-[371px] lg:h-[300px] md:h-[424px] vsm:w-[69px] vsm:h-[153px]">
       <img

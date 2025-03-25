@@ -7,10 +7,13 @@ import TextToggle from "../../components/TextToggle";
 import GameCard from "../../components/Cards/GameCard";
 import CardSlider from "../../components/Cards/CardSlider";
 import HotBookSlider from "../../components/Cards/HotBookSlider";
+import { getCookie } from "../../utils/getCookie";
 
 const Home = () => {
+
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
+  const [isCookie, setIsCookie] = useState(getCookie("token"));
     // get Inforamation user
     const navigate = useNavigate();
     const [allBooks, setAllBooks] = useState([]);
@@ -18,6 +21,7 @@ const Home = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
 
+  // window.location.reload();
 
   // fetching data category
   const fetchData = async () => {
@@ -65,7 +69,7 @@ const Home = () => {
     useEffect(() => {
       fetchData();
       getAllBooks();
-        }, []);
+        }, [isCookie]);
 
     return(
         <>

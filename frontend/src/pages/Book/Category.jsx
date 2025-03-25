@@ -24,9 +24,6 @@ const Category = ({}) => {
     const [userInfo, setUserInfo] = useState(null);
     const [allBooks, setAllBooks] = useState([]);
 
-    const [filterType, setFilterType] = useState("");
-    const [searchQuery, setSearchQuery] = useState('');
-
     const [openAddEditModal, setopenAddEditModal] = useState({
         isShown: false,
         type: "add",
@@ -38,7 +35,6 @@ const Category = ({}) => {
       data: null,
     });
 
-    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState({
         title: "All",
@@ -242,7 +238,7 @@ const Category = ({}) => {
             )}
           </div>
 
-          <div className="inner-category basis-3/4 max-w-[75%] pl-4 pr-4 pb-8 mt-[40px]">
+          <div className="inner-category basis-3/4 max-w-[75%] pl-4 pr-4 pb-8 mt-[40px] vsm:relative vsm:top-[88px] vsm:right-[50px] sm:static">
             <div className="inner-wrap c-container">
               <div>
                 {allBooks.length > 0 ? (

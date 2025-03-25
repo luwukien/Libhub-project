@@ -66,38 +66,6 @@ const GetUser = () => {
   const handleViewUser = () => {
   setOpenViewModal({isShown: true});
   };
-  
-  const getAllBooks = async () => {
-    try{
-        const response = await axiosInstance.get("/get-all-book");
-        if(response.data && response.data.stories){
-            setAllBooks(response.data.stories);
-        }
-    }catch(error){
-        console.log("An unexpected error occurred. Please try again");
-    }
-  }
-
-  const onSearchBook = async (query) => {
-    try{
-      const response = await axiosInstance.get("/search", {
-        params:{
-          query,
-        },
-      });
-      if(response.data && response.data.stories){
-        setFilterType("search");
-        setAllBooks(response.data.stories);
-      }
-  }catch(error){
-      setError("An unexpected error occurred.Please try again!")
-    }
-  }
-
-  const handleClearSearch = () => {
-  setFilterType("");
-  getAllBooks();
-  }
 
   useEffect(() => {
     getUserInfo();

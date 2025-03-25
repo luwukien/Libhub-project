@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-const Login = () => {
+const Login = ({ setIsToken }) => {
   
   const [showPassword, setShowPassword] = useState(false);
 
@@ -37,8 +37,7 @@ const Login = () => {
         { email, password },
         { withCredentials: true } // Quan trọng! Để gửi cookie
       );
-
-      console.log(response.data);
+      setIsToken(true);
       navigate("/home");
     } catch (error) {
       if (error.response?.data?.message) {
