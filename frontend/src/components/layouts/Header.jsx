@@ -16,7 +16,6 @@ const Header = ({
   setSearchQuery,
   onSearchNote,
   handleClearSearch
-
  }) => {
   
   const {checkAuth} = useAuthStore(); 
@@ -146,7 +145,7 @@ const Header = ({
   return (
     <header className="font-KumbhSans">
       <nav
-        className="flex justify-between items-center py-8 font-bold drop-shadow-sm bg-white h-[50px] z-50 scr:z-1000 vsm:z-0"
+        className="flex justify-between items-center py-1 font-bold drop-shadow-sm bg-white h-[70px] z-50"
         style={{
           position: "sticky",
           top: 0,
@@ -154,22 +153,23 @@ const Header = ({
           boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <div className="lg:basis-1/6 lg:mx-auto">
-          <Link
-            to="/home"
+        <div className="flex items-center lg:basis-1/6 lg:mx-auto">
+          <a
+            href="#"
             className="inline-flex items-center justify-center w-auto h-auto relative"
           >
             <img
-              className="lg:w-auto md:w-auto w-auto lg:h-14"
-              src="/lib-hub-logo.png"
+              className="lg:w-16 md:w-16 w-16 lg:h-auto"
+              src="/anhchot.png"
               alt="Logo-lib-hub"
               style={{
                 transition: "transform 0.3s ease",
               }}
               onMouseEnter={(e) => (e.target.style.transform = "scale(1.1)")}
               onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+              onClick={() => { handleAboutClick(); setIsMenuOpen(false); }}
             />
-          </Link>
+          </a>
         </div>
 
         {/* Search Bar */}
@@ -204,7 +204,6 @@ const Header = ({
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
           </svg>
         </div>
-        {/*Mobile Menu*/}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
@@ -263,5 +262,4 @@ const Header = ({
   );
 };
 
-
-  export default Header;
+export default Header;

@@ -215,10 +215,14 @@ app.get("/get-all-book-user", authenticateToken, async (req, res) => {
             .skip((page - 1) * limit) 
             .limit(limit); 
 
+        
+
         const totalBooks = await Book.countDocuments(query);
         const totalPages = Math.ceil(totalBooks / limit);
 
         const user = await User.findById(userId);
+
+        const favouriteBooks = await Book.find({ _id: { $in: user.favourites } });
 
         const booksWithFavourite = books.map(book => ({
             ...book.toObject(),
@@ -229,6 +233,24 @@ app.get("/get-all-book-user", authenticateToken, async (req, res) => {
             stories: booksWithFavourite,
             totalPages,
             currentPage: page,
+            favouriteBooks
+        });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+// Get user favourite books
+app.get("/get-favourite-books-user", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    try {
+
+        const user = await User.findById(userId);
+
+        const favouriteBooks = await Book.find({ _id: { $in: user.favourites } });
+
+        res.status(200).json({
+            favouriteBooks
         });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
