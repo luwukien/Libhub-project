@@ -11,6 +11,11 @@ const borrow = new Schema({
     imageUrl: {type: String},
     startDate: Date,
     endDate: Date,
+    status: {
+        type: String,
+        enum: ["true", "false", "pending"],
+        default: "pending", 
+    },
     bookId: {type: String, default: ""},
     userId: {type: String, default : ""},
 });

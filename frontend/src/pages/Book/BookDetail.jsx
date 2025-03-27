@@ -18,6 +18,7 @@ const BookDetail = ({ }) => {
   const navigate = useNavigate();
   const [bookInfo, setBookInfo] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  const [isBorrowed, setIsBorrowed] = useState(false);
 
   const isCookie = getCookie('token');
 
@@ -44,6 +45,10 @@ const BookDetail = ({ }) => {
 
   };
 
+  const updateIsBorrowed = (borrowed) => {
+    setIsBorrowed(borrowed);
+  };
+
   const fetchBook = async () => {
     try {
       let response = null;
@@ -55,6 +60,9 @@ const BookDetail = ({ }) => {
       }
       if (response.data && response.data.story) {
         setBookInfo(response.data.story);
+      }
+      if (response.data.isBorrowed) {
+        setIsBorrowed(response.data.isBorrowed);
       }
     } catch (error) {
       console.log("An unexpected error occurred. Please try again");
@@ -76,11 +84,12 @@ const BookDetail = ({ }) => {
     }
   };
 
-  const handleReload = () => {
-    window.location.reload();
+  const updateRemainingBook = (newRemaining) => {
+    setBookInfo((prev) => ({
+      ...prev,
+      remainingBook: newRemaining,
+    }));
   };
-
-  const isLoggedIn = false; //Default log out
 
   useEffect(() => {
     fetchBook();
@@ -132,6 +141,7 @@ const BookDetail = ({ }) => {
 
             <div className="flex gap-3 mt-6">
               <BorrowBtn
+                isBorrowed={isBorrowed}
                 bookInfo={bookInfo}
                 isLoggedIn={isCookie}
                 handleViewBook={handleViewBook}
@@ -172,8 +182,9 @@ const BookDetail = ({ }) => {
           bookInfo={bookInfo}
           onClose={() => {
             setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
-            handleReload();
           }}
+          updateRemainingBook={updateRemainingBook}
+          updateIsBorrowed={updateIsBorrowed}
         />
       </Modal>
       {/* Modal for view zoom in book cover */}

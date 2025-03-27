@@ -17,6 +17,7 @@ const Category = require("./models/category.model");
 const Borrow = require("./models/borrow.model");
 const Post = require("./models/post.model");
 const uploadCloud = require("./uploadCloud");
+const { console } = require("inspector");
 
 
 mongoose.connect(config.connectionString);
@@ -140,6 +141,18 @@ app.post("/logout", async (req, res) => {
     res.json({ message: "Logged out successfully" });
 });
 
+app.get("/get-all-users", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    const users = await User.find({ });
+
+    if (!users) {
+        return res.sendStatus(401);
+    }
+    return res.json({
+        users,
+        message: "",
+    });
+})
 
 //Home
 app.get("/home", async (req, res) => {
@@ -628,13 +641,15 @@ app.post("/borrow/:id", authenticateToken, async (req, res) => {
         return res.status(400).json({ error: true, message: "All fields are required" });
     }
 
-    const startParsedDate = new Date(parseInt(req.body.startDate));
-    const endParsedDate = new Date(parseInt(req.body.endDate));
-    req.body.startDate = startParsedDate;
-    req.body.endDate = endParsedDate;
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(startDate.getDate() + 30);
+    req.body.startDate = startDate;
+    req.body.endDate = endDate;
 
     try {
         const book = await Book.findOne({ _id: id });
+        const user = await User.findById(userId);
 
         const borrow = new Borrow({
             borrowName: req.body.borrowName,
@@ -649,13 +664,14 @@ app.post("/borrow/:id", authenticateToken, async (req, res) => {
             titleNoDiacritics: removeAccents(req.body.title),
             userId : req.body.userId,
         });
-
+        user.borrowedBooks.push(id);
         if(req.body.borrowNumber > book.remainingBook){
             return res.status(400).json({error : true, message : "Not enough book to borrow"});
         }else{
             book.remainingBook = book.remainingBook - req.body.borrowNumber;
             await book.save();
             await borrow.save();
+            await user.save();
         }
         res.status(201).json({ borrow: borrow, message: "Added Successfully" });
     } catch (error) {
@@ -665,36 +681,64 @@ app.post("/borrow/:id", authenticateToken, async (req, res) => {
 });
 
 //Delete Borrow
-app.delete("/delete-borrow/:id", authenticateToken, async (req, res) => {
-    const { userId } = req.user;
-    const { id } = req.params;
-
+app.delete("/delete-borrow/:id/:userId", authenticateToken, async (req, res) => {
+    const { id, userId } = req.params;
     try {
         const borrow = await Borrow.findOne({ _id: id });
-        const book = await Book.findOne({ _id: borrow.bookId });
-        book.remainingBook = book.remainingBook + borrow.borrowNumber;
         if (!borrow) {
             return res.status(404).json({ error: true, message: "Borrow request not found" });
         }
-        await borrow.deleteOne({ _id: id });
-        await book.save();
-        res.status(200).json({ error: "Borrow request delete successfully" });
+
+        // Tìm sách & user
+        const book = await Book.findOne({ _id: borrow.bookId });
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: true, message: "User not found" });
+        }
+
+        book.remainingBook += borrow.borrowNumber;
+
+        user.borrowedBooks = user.borrowedBooks.filter(
+            (bookId) => bookId.toString() !== borrow.bookId.toString()
+        );
+
+        await borrow.deleteOne(); 
+        await book.save(); 
+        await user.save(); 
+
+
+        res.status(200).json({ 
+            error: false, 
+            message: "Borrow request deleted successfully",
+            book,
+        });
 
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
 });
 
+
 //Get Borrowed Books
-app.get("/get-borrowed-book", authenticateToken, async (req, res) => {
+app.get("/get-borrowed-book/:id", authenticateToken, async (req, res) => { 
+    const { id } = req.params; 
+    try {
+        const borrowed = await Borrow.find({ userId: id }); 
+        res.status(200).json({ borrowed });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+
+//Get Pending Borrowed
+app.get("/get-borrowed", authenticateToken, async (req, res) => {
     const { userId } = req.user;
     try {
-        const borrowed = await Borrow.find({}); 
-        const borrowedById = borrowed.filter(b => b.userId.toString() === userId); 
+        const pendingBorrowed = await Borrow.find({ status : "pending"});  
 
         res.status(200).json({ 
-            borrowed,
-            borrowedById
+            pendingBorrowed,
         });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
@@ -715,6 +759,26 @@ app.get("/get-posts", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
+});
+
+//Approve Borrow request
+app.put("/approve-borrow-request/:id", authenticateToken, async (req, res) => {
+    const { userId } = req.user;
+    const {id} = req.params;
+    try {
+        const pending = await Borrow.findById(id); 
+        pending.status = "true";
+        await pending.save(); 
+        const borrowed = await Borrow.find({ status : "pending" });
+        const userBorrowed = await Borrow.find({ userId : userId});
+        res.status(200).json({ 
+            borrowed,
+            userBorrowed,
+        });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+
 });
 
 

@@ -42,7 +42,7 @@ const SignUp = ({ setIsToken }) => {
         password:password,
       });
       if(response.data && response.data.accessToken) {
-        setIsToken(true);
+        //setIsToken(true);
         navigate("/login");
       }
     } catch(error){

@@ -3,7 +3,7 @@ import Modal from "react-modal";
 
 Modal.setAppElement("#root");
 
-const BorrowBtn = ({ bookInfo, isLoggedIn, handleViewBook }) => {
+const BorrowBtn = ({ isBorrowed, bookInfo, isLoggedIn, handleViewBook }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleBorrowClick = () => {
@@ -25,12 +25,16 @@ const BorrowBtn = ({ bookInfo, isLoggedIn, handleViewBook }) => {
       {bookInfo.remainingBook > 0 ? (
         <>
           {/* Borrow Button */}
-          <button
+          {!isBorrowed ? <button
             className="bg-black text-white px-4 py-2 rounded-lg hover:bg-pornhub-200 font-semibold transition"
             onClick={handleBorrowClick}
           >
             Borrow!
-          </button>
+          </button> : <button
+            className="bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold"
+          >
+            You have borrowed this book!
+          </button>}
 
           {/* Modal Notify */}
           <Modal

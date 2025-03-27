@@ -52,6 +52,7 @@ const EditUser = ({
         toast.success("User updated successfully", {
           autoClose: 1000,
         });
+        getUserInfo();
         onClose();
       }
 
@@ -142,25 +143,7 @@ const EditUser = ({
         handleDeleteImg={handleDeleteAvatar}
         />
         
-        <div className="mb-4 relative group">
-            <label className="input-label">Password</label>
-            <input
-              type={showPassword ? "text" : "password"} 
-              className="w-full p-2 bg-slate-50 rounded-md"
-              value={password}
-              onChange={({target})=>{
-              setPassword(target.value);
-              }}
-            />
-            {/* Eye icon */}
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)} 
-              className="absolute inset-y-9 right-2 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-50"
-            >
-              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
-            </button>
-          </div>
+         
 
         <div className="flex flex-col gap-2 mt-4">
           <label className="input-label">MSSV</label>

@@ -8,20 +8,32 @@ import Category from "./pages/Book/Category";
 import BookDetail from "./pages/Book/BookDetail";
 import Search from "./pages/Book/Search";
 import { getCookie } from "./utils/getCookie";
-import BorrowedBooks from "./pages/Book/BorrowedBooks";
 import GameCard from "./components/Cards/GameCard"
 import Header from "./components/layouts/Header";
 import axiosInstance from "./utils/axiosInstance";
 import Confession from "./pages/Confession/Confession";
 import About from "./pages/About/About";
+import BorrowedBooks from "./pages/Admin/BorrowedBooks";
 
 const App = () => {
     const [isToken, setIsToken] = useState(getCookie("token")); 
     const [searchQuery, setSearchQuery] = useState('');
     const [allBooks, setAllBooks] = useState([]);
     const [filterType, setFilterType] = useState('');
+    const [userInfo, setUserInfo] = useState(null);
 
-    console.log(isToken);
+    const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      if (response.data && response.data.user) {
+        setUserInfo(response.data.user);
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        rage.clear(); // Có thể là lỗi typo, cần kiểm tra lại
+      }
+    }
+  };
 
     const getAllBooks = async () => {
         try{
@@ -55,9 +67,12 @@ const App = () => {
         getAllBooks();
     }
 
+    console.log(userInfo);
+
     useEffect(() => {
-        setIsToken(getCookie("token"));
-      }, []);
+      getUserInfo();
+      setIsToken(getCookie("token"));
+    }, []);
 
     return (
         <div>
@@ -76,13 +91,16 @@ const App = () => {
                     <Route path="/home" element={<Home />} />
                     <Route path="/login" element={isToken ? <Navigate to="/home" replace /> : <Login setIsToken={setIsToken}/>} />
                     <Route path="/signup" element={ <SignUp setIsToken={setIsToken}/>} />
-                    <Route path="/account" element={<Account />} />
+                    <Route path="/account" element={<Account userInfo={userInfo} getUserInfo={getUserInfo}/>} />
                     <Route path="/about" element={<About />} />
                     <Route path="/category/:title" element={<Category />} />
                     <Route path="/book/:id" element={<BookDetail />} />
                     <Route path="/search" element={<Search />} />
-                    <Route path="/borrowed" element={<BorrowedBooks />} />
-                    <Route path="/confession" element={<Confession isToken={isToken}/>} />
+                    <Route
+                        path="/management"
+                        element={userInfo?.role === "admin" ? <BorrowedBooks /> : <Navigate to="/home" replace />}
+                      />
+                    <Route path="/confession" element={<Confession isToken={isToken} userInfo={userInfo} getUserInfo={getUserInfo}/>} />
                 </Routes>
 
             </Router>

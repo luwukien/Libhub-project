@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
 
-const ViewBorrow = ({ onClose, bookInfo, userInfo }) => {
+const ViewBorrow = ({ onClose, bookInfo, userInfo, updateRemainingBook, updateIsBorrowed }) => {
 
   const [title, setTitle] = useState(bookInfo?.title || "");
   const [borrowName, setBorrowName] = useState(userInfo?.fullName || "");
@@ -16,13 +16,30 @@ const ViewBorrow = ({ onClose, bookInfo, userInfo }) => {
   const [bookCover, setBookCover] = useState(bookInfo?.imageUrl || null);
   const [phoneNumber, setPhoneNumber] = useState(userInfo?.phoneNumber || "");
   const [MSSV, setMSSV] = useState(userInfo?.MSSV || "");
-  const [borrowNumber, setBorrowNumber] = useState("");
+  const [borrowNumber, setBorrowNumber] = useState(1);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleBorrow = async () => {
-    
     const bookId = bookInfo._id;
+
+    console.log(userInfo.borrowedBooks.length);
+
+    if(userInfo.borrowedBooks.length > 4){
+      toast.error("You can't borrow more.");
+      return;
+    }
+
+    if (borrowNumber > bookInfo.remainingBook) {
+      toast.error("Not enough books available to borrow.");
+      return;
+    }
+  
+    if (borrowNumber > 1) {
+      toast.error("You can only borrow up to 2 copies of the same book.");
+      return;
+    }
+
       try{
         const response = await axiosInstance.post(`/borrow/${bookId}`, {
           title,
@@ -39,6 +56,12 @@ const ViewBorrow = ({ onClose, bookInfo, userInfo }) => {
           toast.success("Borrow Book successfully", {
             autoClose: 1000,
           });
+          if (updateRemainingBook) {
+            updateRemainingBook(bookInfo.remainingBook - borrowNumber);
+          }
+          if (updateIsBorrowed) {
+            updateIsBorrowed(true);
+          }
           onClose();
         }
   
@@ -53,7 +76,7 @@ const ViewBorrow = ({ onClose, bookInfo, userInfo }) => {
         }
       }
     }
-
+  
   return (
     <div className="relative">
       <button onClick={onClose} className="absolute right-0 top-0 p-1 hover:bg-gray-200 rounded-full">
@@ -87,13 +110,6 @@ const ViewBorrow = ({ onClose, bookInfo, userInfo }) => {
         </div>
 
           </div>  
-        <div className="my-3">
-          <DateSelector date={startDate} setDate={setStartDate}/>
-        </div>
-
-        <div className="my-3">
-          <DateSelector date={endDate} setDate={setEndDate}/>
-        </div>
         
         <div className="flex flex-col gap-2 mt-4">
           <label className="input-label">PHONE NUMBER</label>
@@ -119,17 +135,6 @@ const ViewBorrow = ({ onClose, bookInfo, userInfo }) => {
            />
         </div> 
 
-        <div className="flex flex-col gap-2 mt-4">
-          <label className="input-label"> QUANTITY </label>
-          <input
-           type="text"
-           className="text-sm text-slate-950 outline-none bg-slate-50 p-2 rounded"
-           placeholder="QUANTITY"
-           rows={1}
-           value={borrowNumber}
-           onChange={({ target }) => setBorrowNumber(target.value)}
-           />
-        </div>
       </div>
 
       <div className="flex justify-center mt-6">

@@ -11,15 +11,16 @@ import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
 import { Tooltip } from "react-tooltip";
 import useLogout from "../../utils/useLogout";
+import moment from "moment";
 
-const GetUser = () => {
+const GetUser = ({  }) => {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [books, setBooks] = useState([]);
   const [favouriteBooks, setFavouriteBooks] = useState([]);
   const [showAvatarMenu, setShowAvatarMenu] = useState(false);
   const [activeSection, setActiveSection] = useState('account'); 
+  const [userInfo, setUserInfo] = useState(null);
 
   const [openAddEditModal, setopenAddEditModal] = useState({
     isShown: false,
@@ -32,18 +33,33 @@ const GetUser = () => {
     data: null,
   });
 
-    const getBorrowedBooks = async() => {
-      try{
-        const response = await axiosInstance.get("/get-borrowed-book");
-        if (response.data && response.data.borrowedById) {
-          setBooks(response.data.borrowedById);
+  
+  const getBorrowedBooks = async(userId) => {
+    try{
+      const response = await axiosInstance.get(`/get-borrowed-book/${userId}`);
+      if (response.data && response.data.borrowed) {
+        setBooks(response.data.borrowed);
       }
-      }catch(error){
-        console.error("An unexpected error occurred. Please try again", error);
+    }catch(error){
+      console.error("An unexpected error occurred. Please try again", error);
+    }
+  }
+  
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      if (response.data && response.data.user) {
+        setUserInfo(response.data.user);
+        getBorrowedBooks(response.data.user._id);
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        rage.clear(); 
       }
     }
+  };
 
-    const getFavouriteBooks = async () => {
+  const getFavouriteBooks = async () => {
       try {
         let response = null;
           response = await axiosInstance.get("/get-favourite-books-user");
@@ -57,20 +73,6 @@ const GetUser = () => {
   
     const logout = useLogout();
 
-  const getUserInfo = async () => {
-    try {
-      const response = await axiosInstance.get("/get-user");
-      if (response.data && response.data.user) {
-        setUserInfo(response.data.user);
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        localStorage.clear();
-        navigate("/home");
-      }
-    }
-  };
-
   const handleEdit = () => {
     setopenAddEditModal({ isShown: true, type: "edit", data: userInfo });
   };
@@ -81,8 +83,6 @@ const GetUser = () => {
 
   useEffect(() => {
     getUserInfo();
-    getBorrowedBooks();
-    getFavouriteBooks();
     AOS.init({
       duration: 1000,
       easing: 'ease-in-out',
@@ -90,6 +90,12 @@ const GetUser = () => {
       anchorPlacement: 'top-bottom',
       mirror: false, 
     });
+  }, []);
+
+  useEffect(() => {
+    if (userInfo && userInfo._id) {
+      getFavouriteBooks();
+    }
   }, [userInfo]);
 
   const toggleSettings = () => {
@@ -142,7 +148,7 @@ const GetUser = () => {
       </button>
     </li>
     <li>
-      <button className="animated-button bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-center space-x-2 transition duration-300 ease-in-out transform hover:scale-105 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-opacity-50" onClick={() => userInfo.role === "admin" ?   handleNavigation("/borrowed") : setActiveSection("borrowing")}>
+      <button className="animated-button bg-yellow-500 text-black font-bold py-2 px-4 rounded-full w-full flex items-center justify-center space-x-2 transition duration-300 ease-in-out transform hover:scale-105 hover:text-white focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-opacity-50" onClick={() => userInfo.role === "admin" ?   handleNavigation("/management") : setActiveSection("borrowing")}>
         <i className="fas fa-book"></i>
         <span>Book in Borrowing</span>
       </button>
@@ -206,30 +212,55 @@ const GetUser = () => {
           </div>
         )}
 
-{activeSection === 'borrowing' && (
-  <div className="bg-white border-4 border-black-500 rounded-lg shadow-lg p-8 w-full min-h-full relative section-content" data-aos="fade-up">
-    <h3 className="text-4xl font-extrabold text-yellow-500 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-      📚Book in Borrowing
-    </h3>
-    <div className="inner-wrap flex flex-row flex-wrap justify-start space-x-5 pb-0">      
-          {books.map((book) => (
-                    <button onClick={() => {
-                      navigate(`/book/${book.bookId}`);
-                    }}>
-                    <div key={book.bookId} className=" text-center hover:bg-gray-50">
-                    <div className="py-3 px-4">
-                      <img 
+        {activeSection === 'borrowing' && (
+          <div className="bg-white border-4 border-black-500 rounded-lg shadow-lg p-8 w-full min-h-full relative section-content" data-aos="fade-up">
+          <h3 className="text-4xl font-extrabold text-yellow-500 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            📚 Book in Borrowing
+          </h3>
+        
+          {/* Header Row */}
+          <div className="grid grid-cols-4 text-center font-bold text-lg bg-gray-200 py-2 rounded-t-md">
+            <div>Book</div>
+            <div>Start Date</div>
+            <div>End Date</div>
+            <div>Status</div>
+          </div>
+        
+          {/* Book List */}
+          <div className="inner-wrap space-y-4">
+            {books.map((book) => (
+              <button 
+                key={book.bookId} 
+                onClick={() => navigate(`/book/${book.bookId}`)} 
+                className="w-full hover:bg-gray-50 transition"
+              >
+                <div className="grid grid-cols-4 items-center text-center border border-gray-300 p-4 shadow-sm">
+                  {/* Image Column */}
+                  <div className="flex justify-center">
+                    <img 
                       src={book.imageUrl} 
                       alt={book.title} 
                       className="w-24 h-auto object-cover rounded-md border border-gray-300"
-                      />
-                    </div>
+                    />
                   </div>
-                  </button>
-                ))}
-    </div>
-  </div>
-)}
+                  {/* Start Date Column */}
+                  <div className="text-gray-700 text-lg font-semibold">
+                    {moment(book.startDate).format("DD/MM/YYYY")}
+                  </div>
+                  {/* End Date Column */}
+                  <div className="text-gray-700 text-lg font-semibold">
+                    {moment(book.endDate).format("DD/MM/YYYY")}
+                  </div>
+                  {/* Status Column */}
+                  <div className={`text-lg font-semibold ${book.status === 'pending' ? 'text-yellow-500' : 'text-green-500'}`}>
+                    {book.status === 'pending' ? 'Pending' : 'Borrowed'}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+        )}
 
         {activeSection === 'favourites' && (
           <div className="bg-white border-4 border-black-500 rounded-lg shadow-lg p-8 w-full min-h-full relative section-content" data-aos="fade-up">

@@ -13,6 +13,7 @@ const UserSchema = new Schema({
   phoneNumber: { type: String, default: "" },
   favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
   role: { type: String, enum: ["admin", "user"], default: "user" },
+  borrowedBooks: [{type: mongoose.Schema.Types.ObjectId, ref: "Book"}],
 });
 
 module.exports = mongoose.model("User", UserSchema);
