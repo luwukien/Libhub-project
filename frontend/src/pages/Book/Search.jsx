@@ -11,8 +11,12 @@ import AddEditBook from "./AddEditBook";
 import { ToastContainer, toast } from 'react-toastify'; 
 import "./styles.css";
 import ViewBook from "./ViewBook";
+import Pagination from "../../components/CategoryElement/Pagination";
+import { getCookie } from "../../utils/getCookie";
+import BookBox from "../../components/CategoryElement/BookBox";
+import "./styles.css";
 
-const SearchResult = () => {
+const SearchResult = ({ userInfo, getUserInfo }) => {
     
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,8 +24,11 @@ const SearchResult = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const query = queryParams.get("q");
   const [filterType, setFilterType] = useState('');
-  const [userInfo, setUserInfo] = useState(null);
   const [allBooks, setAllBooks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const isCookie = getCookie('token');
 
   const [openAddEditModal, setOpenAddEditModal] = useState({
             isShown: false,
@@ -34,25 +41,12 @@ const SearchResult = () => {
           data: null,
   });
 
-  const getUserInfo = async () => {
-    try{
-        const response = await axiosInstance.get("/get-user");
-        if(response.data && response.data.user){
-            setUserInfo(response.data.user);
-        }
-    }catch(error){
-        if(error.response.status === 401){
-            localStorage.clear();
-            navigate("/home");
-        }
-    }
-};
-
   const getAllBooks = async () => {
     try{
         const response = await axiosInstance.get("/get-all-book");
         if(response.data && response.data.stories){
             setAllBooks(response.data.stories);
+            setTotalPages(response.data.totalPages || 1);
         }
     }catch(error){
         console.log("An unexpected error occurred. Please try again");
@@ -89,34 +83,56 @@ const SearchResult = () => {
         }
   }
 
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      try {
-        const response = await axiosInstance.get("/search", { params: { query } });
-        if (response.data && response.data.stories) {
-          setAllBooks(response.data.stories);
-        }
-      } catch (error) {
-        console.error("Error fetching search results:", error);
+  const fetchSearchResults = async (currentPage) => {
+    try {
+      const response = await axiosInstance.get("/search", { params: { 
+        query, 
+        page: currentPage,
+        limit: 16,
+        user: JSON.stringify(userInfo)
+      }  });
+      if (response.data && response.data.stories) {
+        setAllBooks(response.data.stories);
+        setTotalPages(response.data.totalPages || 1);
       }
-    };
-
-    if (query) {
-      fetchSearchResults();
+    } catch (error) {
+      console.error("Error fetching search results:", error);
     }
-    // getUserInfo();
-  }, [query]);
+  };
+
+  const updateIsFavourite = async (bookData) => {
+    const bookId = bookData._id;
+    try {
+        const response = await axiosInstance.put(`/update-is-favourite/${bookId}`);
+
+        if (response.data && response.data.story) {
+            toast.success("Update Successfully", {
+                autoClose: 1000,
+            });
+            getAllBooks();
+        }
+    } catch (error) {
+        console.log("An unexpected error occurred. Please try again.");
+    }
+};
+
+  useEffect(() => {
+    getUserInfo();
+    if (query) {
+      fetchSearchResults(currentPage);
+    }
+    
+  }, [query, currentPage]);
 
   return (
     <>
-    <div className="inner-wrap flex flex-row justify-center pb-0">
-    <div className="relative p-4">
-    <div className="inner-category basis-3/4 max-w-[60%] pl-4 pr-4 pb-8 mt-[30px] vsm:relative vsm:top-[88px] vsm:right-[50px] sm:static">
-      <div className="inner-category basis-3/4 max-w-[100%] pl-4 pr-4 pb-8 mt-[30px] vsm:relative vsm:top-[88px] vsm:right-[50px] sm:static">
+    <main id="main" className="flex justify-center mb-10">
+        <div className="flex justify-center mt-10 mb-10">
+          <div className="inner-category basis-3/4 max-w-[60%] pl-4 pr-4 pb-8 mt-[30px] vsm:relative vsm:top-[88px] vsm:right-[60px] sm:static">
             <div className="inner-wrap c-container">
               <div>
                 {allBooks.length > 0 ? (
-                            <div className="list-book flex flex-row flex-wrap gap-[50px]">
+                            <div className="list-book flex justify-center flex-row flex-wrap gap-[50px]">
                                 {allBooks.map((item) => {
                                     return (
                                         <BookCard 
@@ -145,8 +161,15 @@ const SearchResult = () => {
               </div>
             </div>
           </div>
-          </div>
-          </div>
+        </div>
+      </main>
+
+    <div className="flex justify-center mt-10 mb-10">
+          <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
       <div>
             <Modal 

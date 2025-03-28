@@ -186,7 +186,7 @@ const Header = ({
           <li><Link className="ct-top-menu-item" to="/about">About </Link></li>
           <li>
             <FlyoutLink className="ct-top-menu-item" FlyoutContent={CategoryContent}>
-              Category
+              Books
             </FlyoutLink>
           </li>
           <li><Link className="ct-top-menu-item" to="/confession">Confession</Link></li>
@@ -223,7 +223,7 @@ const Header = ({
               </a>
               <Link to="/category/All" className="w-full">
                 <li className="ct-top-menu-expand-item">
-                  Category
+                  Books
                 </li>
               </Link>
               <a className="w-full" onClick={() => { handleContactClick(); setIsMenuOpen(false); }}>

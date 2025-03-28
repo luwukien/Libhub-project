@@ -14,6 +14,7 @@ import axiosInstance from "./utils/axiosInstance";
 import Confession from "./pages/Confession/Confession";
 import About from "./pages/About/About";
 import BorrowedBooks from "./pages/Admin/BorrowedBooks";
+import RouterHandler from "./utils/RouterHandler";
 
 const App = () => {
     const [isToken, setIsToken] = useState(getCookie("token")); 
@@ -21,6 +22,8 @@ const App = () => {
     const [allBooks, setAllBooks] = useState([]);
     const [filterType, setFilterType] = useState('');
     const [userInfo, setUserInfo] = useState(null);
+
+    const [navigate, setNavigate] = useState("");
 
     const getUserInfo = async () => {
     try {
@@ -66,26 +69,26 @@ const App = () => {
         setFilterType("");
         getAllBooks();
     }
-
-    console.log(userInfo);
-
+    
     useEffect(() => {
       getUserInfo();
       setIsToken(getCookie("token"));
     }, []);
-
+    
     return (
         <div>
             <Router>
             {window.location.pathname !== "/login" && window.location.pathname !== "/signup" && (
                 <Header
+                    className="fixed top-0 left-0 w-full z-50 bg-white shadow-md"
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                     onSearchNote={onSearchBook}
                     handleClearSearch={handleClearSearch}
                 />
-                )}
-                {isToken && <GameCard id="game-frame"/>}
+              )}
+                <GameCard id="game-frame"/>
+                <RouterHandler />
                 <Routes>
                     <Route path="/" element={<Root />} />
                     <Route path="/home" element={<Home />} />
@@ -95,7 +98,7 @@ const App = () => {
                     <Route path="/about" element={<About />} />
                     <Route path="/category/:title" element={<Category />} />
                     <Route path="/book/:id" element={<BookDetail />} />
-                    <Route path="/search" element={<Search />} />
+                    <Route path="/search" element={<Search userInfo={userInfo} getUserInfo={getUserInfo}/>} />
                     <Route
                         path="/management"
                         element={userInfo?.role === "admin" ? <BorrowedBooks /> : <Navigate to="/home" replace />}

@@ -180,7 +180,7 @@ const Category = ({}) => {
       </header>
       <main id="main">
         <div className="inner-wrap flex flex-row justify-center pb-0">
-          <div className="relative p-4">
+          <div className="relative p-3">
             {isScreenInRange ? (
               <>
                 {/* This is the filter button for mobile view */}
@@ -243,7 +243,7 @@ const Category = ({}) => {
             <div className="inner-wrap c-container">
               <div>
                 {allBooks.length > 0 ? (
-                            <div className="list-book flex flex-row flex-wrap gap-[50px]">
+                            <div className="list-book flex flex-row flex-wrap gap-x-[50px] gap-y-[50px]">
                                 {allBooks.map((item) => {
                                     return (
                                         <BookCard 

@@ -6,7 +6,20 @@ function PersistentGame() {
   const location = useLocation();
   const [isGameVisible, setIsGameVisible] = useState(true);
 
-    console.log(location.pathname);
+
+  useEffect(() => {
+    const handleMessage = (event) => {
+      console.log("📩 [Web -> React] Full Event:", event);
+      console.log("📩 [Web -> React] Data Received:", event.data);
+  
+      if (event.data?.type === "unityMessage") {
+        console.log("✅ Unity gửi:", event.data);
+      }
+    };
+  
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   useEffect(() => {
     setIsGameVisible(location.pathname === "/home");
@@ -29,6 +42,7 @@ function PersistentGame() {
     <iframe
       id="game-frame"
       src="/Build/index.html" 
+      sandbox="allow-scripts allow-same-origin allow-modals allow-forms"
       style={{
         width: "100%",
         height: "100vh",

@@ -545,36 +545,52 @@ app.delete("/delete-book/:id", authenticateToken, async (req, res) => {
 });
 
 //Search Book
-
 app.get("/search", async (req, res) => {
     const { query } = req.query;
-    // const { userId } = req.user;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 16;
+    const user = JSON.parse(req.query.user);
 
     if (!query) {
-        return res.status(404).json({ error: true, message: "query is required" });
+        return res.status(404).json({ error: true, message: "Query is required" });
     }
-    // Hàm loại bỏ dấu
 
     removeAccents(req.query.query);
     const regex = new RegExp(req.query.query, "i");
 
     try {
-        const searchResults = await Book.find({
+        const searchQuery = {
             $or: [
                 { title: regex },
                 { titleNoDiacritics: regex },
                 { story: regex },
                 { storyNoDiacritics: regex },
             ],
-        }).sort({ isFavourite: -1 });
+        };
 
+        const totalBooks = await Book.countDocuments(searchQuery);
+        const totalPages = Math.ceil(totalBooks / limit);
 
+        const searchResults = await Book.find(searchQuery)
+            .skip((page - 1) * limit)
+            .limit(limit);
 
-        res.status(200).json({ stories: searchResults });
+        const booksWithFavourite = searchResults.map(book => ({
+            ...book.toObject(),
+            isFavourite: user.favourites.includes(book._id),
+        }));
+
+        res.status(200).json({
+            stories: booksWithFavourite,
+            totalPages,
+            currentPage: page,
+            user,
+        });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
     }
 });
+
 
 app.post("/add-filter", authenticateToken, async (req, res) => {
     const { userId } = req.user;
@@ -781,6 +797,40 @@ app.put("/approve-borrow-request/:id", authenticateToken, async (req, res) => {
 
 });
 
+app.delete("/delete-post/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const post = await Post.findById(id);
+        if (!post) {
+            return res.status(404).json({ error: true, message: "Bài đăng không tồn tại" });
+        }
+
+        await Post.findByIdAndDelete(id);
+
+        res.status(200).json({ success: true, message: "Xóa bài đăng thành công" });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
+
+app.patch("/approve-post/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const post = await Post.findById(id);
+        if (!post) {
+            return res.status(404).json({ error: true, message: "Bài đăng không tồn tại" });
+        }
+
+        post.status = "true";
+        await post.save();
+
+        res.status(200).json({ success: true, message: "Phê duyệt đăng thành công" });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+});
 
 app.listen(8000);
 module.exports = app;

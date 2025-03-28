@@ -7,59 +7,74 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import axiosInstance from "../../utils/axiosInstance";
 import { getCookie } from "../../utils/getCookie";
 
-const Confession = ({ userInfo, getUserInfo }) => {
+const Confession = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [posts, setPosts] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef(null);
+  const [userId, setUserId] = useState();
+  const [role, setRole] = useState("user");
 
   const isToken = getCookie("token");
+  const getUserId = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      setRole(response.data.user.role);
+      setUserId(response.data.user._id);
+      // console.log(response.data.user._id);
+    } catch (error) {
+      console.error("Lỗi khi lấy userId:", error);
+    }
+  };
 
   const getPosts = async () => {
     try {
       const response = await axiosInstance.get("/get-posts");
-      if(response.data && response.data.posts){
       setPosts(response.data.posts);
-      }
     } catch (error) {
       console.error("Lỗi khi lấy bài đăng:", error);
     }
   };
- 
-  
+
+  useEffect(() => {
+    getUserId();
+  }, []);
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
   const handlePost = async () => {
     if (!content.trim() && !image) return;
-    
-    let newPost = {
+
+    const newPost = {
       content: content,
       image: image || "",
       createdAt: new Date().toISOString(),
-      userCreate: userInfo._id,
+      userCreate: userId,
     };
-    
+
     try {
       const response = await axiosInstance.post("/create-post", newPost);
-      if(response.data && response.data.newPost){
-        getPosts();
-      }
+      window.location.reload();
     } catch (error) {
       console.error("Lỗi khi đăng bài:", error);
     }
   };
-  
+
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
+
     const formData = new FormData();
     formData.append("image", file);
-    
+
     try {
       const response = await axiosInstance.post("/image-upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      
+
       setImage(response.data.imageUrl);
     } catch (error) {
       console.error("Lỗi khi upload ảnh:", error);
@@ -77,16 +92,11 @@ const Confession = ({ userInfo, getUserInfo }) => {
       console.error("Lỗi khi xóa ảnh:", error);
     }
   };
-  
+
   const handleEmojiClick = (emojiObject) => {
     setContent((prev) => prev + emojiObject.emoji);
   };
 
-  useEffect(() => {
-    getPosts();
-    getUserInfo(); 
-  }, []);
-  
   return (
     <>
       <div className="flex justify-center gap-6 p-6 pb-20">
@@ -161,9 +171,11 @@ const Confession = ({ userInfo, getUserInfo }) => {
 
           {/* Hiển thị danh sách bài đăng bằng component Post */}
           <div className="max-w-2xl mx-auto mt-5">
-            {posts.map((post) => (
-              <Post key={post._id} post={post} />
-            ))}
+              {posts
+                .filter((item) => role === "admin" || item.status === "true") 
+                .map((item, index) => (
+                  <Post key={index} post={item} getPosts={getPosts} role={role}/>
+                ))}
           </div>
         </div>
       </div>
