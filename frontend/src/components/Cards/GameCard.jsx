@@ -44,8 +44,8 @@ function PersistentGame() {
       src="/Build/index.html" 
       sandbox="allow-scripts allow-same-origin allow-modals allow-forms"
       style={{
-        width: "100%",
-        height: "100vh",
+        width: "100vw",
+        height: "120vh",
         border: "none",
         zIndex: -1, 
         display: isGameVisible ? "block" : "none",
