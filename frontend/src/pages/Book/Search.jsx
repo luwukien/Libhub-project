@@ -28,8 +28,6 @@ const SearchResult = ({ userInfo, getUserInfo }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const isCookie = getCookie('token');
-
   const [openAddEditModal, setOpenAddEditModal] = useState({
             isShown: false,
             type:"add",

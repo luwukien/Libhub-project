@@ -1,11 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   base: "./", 
   server: {
-    historyApiFallback: true, 
+    host: "0.0.0.0", 
+    port: 5173, 
+    strictPort: true, 
+    cors: true, 
+    origin: "https://write-harmony-kernel-tm.trycloudflare.com", // Định nghĩa domain ngrok
   },
 })

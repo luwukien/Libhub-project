@@ -7,7 +7,7 @@ const useLogout = () => {
   const logout = async () => {
     // // localStorage.clear();
     const res = await axiosInstance.post("/logout");
-    
+    window.location.reload()
     navigate("/home");
   };
 

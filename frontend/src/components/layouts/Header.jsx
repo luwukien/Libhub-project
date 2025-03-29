@@ -15,7 +15,9 @@ const Header = ({
   searchQuery,
   setSearchQuery,
   onSearchNote,
-  handleClearSearch
+  handleClearSearch,
+  isToken,
+  setIsToken
  }) => {
   
   const {checkAuth} = useAuthStore(); 
@@ -24,8 +26,6 @@ const Header = ({
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
-
-  const isToken = getCookie('token');
 
   const getUserInfo = async () => {
     try {
@@ -77,6 +77,16 @@ const Header = ({
 
   const onLogin = () => {
     navigate("/login");
+  };
+
+  const handleLogout = async () => {
+    try {
+      logout(); // Gọi hàm logout từ hook `useLogout`
+      setIsToken(null); // Cập nhật state ngay lập tức
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Xóa token trong cookie
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   const FlyoutLink = ({ children, FlyoutContent }) => {
@@ -136,7 +146,7 @@ const Header = ({
 
   useEffect(() => {
     isToken && getUserInfo();
-  }, []);
+  }, [isToken]);
 
   return (
     <header className="font-KumbhSans z-40 mx-2">
@@ -192,7 +202,7 @@ const Header = ({
           <li><Link className="ct-top-menu-item" to="/confession">Confession</Link></li>
 
           {/* Avatar with Dropdown */}
-          {Boolean(isToken) ? <ProfileInfo user={userInfo} /> : (<a href="/login" className="ct-top-menu-item">Login</a>)}
+          {isToken ? <ProfileInfo user={userInfo} /> : (<a href="/login" className="ct-top-menu-item">Login</a>)}
         </ul>
         <div className="lg:hidden flex items-center cursor-pointer px-3 sm:px-8 ml-auto">
           <svg id="ct-toggle-top-menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
@@ -238,7 +248,7 @@ const Header = ({
                 <li className="list-none w-full text-center text-red-600 p-4 hover:bg-pornhub-300 hover:text-white transition-all rounded-xl cursor-pointer" onClick={(e) => {
                   e.stopPropagation();
                   alert("Log out successfully!");
-                  logout();
+                  handleLogout();
                 }}>
                   Log Out
                 </li> :

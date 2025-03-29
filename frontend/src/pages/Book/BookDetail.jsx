@@ -19,8 +19,7 @@ const BookDetail = ({ }) => {
   const [bookInfo, setBookInfo] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [isBorrowed, setIsBorrowed] = useState(false);
-
-  const isCookie = getCookie('token');
+  const [isToken, setIsToken] = useState(null);
 
   const getUserInfo = async () => {
     try {
@@ -52,7 +51,7 @@ const BookDetail = ({ }) => {
   const fetchBook = async () => {
     try {
       let response = null;
-      if (isCookie) {
+      if (isToken) {
         response = await axiosInstance.get(`/get-book-user/${id}`);
       }
       else {
@@ -93,8 +92,13 @@ const BookDetail = ({ }) => {
 
   useEffect(() => {
     fetchBook();
-    isCookie && getUserInfo();
-  }, [id]);
+    getUserInfo();
+    async function fetchToken() {
+      const token = await getCookie("token"); 
+      setIsToken(token); 
+    }
+    fetchToken();
+  }, [id, isToken]);
 
   if (!bookInfo) return <p>Loading...</p>;
 
@@ -143,7 +147,7 @@ const BookDetail = ({ }) => {
               <BorrowBtn
                 isBorrowed={isBorrowed}
                 bookInfo={bookInfo}
-                isLoggedIn={isCookie}
+                isLoggedIn={isToken}
                 handleViewBook={handleViewBook}
               />
   

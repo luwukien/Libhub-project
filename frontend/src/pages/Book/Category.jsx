@@ -42,8 +42,7 @@ const Category = ({}) => {
     const [filters, setFilters] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-
-    const isCookie = getCookie('token');
+    const [isToken, setIsToken] = useState(null);
     
 
     const getUserInfo = async () => {
@@ -61,7 +60,7 @@ const Category = ({}) => {
       setLoading(true);
       try {
         let response = null;
-        if(isCookie){
+        if(isToken){
           response = await axiosInstance.get(`/get-all-book-user?page=${page}&limit=16&filter=${title}`);
         }
         else{
@@ -123,7 +122,7 @@ const Category = ({}) => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    isCookie && getUserInfo();
+    getUserInfo();
     getAllBooks(currentPage);
     return () => {};
   }, [title, currentPage]);
@@ -147,6 +146,11 @@ const Category = ({}) => {
     setSelectedCategory(title);
     fetchFilters();
     setLoading(false);
+    async function fetchToken() {
+        const token = await getCookie("token"); 
+        setIsToken(token); 
+    }
+    fetchToken();
   }, []);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);

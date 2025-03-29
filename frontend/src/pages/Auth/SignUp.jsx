@@ -5,7 +5,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import React, { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-const SignUp = ({ setIsToken }) => {
+const SignUp = ({ }) => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 

@@ -32,27 +32,27 @@ const About = () => {
   //Data members
   const members = [
     {
-      imageUrl: "./Members/nguyen-hiep-store.jpg",
+      imageUrl: "./Members/cuong.webp",
       name: "Đặng Cường",
       role: "Leader & Frontend Developer",
       quote: "Chao",
-      tagline: "Sục",
+      tagline: "Suc",
       linktoFacebook: "https://www.facebook.com/caocuong.dang.7524",
       linktoIntasgram: "#",
       linktoEmail: "mailto:nguyen.hiep@example.com",
     },
     {
-      imageUrl: "./Members/nguyen-hiep-store.jpg",
-      name: "Nguyễn Dũng",
+      imageUrl: "./Members/dau.webp",
+      name: "Lê Dũng",
       role: "Tech Lead & Backend Developer",
       quote: "Hat dau nho",
       tagline: "Hát",
-      linktoFacebook: "https://www.facebook.com/hat.au.nho.983082",
+      linktoFacebook: "https://www.facebook.com/hatdaunhonhor",
       linktoIntasgram: "https://instagram.com/",
       linktoEmail: "mailto:tran.anh@example.com",
     },
     {
-      imageUrl: "./Members/nguyen-hiep-store.jpg",
+      imageUrl: "./Members/hiep.webp",
       name: "Nguyễn Hiệp",
       role: "Backend Developer",
       quote: "Boy phố làm bố các em",
@@ -62,27 +62,27 @@ const About = () => {
       linktoEmail: "mailto:tran.anh@example.com",
     },
     {
-      imageUrl: "./Members/nguyen-hiep-store.jpg",
+      imageUrl: "./Members/qanh.webp",
       name: "Quốc Anh",
       role: "Frontend Developer",
       quote: "dang code",
-      tagline: "gpt",
+      tagline: "adonis",
       linktoFacebook: "https://www.facebook.com/adonis.quocanh",
       linktoIntasgram: "https://instagram.com/",
       linktoEmail: "mailto:tran.anh@example.com",
     },
     {
-      imageUrl: "./Members/nguyen-hiep-store.jpg",
+      imageUrl: "./Members/thao.webp",
       name: "Hoàng Thảo",
       role: "Frontend Developer",
       quote: "Cac ban",
-      tagline: "Gay",
+      tagline: "Tim",
       linktoFacebook: "https://www.facebook.com/kingkind.k6",
       linktoIntasgram: "https://instagram.com/",
       linktoEmail: "mailto:tran.anh@example.com",
     },
     {
-      imageUrl: "./Members/nguyen-hiep-store.jpg",
+      imageUrl: "./Members/kien.webp",
       name: "Lưu Kiên",
       role: "Frontend Developer",
       quote: "Deo hieu code",
@@ -103,7 +103,7 @@ const About = () => {
           <div
             className="flex flex-col items-center justify-center top-0 bottom-0 bg-slate-500 w-full h-[400px] bg-center bg-no-repeat bg-cover"
             style={{
-              backgroundImage: "url('./bg-about-2.jpg')",
+              backgroundImage: "url('./bg-about-2.webp')",
             }}
           >
             <h1 className="text-white text-[80px] font-bold">About Us</h1>

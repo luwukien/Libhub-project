@@ -23,7 +23,7 @@ const ViewBorrow = ({ onClose, bookInfo, userInfo, updateRemainingBook, updateIs
   const handleBorrow = async () => {
     const bookId = bookInfo._id;
 
-    console.log(userInfo.borrowedBooks.length);
+    
 
     if(userInfo.borrowedBooks.length > 4){
       toast.error("You can't borrow more.");

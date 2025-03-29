@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Tooltip } from "react-tooltip";
 import useLogout from "../../utils/useLogout";
 import moment from "moment";
+import { validateNumber } from "../../utils/validateNumber";
 
 const GetUser = () => {
   const navigate = useNavigate();
@@ -33,7 +34,6 @@ const GetUser = () => {
     data: null,
   });
 
-  
   const getBorrowedBooks = async(userId) => {
     try{
       const response = await axiosInstance.get(`/get-borrowed-book/${userId}`);
@@ -90,7 +90,7 @@ const GetUser = () => {
       anchorPlacement: 'top-bottom',
       mirror: false, 
     });
-  }, []);
+  }, [userInfo]);
 
   useEffect(() => {
     if (userInfo && userInfo._id) {

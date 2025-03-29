@@ -16,7 +16,8 @@ const Confession = () => {
   const [userId, setUserId] = useState();
   const [role, setRole] = useState("user");
 
-  const isToken = getCookie("token");
+  const [isToken, setIsToken] = useState(null);
+
   const getUserId = async () => {
     try {
       const response = await axiosInstance.get("/get-user");
@@ -43,6 +44,11 @@ const Confession = () => {
 
   useEffect(() => {
     getPosts();
+    async function fetchToken() {
+            const token = await getCookie("token"); 
+            setIsToken(token); 
+          }
+          fetchToken();
   }, []);
 
   const handlePost = async () => {

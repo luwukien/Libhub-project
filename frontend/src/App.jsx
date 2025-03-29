@@ -17,7 +17,7 @@ import BorrowedBooks from "./pages/Admin/BorrowedBooks";
 import RouterHandler from "./utils/RouterHandler";
 
 const App = () => {
-    const [isToken, setIsToken] = useState(getCookie("token")); 
+    const [isToken, setIsToken] = useState(null); 
     const [searchQuery, setSearchQuery] = useState('');
     const [allBooks, setAllBooks] = useState([]);
     const [filterType, setFilterType] = useState('');
@@ -33,7 +33,7 @@ const App = () => {
       }
     } catch (error) {
       if (error.response.status === 401) {
-        rage.clear(); // Có thể là lỗi typo, cần kiểm tra lại
+        
       }
     }
   };
@@ -72,14 +72,20 @@ const App = () => {
     
     useEffect(() => {
       getUserInfo();
-      setIsToken(getCookie("token"));
-    }, []);
+        async function fetchToken() {
+        const token = await getCookie("token"); 
+        setIsToken(token); 
+      }
+      fetchToken();
+    }, [isToken]);
     
     return (
         <div>
             <Router>
             {window.location.pathname !== "/login" && window.location.pathname !== "/signup" && (
                 <Header
+                    isToken={isToken}
+                    setIsToken={setIsToken}
                     className="fixed top-0 left-0 w-full z-50 bg-white shadow-md"
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
@@ -87,8 +93,10 @@ const App = () => {
                     handleClearSearch={handleClearSearch}
                 />
               )}
+              
                 <GameCard id="game-frame"/>
                 <RouterHandler />
+          
                 <Routes>
                     <Route path="/" element={<Root />} />
                     <Route path="/home" element={<Home />} />

@@ -15,7 +15,7 @@ const Home = () => {
   const [HotBooks, setHotBooks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
-  const [isCookie, setIsCookie] = useState(getCookie("token"));
+  const [isToken, setIsToken] = useState(null);
     // get Inforamation user
   const [loading, setLoading] = useState(true);
 
@@ -41,6 +41,11 @@ const Home = () => {
       }
     };
     fetchData();
+    async function fetchToken() {
+            const token = await getCookie("token"); 
+            setIsToken(token); 
+          }
+          fetchToken();
   }, []);
 
     return(

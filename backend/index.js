@@ -27,9 +27,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true,
+    origin: ["http://localhost:5173", "https://write-harmony-kernel-tm.trycloudflare.com"],
+    credentials: true, // Quan trọng: Cho phép gửi cookies
 }));
+
+
 
 function removeAccents(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -122,7 +124,9 @@ app.post("/login", async (req, res) => {
     );
 
     res.cookie('token', accessToken, {
-        httpOnly: false,   // Prevents client-side JavaScript from accessing the cookie
+        httpOnly: false,
+        secure: true,
+        sameSite: "None",   // Prevents client-side JavaScript from accessing the cookie
         maxAge: 24 * 60 * 60 * 1000,  // 1 day
     });
 
@@ -136,9 +140,22 @@ app.post("/login", async (req, res) => {
 });
 
 // Logout
-app.post("/logout", async (req, res) => {
-    res.clearCookie("token");
+app.post("/logout", (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: false,
+        secure: true,  
+        sameSite: "None"
+    });
     res.json({ message: "Logged out successfully" });
+});
+
+
+//Get Token 
+app.get("/get-token", (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: "No token provided" });
+
+    return res.json({ token });
 });
 
 app.get("/get-all-users", authenticateToken, async (req, res) => {
