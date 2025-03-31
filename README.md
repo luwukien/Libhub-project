@@ -114,8 +114,11 @@ This will start the server and it will be accessible at `http://localhost:5173`.
 ## Document
 - [Document Libhub](https://docs.google.com/document/d/1pmQno1baoB7y_3l71nIms7S9zbDFDBMlS1tOSNpXQtU/edit?usp=sharing)
 
-## Origin Repo
-- [Original Repository Libhub](https://github.com/BoyF-ur/LibHub)
+## Original Repo
+- [Original Repository Libhub](https://github.com/BoyF-ur/LibHub) 
+
+## Wireframe Website
+- [Wireframe Libhub](https://github.com/luwukien/Libhub-project/tree/main/Wireframe)
 
 ## Lời cuối cùng
-- Trước tiên em xin cảm ơn tất cả anh chị mentor/takecare của team 4 đã giúp đỡ em trong khoảng thời gian hơn hai tháng ạ. Đặc biệt em muốn cảm ơn anh Dũng chị Ngọc Maii. Anh Dũng đã cho em một góc nhìn khác và đưa cho em một số key để định hướng em. Em muốn cảm ơn chị Ngọc Maii đã cho giúp em hình dung ra bài toán frontend của website, chị giúp em rất nhiều để em có thể tự tin hơn trong các hoạt động. 
+- Trước tiên em xin cảm ơn tất cả anh chị mentor/takecare của team 4 đã giúp đỡ em trong khoảng thời gian hơn hai tháng ạ. Đặc biệt em muốn cảm ơn anh Dũng và chị Ngọc Maii. Anh Dũng đã cho em một góc nhìn khác và đưa cho em một số key để định hướng tương lai cho em. Em muốn cảm ơn chị Ngọc Maii đã cho giúp em hình dung ra bài toán frontend của website, chị giúp em rất nhiều để em có thể tự tin hơn trong các hoạt động nhóm và chúc rượu hehe. Cuối cùng, tôi xin cảm ơn tất các ông: ông Đậu, ông Hiệp, ông Quốc Anh, ông Thảo và cuối cùng là ông Leader, ông Cường. Cảm ơn các ông, khoảng thời gian được làm việc và vui chơi với các ông đã giúp tôi học nhiều điều. Cảm ơn tất cả mọi người trong hơn hai tháng làm việc với nhau. Respect!.
