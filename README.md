@@ -109,3 +109,6 @@ This will start the server and it will be accessible at `http://localhost:5173`.
 
 ## Document
 - [Document Libhub](https://docs.google.com/document/d/1pmQno1baoB7y_3l71nIms7S9zbDFDBMlS1tOSNpXQtU/edit?usp=sharing)
+
+## Document
+- [Original Repository Libhub](https://github.com/BoyF-ur/LibHub)
