@@ -97,18 +97,25 @@ This will start the server and it will be accessible at `http://localhost:5173`.
     - Lưu Chí Kiên (Meee)
 
 ## Meeting Reports
-- [Biên bản họp lần 1](https://github.com/TuanVuNguyen89/jsclub-team-3-project/blob/master/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp%20ng%C3%A0y%201.md)
+- [Biên bản họp lần 1](https://github.com/luwukien/Libhub-project/blob/main/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/19_01_2025.md)
 
-- [Biên bản họp lần 2](https://github.com/TuanVuNguyen89/jsclub-team-3-project/blob/master/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp%20ng%C3%A0y%202.md)
+- [Biên bản họp lần 2](https://github.com/luwukien/Libhub-project/blob/main/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/22_01_2025.md)
 
-- [Biên bản họp lần 3](https://github.com/TuanVuNguyen89/jsclub-team-3-project/blob/master/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp%20ng%C3%A0y%203.md)
+- [Biên bản họp lần 3](https://github.com/luwukien/Libhub-project/blob/main/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/BI%C3%8AN%20B%E1%BA%A2N%20H%E1%BB%8CP%2007_03_2025.md)
 
-- [Biên bản họp lần 4](https://github.com/TuanVuNguyen89/jsclub-team-3-project/blob/master/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp%20ng%C3%A0y%204.md)
+- [Biên bản họp lần 4](https://github.com/luwukien/Libhub-project/blob/main/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/BI%C3%8AN%20B%E1%BA%A2N%20H%E1%BB%8CP%2013_02_2025.md)
 
-- [Biên bản họp lần 5](https://github.com/TuanVuNguyen89/jsclub-team-3-project/blob/master/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp%20ng%C3%A0y%205.md)
+- [Biên bản họp lần 5](https://github.com/luwukien/Libhub-project/blob/main/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/BI%C3%8AN%20B%E1%BA%A2N%20H%E1%BB%8CP%2013_03_2025.md)
+
+- [Biên bản họp lần 6](https://github.com/luwukien/Libhub-project/blob/main/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/BI%C3%8AN%20B%E1%BA%A2N%20H%E1%BB%8CP%2020_02_2025.md)
+
+- [Biên bản họp lần 7](https://github.com/luwukien/Libhub-project/blob/main/Bi%C3%AAn%20b%E1%BA%A3n%20h%E1%BB%8Dp/BI%C3%8AN%20B%E1%BA%A2N%20H%E1%BB%8CP%2027_02_2025.md)
 
 ## Document
 - [Document Libhub](https://docs.google.com/document/d/1pmQno1baoB7y_3l71nIms7S9zbDFDBMlS1tOSNpXQtU/edit?usp=sharing)
 
-## Document
+## Origin Repo
 - [Original Repository Libhub](https://github.com/BoyF-ur/LibHub)
+
+## Lời cuối cùng
+- Trước tiên em xin cảm ơn tất cả anh chị mentor/takecare của team 4 đã giúp đỡ em trong khoảng thời gian hơn hai tháng ạ. Đặc biệt em muốn cảm ơn anh Dũng chị Ngọc Maii. Anh Dũng đã cho em một góc nhìn khác và đưa cho em một số key để định hướng em. Em muốn cảm ơn chị Ngọc Maii đã cho giúp em hình dung ra bài toán frontend của website, chị giúp em rất nhiều để em có thể tự tin hơn trong các hoạt động. 
